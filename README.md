@@ -15,27 +15,24 @@ Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, an
 * `descriptive-stats.R` create descriptive figures and tables for Online Appendix
 
 #Instructions
-1. Clone a copy of the repository to your working directory with the command
+* Clone a copy of the repository to your working directory with the command
 
 ```
 $ git clone https://github.com/jvpoulos/ga-lottery
 ```
-2. The code uses **R** version 3.2.2 (2015-08-14). To install the latest version of R on Ubuntu, use the command 
+* The code uses **R** version 3.2.2 (2015-08-14). To install the latest version of R on Ubuntu, use the command 
 ```
 $ sudo apt-get install r-base-core=3.2.2-1trusty0
 ```
   * To verify that the most recent version of **R** is installed, type `R` a the command line, and then `R.Version()`
-3. Open `analysis.R` in a script editor
+* Open `analysis.R` in a script editor
   * Verify that all required packages are installed in your **R** library
   * Change the file path specified by character vector `data.directory` to your working directory
   * Change logical vectors `patient.random` or `patient.het` to FALSE if you wish not to run either randomization tests or heterogeneous effects models because they are computationally costly 
   * Save your changes to `analysis.R`
-4. Run `analysis.R` from the Linux/Unix command line using the command
+* Run `analysis.R` from the Linux/Unix command line using the command
 ```
-R CMD BATCH analysis.R
+$ R CMD BATCH analysis.R
 ```
-5. The script will output figures as .pdfs and a .RData file `analysis.RData` that can be loaded into R using the R command
-```
-load(“analysis.RData”)
-```
+* The script will output figures as .pdfs and a .RData file `analysis.RData`.
   * The batch command result analysis.Rout contains the result of the script and LaTeX table output.
