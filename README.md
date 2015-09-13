@@ -1,4 +1,4 @@
-Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, and Elite Ideology in Antebellum Georgia"
+Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, and Elite Ideology in Antebellum Georgia." Data sources are described in the paper. 
 
 #Contents
 * `lottery.Rdata` contains the datasets used for the analysis 
@@ -13,6 +13,11 @@ Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, an
 * `tax-digests.R` prepares tax digest data (`tax-digests.csv`) 
 * `tax-digests.csv` tax digest data for legislators
 * `descriptive-stats.R` create descriptive figures and tables for Online Appendix
+* `georgia.csv` complete--count Census data (1850)
+* `counties-1800.csv` county--level Census data (1800)
+* `counties-1850.csv` county--level Census data (1850)
+* `county-maps.R` create maps of Georgia with 1807 county boundaries
+* `GA_AtlasHCB` Georgia county boundary files
 
 #Instructions
 * Clone a copy of the repository to your working directory with the command
@@ -37,3 +42,4 @@ $ R CMD BATCH analysis.R
 ```
 * The script will output figures as .pdfs and a .RData file `analysis.RData`.
   * The batch command result `analysis.Rout` contains the result of the script and LaTeX table output.
+
