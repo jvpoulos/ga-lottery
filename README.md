@@ -24,11 +24,11 @@ $ git clone https://github.com/jvpoulos/ga-lottery
 ```
 $ sudo apt-get install r-base-core=3.2.2-1trusty0
 ```
-  * To verify that the most recent version of **R** is installed, type `R` a the command line, and then `R.Version()`
+To verify that the most recent version of **R** is installed, type `R` a the command line, and then `R.Version()`
 * Open `analysis.R` in a script editor
   * Verify that all required packages are installed in your **R** library
   * Change the file path specified by character vector `data.directory` to your working directory
-  * Change logical vectors `patient.random` or `patient.het` to FALSE if you wish not to run either randomization tests or heterogeneous effects models because they are computationally costly 
+  * Change logical vectors `patient.random` or `patient.het` to FALSE if you wish not to run either randomization tests or heterogeneous effects models
   * Save your changes to `analysis.R`
 * Run `analysis.R` from the Linux/Unix command line using the command
 ```
