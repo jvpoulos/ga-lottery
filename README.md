@@ -35,4 +35,4 @@ To verify that the most recent version of **R** is installed, type `R` a the com
 $ R CMD BATCH analysis.R
 ```
 * The script will output figures as .pdfs and a .RData file `analysis.RData`.
-  * The batch command result analysis.Rout contains the result of the script and LaTeX table output.
+  * The batch command result `analysis.Rout` contains the result of the script and LaTeX table output.
