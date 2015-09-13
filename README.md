@@ -29,6 +29,7 @@ To verify that the most recent version of **R** is installed, type `R` a the com
   * Verify that all required packages are installed in your **R** library
   * Change the file path specified by character vector `data.directory` to your working directory
   * Change logical vectors `patient.random` or `patient.het` to FALSE if you wish not to run either randomization tests or heterogeneous effects models
+  * Set the numeric vector `cores` to the number of cores to use for parallel execution. You can check the number of cores available with the R command `detectCores()`
   * Save your changes to `analysis.R`
 * Run `analysis.R` from the Linux/Unix command line using the command
 ```
