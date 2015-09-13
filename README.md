@@ -14,13 +14,11 @@ Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, an
 ```
 $ git clone https://github.com/jvpoulos/ga-lottery
 ```
-* The code uses **R** version 3.2.2 (2015-08-14)
-
-To install the latest version of R on Ubuntu, use the command 
+* The code uses **R** version 3.2.2 (2015-08-14). To install the latest version of R on Ubuntu, use the command 
 ```
 $ sudo apt-get install r-base-core=3.2.2-1trusty0
 ```
-To verify that the most recent version of **R** is installed, type R a the command line, and then R.Version()
+To verify that the most recent version of **R** is installed, type `R` a the command line, and then `R.Version()`
 * Verify that all **R** packages in the `libraries` chunk are installed on your local machine
 * Change the file path on line 80 to the local directory of the three image .txt files
 * Knit the document and compile the .pdf using the following two commands
