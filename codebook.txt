@@ -4,9 +4,7 @@ There are four datasets in ‘lottery.RData’. ‘pet’ is the complete partic
 
 ——————————
 
-row.no[.2-4]/
-id/
-census.no		Constructed ID number.
+row.no		Constructed ID number.
 		[Source: author]
 
 number		Original identifying number entered by land lottery managers. Represents order in which participant name was recorded within a specific letter group. Not a unique identifier and has no use other than as a record linkage aid.
@@ -30,7 +28,7 @@ n.draw		Number of registered draws in the lottery.
 draw		Draw result recorded by the lottery managers. “B” represents a blank draw and “P” represents a prize draw. 
 		[Source: participant records]
 
-lot[.y]		Number of land lot won by fortunate drawers.		
+lot		Number of land lot won by fortunate drawers.		
 		[Source: participant records]
 
 fortunate.drawer[.x,.y]		The name of the person who won the lot in the land lottery.		
@@ -86,9 +84,6 @@ blacksmith		“1” if participant listed as a blacksmith, “0” otherwise.
 captain		“1” if participant listed with military rank of Captain, “0” otherwise.  
 		[Source: participant records/author]
 
-carpenter	“1” if participant listed as a carpenter, “0” otherwise.  
-		[Source: participant records/author]
-
 colonel		“1” if participant listed with military rank of Colonel, “0” otherwise.  
 		[Source: participant records/author]
 
@@ -126,43 +121,22 @@ schoolmaster
 			[Source: participant records/author]
 
 oh		“1” if participant held office during study period, “0” otherwise.		
-			[[Source: officeholder records/author]
+			[Source: officeholder records/author]
 
 prior.office
 (“Pretreatment officeholder”)		“1” if participant held office prior to 1806, “0” otherwise.					[Source: officeholder records/author]
 
-name[.2-.4]		Name of matched officeholder.  
+name[.1-.4]		Name of matched officeholder.  
 			[Source: officeholder records/author]
 
-office[.2-.4]		Office of matched officeholder.  
+office[.1-.4]		Office of matched officeholder.  
 			[Source: officeholder records/author]
 
-const[.2-.4]		Constituency of matched officeholder.  
-			[Source: officeholder records/author]
-
-prior.office[.2-.4]	“1” if matched officeholder held office pretreatment, “0” otherwise.  
-			[Source: officeholder records/author]
-
-surname.freq.oh[.2-.4]	Frequency of matched officeholders’s surname in the roster.
-			[Source: officeholder records/author]
-
-surname.length.oh[.2-.4]	Character length of matched officeholder’s surname.  
-			[Source: officeholder records/author]
-
-jaro.first[.2-.4]	Similarity measure between first names of matched officeholder and participant.  
-			[Source: officeholder records/author]
-
-county.match[.2-.4]	“1” if matched officeholder’s constituency is an exact match of participant’s county of registration, “0” otherwise.  
-			[Source: officeholder records/author]
-
-dist[.2-.4]	Euclidean distance between matched officeholder’s constituency and participant’s county of registration
+const[.1-.4]		Constituency of matched officeholder.  
 			[Source: officeholder records/author]
 
 match		Probability of correct match between officeholder and participant.  
 			[Source: author] 
-
-line.number		Line number in Census records
-			[Source: 1820 Census] 
 
 first.name.census  	First name. 
 			[Source: 1820 Census] 
