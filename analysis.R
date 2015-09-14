@@ -210,15 +210,6 @@ ForestPlot <- function(d, xlab, ylab){
   return(p)
 }
 
-## Run balance tests and plots
-
-if(patient.random){
-source(paste0(data.directory,"balance-tests.R"))
-source(paste0(data.directory,"balance-plot.R")) 
-}
-
-source(paste0(data.directory,"qq-plot.R")) 
-
 ## Prepare 1805 lottery data 
 
 # Create dummy for never-treat
@@ -250,6 +241,15 @@ resp.dat$weight <- (resp.dat$treat)/(resp.dat$p.score) + (1-resp.dat$treat)/(1-r
 # Create sample exclusions
 sub.oh <- resp.dat[(resp.dat$prior.office!=1) & (resp.dat$orphan!=1) & (resp.dat$widow!=1),] # exclude orphans, widows, pretreatment officeholders
 sub.prior <- resp.dat[(resp.dat$prior.office==1),] # only pretreatment officeholders
+
+## Run balance tests and plots
+
+if(patient.random){
+  source(paste0(data.directory,"balance-tests.R"))
+  source(paste0(data.directory,"balance-plot.R")) 
+}
+
+source(paste0(data.directory,"qq-plot.R")) 
 
 ## Create table showing outcomes by treatment group & compliance status
 my.stats <- list("n", "min", "mean", "max", "s") 
