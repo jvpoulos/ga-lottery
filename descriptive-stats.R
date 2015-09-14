@@ -67,7 +67,11 @@ counties.00$name <- properCase(as.character(counties.00$name))
 counties.00$slave.poppc <- counties.00$stot/counties.00$totpop
 
 # Create table 
-print(xtable(counties.00[c("name","wm1625", "wm2644", "wm45","wmtot","wftot","slave.poppc")],digits= 3,caption = "Summary statistics on selected county--level characteristics in the 1800 Census. `Slave pop.' is the slave population over the total population.", lab = "sum-counties-00"),include.rownames = FALSE,booktabs = TRUE,tabular.environment = "longtable")
+print(xtable(counties.00[c("name","wm1625", "wm2644", "wm45","wmtot","wftot","slave.poppc")],digits= 3,caption = "Summary statistics on selected county--level characteristics in the 1800 Census. `Slave pop.' is the slave population over the total population.", lab = "sum-counties-00"),
+      include.rownames = FALSE,
+      booktabs = TRUE,
+      tabular.environment = "longtable",
+      floating=FALSE)
 
 # Approx pc. eligible white males
 (nrow(petd[petd$orphan!=1 & petd$widow!=1,])/(counties.00$wm1625[counties.00$county==0] + counties.00$wm2644[counties.00$county==0] + counties.00$wm45[counties.00$county==0]))*100
@@ -120,7 +124,11 @@ counties$slave.deathpc <- counties$sdeath/counties$deaths # slave deaths / total
 counties1805 <- subset(counties, name=="Baldwin" | name== "Bryan"| name=="Bulloch"| name=="Burke"| name=="Camden"| name=="Chatham"| name=="Clarke"| name=="Columbia"| name=="Effingham"| name=="Elbert"| name=="Franklin"| name=="Glynn"| name=="Greene"| name=="Hancock"| name=="Jackson"| name=="Jefferson"| name=="Liberty"| name=="Lincoln"| name=="McIntosh"| name=="Montgomery"| name=="Oglethorpe"| name=="Richmond"| name=="Screven"| name=="Tattnall"| name=="Warren"| name=="Washington"| name=="Wayne" | name=="Wilkes" | name=="Wilkinson" | name=="Georgia")
 
 # Make table
-print(xtable(counties1805[c("name","logfarmval","logequipval","logfarms","logavgfarm","logtotalfarmacres","avgacre","wtot","slave.poppc")],digits= 3,caption = "Summary statistics on selected county--level characteristics for counties existing in 1805 from the 1850 Census. `Log total farm acres' is the log of the sum of improved and unimproved acres of land in farms. `Log average farm value' is the log of the difference between farm value and equipment value, over the total number of farms. `Per acre farm value' is the difference between farm value and equipment value, over the sum of improved and unimproved acres of farm land. All dollar values are current (1850$). `Slave pop.' is the slave population over the total population.", lab = "sum-counties"),include.rownames = FALSE,booktabs = TRUE,tabular.environment = "longtable")
+print(xtable(counties1805[c("name","logfarmval","logequipval","logfarms","logavgfarm","logtotalfarmacres","avgacre","wtot","slave.poppc")],digits= 3,caption = "Summary statistics on selected county--level characteristics for counties existing in 1805 from the 1850 Census. `Log total farm acres' is the log of the sum of improved and unimproved acres of land in farms. `Log average farm value' is the log of the difference between farm value and equipment value, over the total number of farms. `Per acre farm value' is the difference between farm value and equipment value, over the sum of improved and unimproved acres of farm land. All dollar values are current (1850$). `Slave pop.' is the slave population over the total population.", lab = "sum-counties"),
+      include.rownames = FALSE,
+      booktabs = TRUE,
+      tabular.environment = "longtable",
+      floating=FALSE)
 
 ## Plot densities of time lag in filing grants by lottery year and county in which land is drawn
 
