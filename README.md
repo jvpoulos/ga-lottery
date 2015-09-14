@@ -21,7 +21,6 @@ Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, an
 
 #Instructions
 * Clone a copy of the repository to your working directory with the command
-
 ```
 $ git clone https://github.com/jvpoulos/ga-lottery
 ```
