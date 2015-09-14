@@ -7,7 +7,7 @@
 ipums <- read.csv(paste0(data.directory,"ipums-ga-1850.csv"),header=TRUE, sep = ",")
 
 # Remove non-alphabetic characters from surname and make all uppercase
-ipums$surname<- trim(toupper(gsub("[^[:alnum:] ]", "",ipums$NAMELAST)))
+ipums$surname<- trimws(toupper(gsub("[^[:alnum:] ]", "",ipums$NAMELAST)))
 
 # Trim spaces
 ipums$surname <- gsub(" ","",ipums$surname)

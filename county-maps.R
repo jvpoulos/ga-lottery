@@ -7,6 +7,7 @@ require(maptools)
 require(ggmap)
 require(sp)
 require(spdep)
+require(ifultools)
 
 # Load map data
 setwd(paste0(data.directory,"GA_AtlasHCB/GA_Historical_Counties")) # set directory to map files

@@ -22,11 +22,11 @@ require(scales)
 require(stringr)
 require(splines)
 
-# Load record-link data
-load("lottery.RData")
-
 # Set data directory 
 data.directory <-"/home/ubuntu/ga-lottery/"
+
+# Load data
+load(paste0(data.directory,"lottery.RData"))
 
 # Run randomization tests?
 patient.random <- TRUE
