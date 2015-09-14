@@ -1,0 +1,105 @@
+Codebook for “Wealth, Officeholding, and Elite Demand for Slavery in Antebellum Georgia”
+
+There are two replication data files. lottery is the merged file of lottery participant records, grant records, and officeholder records. assembly merges the subset of the lottery file containing all officeholders with roll call vote records. Refer to the “Data and construction” section of the paper for data sources and methods of linking records. 
+
+* variable is in lottery file only
+** variable is in assembly file only
+
+——————————
+
+number	Original identifying number entered by land lottery managers. Represents order in which participant name was recorded within a specific letter group. Not a unique identifier and has no use other than as a record linkage aid.
+		[Source: participant records]
+
+name.x	Name of lottery participant, surname first. 
+		[Source: participant records]
+
+county	County of residence of participant at the time of land lottery registration. 
+		[Source: participant records]
+
+treat		Dummy variable indicating treatment assignment. “1” if participant drew at least one prize in the lottery, “0” otherwise. 
+		[Source: author]
+
+draw		Draw result recorded by the lottery managers. “B” represents a blank draw and “P” represents a prize draw. 
+		[Source:  participant records]
+
+prize		Prize record includes county, district, and number of land lot won by fortunate drawers.		[Source: participant records]
+
+prize2		Second prize record for fortunate drawers who drew two prizes. 
+		[Source: participant 	records]
+
+RGB		Dummy variable indicates whether participant name is found in the Reverted Grant Book (RGB). Used to infer compliance status. “1” if participant is noncomplier (i.e., name is found in RGB), “0” otherwise. 
+		[Source: grant records]
+
+orphan*	“1” if participant is an orphan, “0” otherwise.  
+		[Source: participant records/author]
+
+widow*	“1” if participant is a widow, “0” otherwise.  
+		[Source: participant records/author]
+
+junior*	“1” if participant name has suffix of “Jr.” or “III” , “0” otherwise.  
+		[Source: participant 	records/author]
+
+orphan*	“1” if participant is an orphan, “0” otherwise.
+		[Source: participant records/author]
+
+widow*	“1” if participant is a widow, “0” otherwise.  
+		[Source: participant records/author]
+
+junior*	“1” if participant name has suffix of junior or “III” , “0” otherwise.  
+		[Source: participant 	records/author]
+
+senior*	“1” if participant name has suffix of senior, “0” otherwise.  
+		[Source: participant records/author]
+
+surname.freq*		Frequency of participant’s surname in the participant records.
+				[Source: participant records/author]
+
+surname.length*		Character length of participant’s surname.  
+				[Source: participant records/author]
+
+blacksmith*		“1” if participant listed as a blacksmith, “0” otherwise.  
+			[Source: participant records/author]
+
+bricklayer*		“1” if participant listed as a bricklayer, “0” otherwise.  
+			[Source: participant records/author]
+
+hatter*		“1” if participant listed as a hatter, “0” otherwise.
+			[Source: participant records/author]
+
+esquire/
+Lawyer*		“1” if participant listed as a lawyer, “0” otherwise. 
+			[Source: participant records/author]
+
+merchant*		“1” if participant listed as a merchant, “0” otherwise.
+			[Source: participant records/author]
+
+military*		“1” if participant listed with military rank (i.e., Captain, Colonel, General, or Major), “0” otherwise.  
+			[Source: participant records/author]
+
+doctor/
+Physician*		“1” if participant listed as a physician, “0” otherwise. 
+			[Source: participant records/author]
+
+reverend*		“1” if participant listed as a reverend, “0” otherwise. 
+			[Source: participant records/author]
+
+schoolmaster/
+Teacher*		“1” if participant listed as a teacher, “0” otherwise. 
+			[Source: participant records/author]
+
+officeholder*	“1” if participant held office between 1806 and 1846, inclusive “0” otherwise.			[Source: officeholder records/author]
+
+prior.office/
+Pretreatment officeholder	“1” if participant held office prior to 1806, “0” otherwise.					[Source: officeholder records/author]
+
+name.y[2-4]		Name of matched officeholder.  
+			[Source: officeholder records]
+
+office[2-4]		Office of matched officeholder.  
+			[Source: officeholder records]
+
+const[2-4]		Constituency of matched officeholder.  
+			[Source: officeholder records]
+
+vote.index**		Mean of votes in favor of slavery for roll calls in which Assembly member is present.
+			[Source: roll call vote records/author]
