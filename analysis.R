@@ -23,7 +23,7 @@ require(stringr)
 require(splines)
 
 # Load record-link data
-load("record-link.RData")
+load("lottery.RData")
 
 # Set data directory 
 data.directory <-"/home/ubuntu/ga-lottery/"
