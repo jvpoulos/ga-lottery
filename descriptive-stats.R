@@ -4,10 +4,7 @@
 # Historical CPI found here: http://www.measuringworth.com/datasets/uscpi/.
 
 # Import Census data
-ipums <- read.csv(paste0(data.directory,"georgia.csv"),header=TRUE, sep = ",")
-
-# Subset data to male HoH aged 21+, with non--missing surnames property values
-ipums <- subset(ipums, SEX==1 & AGE>=21 & PERNUM==1 & BPL==01300 &REALPROP!=99999999 & ipums$NAMELAST!="")
+ipums <- read.csv(paste0(data.directory,"ipums-ga-1850.csv"),header=TRUE, sep = ",")
 
 # Remove non-alphabetic characters from surname and make all uppercase
 ipums$surname<- trim(toupper(gsub("[^[:alnum:] ]", "",ipums$NAMELAST)))

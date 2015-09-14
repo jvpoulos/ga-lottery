@@ -13,7 +13,7 @@ Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, an
 * `tax-digests.R` prepares tax digest data (`tax-digests.csv`) 
 * `tax-digests.csv` tax digest data for legislators
 * `descriptive-stats.R` create descriptive figures and tables for Online Appendix
-* `georgia.csv` complete--count Census data (1850)
+* `ipums-ga-1850.csv` subset of complete--count Census data (1850)
 * `counties-1800.csv` county--level Census data (1800)
 * `counties-1850.csv` county--level Census data (1850)
 * `county-maps.R` create maps of Georgia with 1807 county boundaries
