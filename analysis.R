@@ -148,7 +148,7 @@ PermutationTest<-function(y,treat,w,p.score,L=10000,alternative="two.sided",allo
   return(list("p" = pvalue, "perm.t.stats" = new.t.stats))
 }
 
-BootDiff<- function(y,treat,w,R=10000,beta.hat) {
+BootDiff<- function(y,treat,w,R=10000,beta.hat,allow.parallel=TRUE,workers=cores) {
   # Function to compute 95% confidence interval for the weighted difference in two means.
   #
   # Args:
@@ -157,13 +157,21 @@ BootDiff<- function(y,treat,w,R=10000,beta.hat) {
   #   w: Vector of weights.
   #   R: The number of bootstrap replicates. The default is 1,000. 
   #   beta.hat: The fraction of compliers in the experimental population.
+  #   allow.parallel: Character string specifying whether to use parallel backend. Default is TRUE.
+  #   workers: Number of workers used for parallel execution. Default is set to number of cores.
   #
   # Returns:
   #   Vector containing weighted difference-in-means, and 95% nonparametric CI.
   treat <- as.factor(treat) 
-  # Bootstrap weighted means for response y for each treatment group (A and B)
-  a <- boot(y[treat==0], weighted.mean, R, w=w[treat==0])$t
-  b <- boot(y[treat==1], weighted.mean, R, w=w[treat==1])$t
+  if(allow.parallel){
+    # Bootstrap weighted means for response y for each treatment group (A and B)
+    a <- boot(y[treat==0], weighted.mean, R, w=w[treat==0], parallel="multicore",ncpus=workers)$t
+    b <- boot(y[treat==1], weighted.mean, R, w=w[treat==1], parallel="multicore",ncpus=workers)$t
+  }
+  else{
+    a <- boot(y[treat==0], weighted.mean, R, w=w[treat==0])$t
+    b <- boot(y[treat==1], weighted.mean, R, w=w[treat==1])$t
+  }
   # ITT
   meandif <- EstAte(y,treat,w) # calculate observed differences in means
   a.b <- quantile(b-a, c(.025,.975)) # calculate percentiles of the differences in bootstrapped means
@@ -279,7 +287,7 @@ if(patient.random){
                              treat=sub.oh$treat,
                              w=sub.oh$weight,
                              p.score=sub.oh$p.score) 
-  perm.oh$p
+  print(perm.oh$p)
 }
 
 oh.CI <- BootDiff(y=sub.oh$oh,
@@ -287,7 +295,7 @@ oh.CI <- BootDiff(y=sub.oh$oh,
                   w=sub.oh$weight,
                   beta.hat=beta.hat)
 
-oh.CI
+print(oh.CI)
 
 # Permutation results of slavery legislation
 if(patient.random){
@@ -295,7 +303,7 @@ if(patient.random){
                                   treat=resp.dat[!is.na(resp.dat$slave.index),]$treat,
                                   w=resp.dat[!is.na(resp.dat$slave.index),]$weight,
                                   p.score=resp.dat[!is.na(resp.dat$slave.index),]$p.score)
-  perm.slavery$p  
+  print(perm.slavery$p)  
 }
 
 slavery.CI <-   BootDiff(y=resp.dat[!is.na(resp.dat$slave.index),]$slave.index,
@@ -303,7 +311,7 @@ slavery.CI <-   BootDiff(y=resp.dat[!is.na(resp.dat$slave.index),]$slave.index,
                          w=resp.dat[!is.na(resp.dat$slave.index),]$weight,
                          beta.hat=beta.hat)
 
-slavery.CI
+print(slavery.CI)
 
 # Permutation results of bank votes
 if(patient.random){
@@ -311,7 +319,7 @@ if(patient.random){
                                treat=resp.dat[!is.na(resp.dat$bank.index),]$treat,
                                w=resp.dat[!is.na(resp.dat$bank.index),]$weight,
                                p.score=resp.dat[!is.na(resp.dat$bank.index),]$p.score)
-  perm.bank$p  
+  print(perm.bank$p) 
 }
 
 bank.CI <-   BootDiff(y=resp.dat[!is.na(resp.dat$bank.index),]$bank.index,
@@ -319,7 +327,7 @@ bank.CI <-   BootDiff(y=resp.dat[!is.na(resp.dat$bank.index),]$bank.index,
                       w=resp.dat[!is.na(resp.dat$bank.index),]$weight,
                       beta.hat=beta.hat)
 
-bank.CI
+print(bank.CI)
 
 # Permutation results for term 
 if(patient.random){
@@ -327,7 +335,7 @@ if(patient.random){
                                treat=sub.prior$treat,
                                w=sub.prior$weight,
                                p.score=sub.prior$p.score) 
-  perm.term$p
+  print(perm.term$p)
 }
 
 term.CI <-   BootDiff(y=sub.prior$n.post.terms,
@@ -335,7 +343,7 @@ term.CI <-   BootDiff(y=sub.prior$n.post.terms,
                       w=sub.prior$weight,
                       beta.hat=beta.hat)
 
-term.CI
+print(term.CI)
 
 # Permutation results for slaves 
 if(patient.random){
@@ -343,7 +351,7 @@ if(patient.random){
                                  treat=resp.dat[!is.na(resp.dat$no.slaves.1820),]$treat,
                                  w=resp.dat[!is.na(resp.dat$no.slaves.1820),]$weight,
                                  p.score=resp.dat[!is.na(resp.dat$no.slaves.1820),]$p.score) 
-  perm.slaves$p
+  print(perm.slaves$p)
 }
 
 slaves.CI <-   BootDiff(y=resp.dat[!is.na(resp.dat$no.slaves.1820),]$no.slaves.1820,
@@ -351,7 +359,7 @@ slaves.CI <-   BootDiff(y=resp.dat[!is.na(resp.dat$no.slaves.1820),]$no.slaves.1
                         w=resp.dat[!is.na(resp.dat$no.slaves.1820),]$weight,
                         beta.hat=beta.hat)
 
-slaves.CI
+print(slaves.CI)
 
 ## Create summary plot for ATEs
 
