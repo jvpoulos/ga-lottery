@@ -1,3 +1,13 @@
+# Packages
+require(SuperLearner)
+require(class)
+require(randomForest)
+require(glmnet)
+require(gam)
+require(e1071)
+require(gbm)
+require(nnet)
+
 # Create randomForest wrappers changing both mtry and nodesize
 tuneGrid <- expand.grid(mtry=c(1,5,10), nodesize=c(1,5))
 create.SL.randomForest <- function(tune = list(mtry = c(1, 5, 10), nodesize = c(1, 5))) {

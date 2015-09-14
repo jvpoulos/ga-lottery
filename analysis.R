@@ -22,11 +22,11 @@ require(scales)
 require(stringr)
 require(splines)
 
+# Load record-link data
+load("record-link.RData")
+
 # Set data directory 
 data.directory <-"/home/ubuntu/ga-lottery/"
-
-# Load data
-load(paste0(data.directory,"lottery.RData"))
 
 # Run randomization tests?
 patient.random <- TRUE
@@ -47,28 +47,10 @@ if(patient.random){
 # Run heterogeneous effects models?
 patient.het <- TRUE
 
-if(patient.het){
-  require(SuperLearner)
-  require(class)
-  require(randomForest)
-  require(glmnet)
-  require(gam)
-  require(e1071)
-  require(gbm)
-  require(nnet)
-}
-
 # Produce descriptive statistics and maps?
 patient.desc <- TRUE
 
 if(patient.desc){
-  require(rgdal)
-  require(rgeos)
-  require(maptools)
-  require(ggmap)
-  require(sp)
-  require(spdep)
-  
   source(paste0(data.directory,"descriptive-stats.R"))
   source(paste0(data.directory,"county-maps.R"))
 }
@@ -230,18 +212,12 @@ ForestPlot <- function(d, xlab, ylab){
 
 ## Run balance tests and plots
 
-source(paste0(data.directory,"balance-tests.R"))
-
 if(patient.random){
+source(paste0(data.directory,"balance-tests.R"))
 source(paste0(data.directory,"balance-plot.R")) 
 }
 
 source(paste0(data.directory,"qq-plot.R")) 
-
-# Take mean of duplicated officeholder outcomes
-officeholders <- cbind(officeholders[!duplicated(officeholders$row.no),][c(oh.id.vars,'prior.office','oh')],
-                       ddply(officeholders[c("row.no","slave.index","bank.index","n.post.terms")],
-                             "row.no",numcolwise(mean)))
 
 ## Prepare 1805 lottery data 
 

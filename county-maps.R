@@ -1,5 +1,13 @@
 # Note: descriptive-stats.R must be run before this script
 
+# Packages
+require(rgdal)
+require(rgeos)
+require(maptools)
+require(ggmap)
+require(sp)
+require(spdep)
+
 # Load map data
 setwd(paste0(data.directory,"GA_AtlasHCB/GA_Historical_Counties")) # set directory to map files
 county.map <- readOGR(dsn = ".", "GA_Historical_Counties")
