@@ -24,6 +24,13 @@ require(splines)
 require(parallel)
 require(doParallel)
 
+# Setup parallel processing 
+cores <- 8 # specify number of cores to use
+
+registerDoParallel(cores) # register cores
+
+RNGkind("L'Ecuyer-CMRG") # ensure random number generation
+
 # Set data directory 
 data.directory <-"/home/ubuntu/ga-lottery/"
 
@@ -32,13 +39,6 @@ load(paste0(data.directory,"lottery.RData"))
 
 # Run randomization tests?
 patient.random <- TRUE
-
-# Setup parallel processing 
-cores <- 8 # specify number of cores to use
-  
-registerDoParallel(cores) # register cores
-  
-RNGkind("L'Ecuyer-CMRG") # ensure random number generation
 
 # Run heterogeneous effects models?
 patient.het <- TRUE

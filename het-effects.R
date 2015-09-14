@@ -87,6 +87,8 @@ surname.freq <- DummiesQCut(lot05$surname.freq) # quintiles for surname frequenc
 surname.splits <- c("Surname length Q1", "Surname length Q2", "Surname length Q3", "Surname length Q4","Surname length Q5",
                     "Surname frequency Q1", "Surname frequency Q2", "Surname frequency Q3", "Surname frequency Q4","Surname frequency Q5")
 
+covars.balance <- c("junior","senior","surname.freq","surname.length","blacksmith","bricklayer","hatter","esquire","merchant","military","doctor","reverend","schoolmaster","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
+
 common.features <- cbind(resp.dat[c("treat")],
                          two.draws,
                          lot05[covars.balance[!covars.balance %in% c("surname.length","surname.freq")]],
