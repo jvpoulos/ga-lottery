@@ -403,10 +403,10 @@ het.plot.slaves <- DotPlot(slaves.plot,
                                        format(length(fitSL.slaves$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.2, .2)
 
 ## Combine legislator-participant plots
-pdf(paste0(data.directory,"het-wealth-plots.pdf"), width=8.5, height=16)
+pdf(paste0(data.directory,"het-wealth-plots.pdf"), width=11, height=8.5)
 grid.arrange(het.plot.slave, 
              het.plot.bank, 
-             ncol=1, nrow=2, left="Pretreatment covariate", bottom="Heterogeneous treatment effect")
+             ncol=2, nrow=1, left="Pretreatment covariate", bottom="Heterogeneous treatment effect")
 dev.off()
 
 ## Combine plots for other outcomes
