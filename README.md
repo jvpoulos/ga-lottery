@@ -1,6 +1,7 @@
 Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, and Elite Ideology in Antebellum Georgia." Data sources are described in the paper. 
 
 #Contents
+* `ga-lottery-online-appendix.pdf` is the Online Appendix
 * `lottery.Rdata` contains the datasets used for the analysis 
 * `codebook.txt` describes the `lottery.Rdata` datasets
 * `analysis.R` creates table showing outcomes by treatment group and compliance status; implements randomization tests; creates summary plot for ATEs; and creates summary plot for sensitivity analyses 
