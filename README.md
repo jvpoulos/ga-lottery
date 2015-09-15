@@ -1,4 +1,4 @@
-Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, and Elite Ideology in Antebellum Georgia." Data sources are described in the paper. 
+Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, and Elite Ideology in Antebellum Georgia." Data sources are described in the <http://ssrn.com/abstract=2484037>  "paper". 
 
 #Contents
 * `ga-lottery-online-appendix.pdf` is the Online Appendix
