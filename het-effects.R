@@ -298,7 +298,7 @@ slave.plot <- data.frame(x=c(covars.names[-c(3,4)],
 # Plot forest plot
 het.plot.slave <- DotPlot(slave.plot, 
                           title=paste("Slavery legislation, N =", 
-                                      format(length(fitSL.assembly.slave$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.2, .2)
+                                      format(length(fitSL.assembly.slave$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.15, .15)
 
 ## Heterogeneous treatment effects on state banking policy
 
@@ -312,7 +312,7 @@ bank.plot <- data.frame(x=c(covars.names[-c(3,4)],
 # Plot forest plot
 het.plot.bank <- DotPlot(bank.plot, 
                          title=paste("State banking policy, N =", 
-                                     format(length(fitSL.assembly.bank$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.2, .2)  
+                                     format(length(fitSL.assembly.bank$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.15, .15)  
 
 ## Heterogeneous treatment effects on number of terms held after lottery
 
@@ -402,12 +402,17 @@ het.plot.slaves <- DotPlot(slaves.plot,
                            title=paste("# slaves held (1820), N =", 
                                        format(length(fitSL.slaves$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.2, .2)
 
-## Combine plots
-pdf(paste0(data.directory,"het-plots.pdf"), width=11, height=18)
+## Combine legislator-participant plots
+pdf(paste0(data.directory,"het-wealth-plots.pdf"), width=8.5, height=11)
+grid.arrange(het.plot.slave, 
+             het.plot.bank, 
+             ncol=1, nrow=2, left="Pretreatment covariate", bottom="Heterogeneous treatment effect")
+dev.off()
+
+## Combine plots for other outcomes
+pdf(paste0(data.directory,"het-plots.pdf"), width=11, height=11)
 grid.arrange(het.plot.term, 
              het.plot.slaves,
              het.plot.oh, 
-             het.plot.slave, 
-             het.plot.bank, 
-             ncol=2, nrow=3, left="County of Registration", bottom="Heterogeneous treatment effect")
+             ncol=2, nrow=2, left="Pretreatment covariate", bottom="Heterogeneous treatment effect")
 dev.off() 
