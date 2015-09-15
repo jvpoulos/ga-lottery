@@ -1,7 +1,5 @@
 # Create function for plot theme
-
 ThemeBw1 <- function(base_size = 11, base_family = "") {
-  # Starts with theme_grey and then modify some parts
   theme_grey(base_size = base_size, base_family = base_family) %+replace%
     theme(
       axis.text.x =       element_text(size = base_size*.9, colour = "black",  hjust = .5 , vjust=1),

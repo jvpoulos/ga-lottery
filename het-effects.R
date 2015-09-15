@@ -15,7 +15,18 @@ DotPlotF <- function(plot.df,title){
 }
 
 # Dot plot (balance covariates as features)
-DotPlot <- function(plot.df,title,theme=ThemeBw1){
+DotPlot <- function(plot.df,title){
+  # Create function for plot theme
+  ThemeBw1 <- function(base_size = 11, base_family = "") {
+    theme_grey(base_size = base_size, base_family = base_family) %+replace%
+      theme(
+        axis.text.x =       element_text(size = base_size*.9, colour = "black",  hjust = .5 , vjust=1),
+        axis.text.y =       element_text(size = base_size, colour = "black", hjust = 0 , vjust=.5 ), # changes position of X axis text
+        axis.ticks =        element_blank(),
+        axis.title.y =      element_text(size = base_size,angle=90,vjust=.01,hjust=.1),
+        legend.position = "none"
+      )
+  }
   # Group variables
   Generational  <- c("Junior","Senior") 
   Surname    <- c("Surname frequency","Surname length")
@@ -69,11 +80,10 @@ DotPlot <- function(plot.df,title,theme=ThemeBw1){
     coord_flip() +
     geom_line() +
     geom_hline(aes(x=0), lty=2) +
-    theme(legend.position="none") +
     ggtitle(title) +
     ylab("") +
     xlab("") #switch because of the coord_flip() above 
-  return(p+ theme)
+  return(p+ ThemeBw1())
 }
 
 # Create dummies for pretreatment vars
@@ -393,7 +403,7 @@ het.plot.slaves <- DotPlot(slaves.plot,
                                        format(length(fitSL.slaves$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.2, .2)
 
 ## Combine plots
-pdf(paste0(data.directory,"het-county-plots.pdf"), width=8.5, height=11)
+pdf(paste0(data.directory,"het-plots.pdf"), width=8.5, height=11)
 grid.arrange(het.plot.term, 
              het.plot.slaves,
              het.plot.oh, 
