@@ -15,7 +15,13 @@ DotPlotF <- function(plot.df,title){
 }
 
 # Dot plot (balance covariates as features)
-DotPlot <- function(plot.df,title){
+DotPlot <- function(plot.df,title,theme=ThemeBw1){
+  # Group variables
+  Generational  <- c("Junior","Senior") 
+  Surname    <- c("Surname frequency","Surname length")
+  Occupations       <- c("Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher")
+  Counties       <- c("Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
+  
   # Reformat plot data to match balance plot
   plot.df$group <- NA
   plot.df$group[plot.df$x %in% Generational]       <- "Generational titles"
@@ -30,6 +36,8 @@ DotPlot <- function(plot.df,title){
                       "Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
   
   plot.df <- plot.df[match(covars.reorder, plot.df$x),]
+  
+  offset <- c("   ")
   
   plot.df$x <- paste(offset,plot.df$x) # make offset in x var name
   
@@ -65,7 +73,7 @@ DotPlot <- function(plot.df,title){
     ggtitle(title) +
     ylab("") +
     xlab("") #switch because of the coord_flip() above 
-  return(p+ ThemeBw1())
+  return(p+ theme)
 }
 
 # Create dummies for pretreatment vars
@@ -86,8 +94,6 @@ surname.freq <- DummiesQCut(lot05$surname.freq) # quintiles for surname frequenc
 
 surname.splits <- c("Surname length Q1", "Surname length Q2", "Surname length Q3", "Surname length Q4","Surname length Q5",
                     "Surname frequency Q1", "Surname frequency Q2", "Surname frequency Q3", "Surname frequency Q4","Surname frequency Q5")
-
-covars.balance <- c("junior","senior","surname.freq","surname.length","blacksmith","bricklayer","hatter","esquire","merchant","military","doctor","reverend","schoolmaster","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
 
 common.features <- cbind(resp.dat[c("treat")],
                          two.draws,

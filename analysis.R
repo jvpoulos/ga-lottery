@@ -43,13 +43,10 @@ patient.random <- TRUE
 # Run heterogeneous effects models?
 patient.het <- TRUE
 
-# Produce descriptive statistics and maps?
-patient.desc <- TRUE
+# Produce descriptive statistics and maps
+source(paste0(data.directory,"descriptive-stats.R"))
+source(paste0(data.directory,"county-maps.R"))
 
-if(patient.desc){
-  source(paste0(data.directory,"descriptive-stats.R"))
-  source(paste0(data.directory,"county-maps.R"))
-}
 
 ## Define functions for analyses
 
@@ -248,11 +245,8 @@ sub.prior <- resp.dat[(resp.dat$prior.office==1),] # only pretreatment officehol
 
 ## Run balance tests and plots
 
-if(patient.random){
-  source(paste0(data.directory,"balance-tests.R"))
-  source(paste0(data.directory,"balance-plot.R")) 
-}
-
+source(paste0(data.directory,"balance-tests.R"))
+source(paste0(data.directory,"balance-plot.R")) 
 source(paste0(data.directory,"qq-plot.R")) 
 
 ## Create table showing outcomes by treatment group & compliance status
