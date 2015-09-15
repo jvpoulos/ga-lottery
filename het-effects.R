@@ -238,8 +238,8 @@ het.plot.assembly.bank <- DotPlotF(assembly.bank,
 
 ## Combine legislator-participant plots
 pdf(paste0(data.directory,"het-wealth-plots.pdf"), width=11, height=8.5)
-print(grid.arrange(het.plot.assembly.slave,het.plot.assembly.bank,
-                   ncol=2, nrow=1, left="Pretreatment measure of wealth (quintiles)", bottom="Heterogeneous treatment effect"))
+grid.arrange(het.plot.assembly.slave,het.plot.assembly.bank,
+             ncol=2, nrow=1, left="Pretreatment measure of wealth (quintiles)", bottom="Heterogeneous treatment effect")
 dev.off() 
 
 ## Heterogeneous treatment effects on officeholding 
@@ -403,7 +403,7 @@ het.plot.slaves <- DotPlot(slaves.plot,
                                        format(length(fitSL.slaves$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.2, .2)
 
 ## Combine plots
-pdf(paste0(data.directory,"het-plots.pdf"), width=8.5, height=11)
+pdf(paste0(data.directory,"het-plots.pdf"), width=11, height=18)
 grid.arrange(het.plot.term, 
              het.plot.slaves,
              het.plot.oh, 
