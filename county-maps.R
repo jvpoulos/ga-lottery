@@ -1,6 +1,7 @@
 # Note: descriptive-stats.R must be run before this script
 
 # Packages
+require(ggplot2)
 require(rgdal)
 require(rgeos)
 require(maptools)

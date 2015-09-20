@@ -32,7 +32,7 @@ $ sudo apt-get install r-base-core=3.2.2-1trusty0
 * Open `analysis.R` in a script editor
   * Verify that all required packages are installed in your **R** library
   * Change the file path specified by character vector `data.directory` to your working directory
-  * Change logical vectors `patient.random` or `patient.het` to FALSE if you wish not to run either randomization tests or heterogeneous effects models
+  * Change logical vectors `patient.random` or `patient.het` to FALSE if you wish not to run either randomization tests or heterogeneous effects models. (N.b.: the total elapsed time of running `analysis.RData` with default settings on a machine with 8 vCPU is 11.29 hours.) 
   * Set the numeric vector `cores` to the number of cores to use for parallel execution. You can check the number of cores available with the R command `detectCores()`
   * Save your changes to `analysis.R`
 * Open `SuperLearner.R` and `descriptive-stats.R` and verify required packages are installed
