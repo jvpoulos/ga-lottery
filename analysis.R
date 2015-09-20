@@ -369,6 +369,7 @@ plot.data$Outcome <- c(rep("Officeholding",2),
                        rep("# terms after lottery",2),
                        rep("# slaves held (1820)",2))
 # Plot forest plot
+plot.data$x <- factor(plot.data$x, levels=rev(plot.data$x)) # reverse order
 summary.plot <- ForestPlot(plot.data,xlab="Treatment effect",ylab="Analysis")
 
 ggsave(paste0(data.directory,"summary-plot.pdf"), summary.plot, width=11, height=8.5)
@@ -498,6 +499,7 @@ s.plot.data$Outcome <- c(rep("Weighted response",2),
                          rep("Treatment: Wayne",2),
                          rep("Treatment: Wilkinson",2))
 # Plot forest plot
+s.plot.data$x <- factor(s.plot.data$x, levels=rev(s.plot.data$x)) # reverse order
 slavery.sensitivity <- ForestPlot(s.plot.data,xlab="Treatment effect",ylab="Analysis")
 
 ggsave(paste0(data.directory,"slavery-sensitivity.pdf"), slavery.sensitivity, width=11, height=8.5)
