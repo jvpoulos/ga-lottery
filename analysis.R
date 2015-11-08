@@ -183,7 +183,7 @@ BootDiffHet <- function(tau.i,g) {
   # Function to compute 95% confidence intervals for heterogeneous treatment effect plots. 
   #
   # Args:
-  #   tau.i: Vector of bserved individual treatment effects. 
+  #   tau.i: Vector of observed individual treatment effects. 
   #   g: Binary grouping variable. 
   #
   # Returns:
