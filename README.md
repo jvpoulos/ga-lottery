@@ -1,4 +1,4 @@
-Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, and Elite Ideology in Antebellum Georgia."
+Reproduce figures, tables, and empirical estimates in "Lottery Wealth and Legislative Ideology"
 
 #Contents
 * `ga-lottery-online-appendix.pdf` is the Online Appendix
