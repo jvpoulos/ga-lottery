@@ -10,6 +10,12 @@ require(sp)
 require(spdep)
 require(ifultools)
 
+# Download historical county map data
+url <- "http://publications.newberry.org/ahcbp/downloads/gis/GA_AtlasHCB.zip"
+map.data <- basename(url)
+download.file(url,map.data)
+unzip(map.data)
+
 # Load map data
 setwd(paste0(data.directory,"GA_AtlasHCB/GA_Historical_Counties")) # set directory to map files
 county.map <- readOGR(dsn = ".", "GA_Historical_Counties")

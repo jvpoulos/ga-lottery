@@ -18,7 +18,6 @@ Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, an
 * `counties-1800.csv` county--level Census data (1800)
 * `counties-1850.csv` county--level Census data (1850)
 * `county-maps.R` create maps of Georgia with 1807 county boundaries
-* `GA_AtlasHCB` Georgia county boundary files
 
 #Instructions
 * Clone a copy of the repository to your working directory with the command
