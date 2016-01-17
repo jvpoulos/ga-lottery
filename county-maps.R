@@ -56,7 +56,7 @@ Map <- ggplot(counties1807, aes(long, lat, group = group, fill = newcounty)) + g
   geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + 
   scale_colour_manual(values=c('black')) + theme(legend.position="none") 
 
-pdf(paste0(data.directory,"county-map.pdf"), width=11, height=8.5)
+pdf(paste0(data.directory,"county-map.pdf"), width=8.5, height=11)
 Map + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
 dev.off() 
 
@@ -72,6 +72,6 @@ Map.slave.pop.50 <- ggplot(county.50, aes(long, lat, group = group, fill = slave
                                                 panel.grid.major=element_blank()) +
   geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
 
-pdf(paste0(data.directory,"county-map-slave-pop-1850.pdf"), width=11, height=8.5)
+pdf(paste0(data.directory,"county-map-slave-pop-1850.pdf"), width=8.5, height=11)
 Map.slave.pop.50 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
 dev.off() 
