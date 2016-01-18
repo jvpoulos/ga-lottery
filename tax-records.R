@@ -37,7 +37,7 @@ ptax.hist <- ggplot(ptax, aes(x=value, fill=variable)) + # ptax
   theme(legend.justification = c(1, 1), legend.position = c(1, 1),legend.background = element_rect(colour = "black")) 
 
 # Combine plots
-pdf(paste0(data.directory,"assembly-wealth-plot.pdf"), width=11, height=8.5)
+pdf(paste0(data.directory,"assembly-wealth-plot.pdf"), width=8.5, height=11)
 grid.arrange(slaves.hist, acres.hist, ptax.hist,
              ncol=3, nrow=1, left="Density", bottom="Measure of wealth")
 dev.off() 

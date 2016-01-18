@@ -171,7 +171,8 @@ time.lapse.hist05 <- ggplot(time.lapse.plot05, aes(x=value, fill=county.drawn)) 
   geom_density(alpha=.3) +
   ylab("") + 
   xlab("") +
-  ggtitle("1805 lottery") +
+  ggtitle(paste("1805 lottery, N =", 
+                format(nrow(fdg05),big.mark=",",scientific=FALSE,trim=TRUE))) +
   xlim(c(0,1000)) +
   scale_fill_manual(values = c("red","yellow","green"), name="County drawn") +
   theme(legend.justification = c(1, 1), legend.position = c(1, 1),legend.background = element_rect(colour = "black"))
@@ -180,13 +181,14 @@ time.lapse.hist07 <- ggplot(time.lapse.plot07, aes(x=value, fill=county.drawn)) 
   geom_density(alpha=.3) +
   ylab("") + 
   xlab("") +
-  ggtitle("1807 lottery") +
+  ggtitle(paste("1807 lottery, N =", 
+                format(nrow(fdg07),big.mark=",",scientific=FALSE,trim=TRUE))) +
   xlim(c(0,3000)) +
   scale_fill_manual(values = c("red","green"), name="County drawn") +
   theme(legend.justification = c(1, 1), legend.position = c(1, 1),legend.background = element_rect(colour = "black"))
 
 # Combine plots
-pdf(paste0(data.directory,"time-lapse.pdf"), width=11, height=8.5)
+pdf(paste0(data.directory,"time-lapse.pdf"), width=8.5, height=11)
 print(grid.arrange(time.lapse.hist05, time.lapse.hist07,
                    ncol=2, nrow=1, left="Density", bottom="# of days since start of grant claiming")) 
 dev.off() 
