@@ -190,8 +190,7 @@ assembly.slave <- data.frame(x=rep(c("Q1","Q2","Q3","Q4","Q5"),3),
                                         rep("Person tax ($)",5))) 
 # Plot forest plot
 het.plot.assembly.slave <- DotPlotF(assembly.slave, 
-                                    title=paste("Slavery legislation, N =", 
-                                                format(length(fitSL.assembly.slave$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + 
+                                    title="") + 
   ylim(-.015, 0.015) + 
   xlab("Pretreatment measure of wealth (quintiles)") +
   ylab("Heterogeneous treatment effect")
@@ -240,7 +239,7 @@ oh.plot <- data.frame(x=c(covars.names[-c(3,4)],
 # Plot dot plot
 het.plot.oh <- DotPlot(oh.plot, 
                        title=paste("Officeholding, N =", 
-                                   format(length(fitSL.oh$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.05, .05)
+                                   format(length(fitSL.oh$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.01, .01)
 
 ## Heterogeneous treatment effects on slavery legislation
 
@@ -254,7 +253,7 @@ slave.plot <- data.frame(x=c(covars.names[-c(3,4)],
 # Plot forest plot
 het.plot.slave <- DotPlot(slave.plot, 
                           title=paste("Slavery legislation, N =", 
-                                      format(length(fitSL.assembly.slave$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.05, .05)
+                                      format(length(fitSL.assembly.slave$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE)))
 
 ## Heterogeneous treatment effects on number of terms held after lottery
 
