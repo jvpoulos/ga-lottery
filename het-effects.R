@@ -340,7 +340,7 @@ slaves.plot <- data.frame(x=c(covars.names[-c(3,4)],
 
 # Plot forest plot
 het.plot.slaves <- DotPlot(slaves.plot, 
-                           title=paste("# slaves held (1820), N =", 
+                           title=paste("# slaves held, N =", 
                                        format(length(fitSL.slaves$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.2, .2)
 
 ## Combine plots for other outcomes
