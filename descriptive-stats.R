@@ -173,7 +173,7 @@ time.lapse.hist05 <- ggplot(time.lapse.plot05, aes(x=value, fill=county.drawn)) 
   xlab("") +
   ggtitle(paste("1805 lottery, N =", 
                 format(nrow(fdg05),big.mark=",",scientific=FALSE,trim=TRUE))) +
-  xlim(c(0,1000)) +
+  xlim(c(0,3000)) +
   scale_fill_manual(values = c("red","yellow","green"), name="County drawn") +
   theme(legend.justification = c(1, 1), legend.position = c(1, 1),legend.background = element_rect(colour = "black"))
 

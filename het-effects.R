@@ -239,7 +239,7 @@ oh.plot <- data.frame(x=c(covars.names[-c(3,4)],
 # Plot dot plot
 het.plot.oh <- DotPlot(oh.plot, 
                        title=paste("Officeholding, N =", 
-                                   format(length(fitSL.oh$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.01, .01)
+                                   format(length(fitSL.oh$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.2, .2)
 
 ## Heterogeneous treatment effects on slavery legislation
 
@@ -253,7 +253,7 @@ slave.plot <- data.frame(x=c(covars.names[-c(3,4)],
 # Plot forest plot
 het.plot.slave <- DotPlot(slave.plot, 
                           title=paste("Slavery legislation, N =", 
-                                      format(length(fitSL.assembly.slave$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE)))
+                                      format(length(fitSL.assembly.slave$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + ylim(-.2, .2)
 
 ## Heterogeneous treatment effects on number of terms held after lottery
 
