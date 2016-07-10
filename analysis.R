@@ -37,6 +37,9 @@ data.directory <-"/home/ubuntu/ga-lottery/"
 # Load data
 load(paste0(data.directory,"lottery.RData"))
 
+# Run balance tests?
+patient.balance <- FALSE
+
 # Run randomization tests?
 patient.random <- TRUE
 
@@ -46,7 +49,6 @@ patient.het <- TRUE
 # Produce descriptive statistics and maps
 source(paste0(data.directory,"descriptive-stats.R"))
 source(paste0(data.directory,"county-maps.R"))
-source(paste0(data.directory,"tax-records.R"))
 
 ## Define functions for analyses
 
@@ -180,16 +182,15 @@ BootDiff<- function(y,treat,w,R=10000,beta.hat) {
 # Forest plot for summary figure
 ForestPlot <- function(d, xlab, ylab){
   p <- ggplot(d, aes(x=x, y=y, ymin=y.lo, ymax=y.hi,colour=Outcome)) + 
-    geom_pointrange(size=1, alpha=0.8) + 
+    geom_pointrange(size=1.5, alpha=0.9) + 
     coord_flip() +
-    geom_hline(aes(x=0), lty=2) +
+    geom_hline(data=data.frame(x=0, y = 1), aes(x=x, yintercept=0), colour="black", lty=2) +
     theme(legend.position="none") +
     facet_grid(Outcome~.) +
     ylab(xlab) +
     xlab(ylab) #switch because of the coord_flip() above
   return(p)
 }
-
 
 ## Prepare 1805 lottery data 
 
@@ -201,11 +202,14 @@ lot05$rgb[c(grep("RGB",lot05$grant.book.x),grep("RGB",lot05$grant.book.y))] <- 1
 beta.hat <- 1-(sum(lot05$rgb)/sum(lot05$treat))
 
 # Merge officeholder info with lottery data
-resp.dat <- merge(lot05[c("row.no","county","treat","treat2","prize","prize2","orphan","widow","rgb","n.draw","no.slaves.1820")],
-                  officeholders[c("row.no","prior.office","slave.index","match","oh","n.post.terms")],by="row.no", all.x=TRUE)
+resp.dat <- merge(lot05[c("row.no","county","treat","treat2","prize","prize2","orphan","widow","rgb","n.draw","no.slaves.1820","candidate","prior.run","match.votes","match.census")],
+                  officeholders[c("row.no","prior.office","slave.index","bank.index","oh","n.post.terms","match.oh")],by="row.no", all.x=TRUE)
 
 resp.dat$prior.office[is.na(resp.dat$prior.office)] <- 0 # make binary
 resp.dat$oh[is.na(resp.dat$oh)] <- 0
+
+resp.dat$prior.run[is.na(resp.dat$prior.run)] <- 0
+resp.dat$candidate[is.na(resp.dat$candidate)] <- 0
 
 # Count # of prizes
 prizes <- sum(resp.dat$treat) + sum(resp.dat$treat2)
@@ -221,6 +225,7 @@ resp.dat$weight <- (resp.dat$treat)/(resp.dat$p.score) + (1-resp.dat$treat)/(1-r
 
 # Create sample exclusions
 sub.oh <- resp.dat[(resp.dat$prior.office!=1) & (resp.dat$orphan!=1) & (resp.dat$widow!=1),] # exclude orphans, widows, pretreatment officeholders
+sub.candidate <- resp.dat[(resp.dat$prior.run!=1) & (resp.dat$prior.office!=1) & (resp.dat$orphan!=1) & (resp.dat$widow!=1),] # exclude orphans, widows, pretreatment candidates + officeholders
 sub.prior <- resp.dat[(resp.dat$prior.office==1),] # only pretreatment officeholders
 
 ## Run balance tests and plots
@@ -228,6 +233,7 @@ sub.prior <- resp.dat[(resp.dat$prior.office==1),] # only pretreatment officehol
 source(paste0(data.directory,"balance-tests.R"))
 source(paste0(data.directory,"balance-plot.R")) 
 source(paste0(data.directory,"qq-plot.R")) 
+source(paste0(data.directory,"tax-records.R"))
 
 ## Create table showing outcomes by treatment group & compliance status
 my.stats <- list("n", "min", "mean", "max", "s") 
@@ -237,7 +243,7 @@ print(tableContinuous(vars = resp.dat[c("no.slaves.1820")],
                       cumsum=FALSE,
                       stats=my.stats))
 
-print(tableContinuous(vars = sub.prior[c("n.post.terms","slave.index")], 
+print(tableContinuous(vars = sub.prior[c("n.post.terms","slave.index","bank.index")], 
                       group = sub.prior$treat + sub.prior$rgb, 
                       prec = 3,
                       cumsum=FALSE,
@@ -248,6 +254,26 @@ print(tableContinuous(vars = sub.oh[c("oh")],
                       prec = 3,
                       cumsum=FALSE,
                       stats=my.stats))
+
+print(tableContinuous(vars = sub.candidate[c("candidate")], 
+                      group = sub.candidate$treat + sub.candidate$rgb, 
+                      prec = 3,
+                      cumsum=FALSE,
+                      stats=my.stats))
+
+# Results for candidacy
+if(patient.random){
+  perm.candidate <- PermutationTest(y=sub.candidate$candidate,
+                                    treat=sub.candidate$treat,
+                                    w=sub.candidate$weight,
+                                    p.score=sub.candidate$p.score) 
+  print(perm.candidate$p)
+}
+
+candidate.CI <- BootDiff(y=sub.candidate$candidate,
+                         treat=sub.candidate$treat,
+                         w=sub.candidate$weight,
+                         beta.hat=beta.hat)
 
 ## ITT/TOT analyses for all outcomes
 
@@ -277,6 +303,20 @@ if(patient.random){
 slavery.CI <- BootDiff(y=sub.prior[!is.na(sub.prior$slave.index),]$slave.index,
                        treat=sub.prior[!is.na(sub.prior$slave.index),]$treat,
                        w=sub.prior[!is.na(sub.prior$slave.index),]$weight,
+                       beta.hat=beta.hat)
+
+# Permutation results of banking legislation
+if(patient.random){
+  perm.bank <- PermutationTest(y=sub.prior[!is.na(sub.prior$bank.index),]$bank.index,
+                                  treat=sub.prior[!is.na(sub.prior$bank.index),]$treat,
+                                  w=sub.prior[!is.na(sub.prior$bank.index),]$weight,
+                                  p.score=sub.prior[!is.na(sub.prior$bank.index),]$p.score)
+  print(perm.bank$p)
+}
+
+bank.CI <- BootDiff(y=sub.prior[!is.na(sub.prior$bank.index),]$bank.index,
+                       treat=sub.prior[!is.na(sub.prior$bank.index),]$treat,
+                       w=sub.prior[!is.na(sub.prior$bank.index),]$weight,
                        beta.hat=beta.hat)
 
 # Permutation results for term 
@@ -311,15 +351,21 @@ slaves.CI <- BootDiff(y=resp.dat[!is.na(resp.dat$no.slaves.1820),]$no.slaves.182
 
 # Create data for plot
 plot.data <- data.frame(x = c("ITT","TOT"),
-                        y = c(oh.CI[1],oh.CI[2],
+                        y = c(candidate.CI[1],candidate.CI[2],
+                              oh.CI[1],oh.CI[2],
+                              bank.CI[1],bank.CI[2],
                               slavery.CI[1],slavery.CI[2],
                               term.CI[1],term.CI[2],
                               slaves.CI[1],slaves.CI[2]),
-                        y.lo = c(oh.CI[3],oh.CI[4],slavery.CI[3],slavery.CI[4],term.CI[3],term.CI[4],slaves.CI[3],slaves.CI[4]),
-                        y.hi = c(oh.CI[5],oh.CI[6],slavery.CI[5],slavery.CI[6],term.CI[5],term.CI[6],slaves.CI[5],slaves.CI[6]))
+                        y.lo = c(candidate.CI[3],candidate.CI[4],oh.CI[3],oh.CI[4],bank.CI[3],bank.CI[4],slavery.CI[3],slavery.CI[4],term.CI[3],term.CI[4],slaves.CI[3],slaves.CI[4]),
+                        y.hi = c(candidate.CI[5],candidate.CI[6],oh.CI[5],oh.CI[6],bank.CI[5],bank.CI[6],slavery.CI[5],slavery.CI[6],term.CI[5],term.CI[6],slaves.CI[5],slaves.CI[6]))
 plot.data <- transform(plot.data, y.lo = y.lo, y.hi=y.hi)
-plot.data$Outcome <- c(rep(paste("Officeholding, N =", 
+plot.data$Outcome <- c(rep(paste("Candidacy, N =", 
+                                 format(nrow(sub.candidate),big.mark=",",scientific=FALSE,trim=TRUE)),2),
+                       rep(paste("Officeholding, N =", 
                                  format(nrow(sub.oh),big.mark=",",scientific=FALSE,trim=TRUE)),2),
+                       rep(paste("State banking policy, N =", 
+                                 format(nrow(sub.prior[!is.na(sub.prior$bank.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
                        rep(paste("Slavery legislation, N =", 
                                  format(nrow(sub.prior[!is.na(sub.prior$slave.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
                        rep(paste("# terms after lottery, N=", 
@@ -329,7 +375,7 @@ plot.data$Outcome <- c(rep(paste("Officeholding, N =",
 
 # Plot forest plot
 plot.data$x <- factor(plot.data$x, levels=rev(plot.data$x)) # reverse order
-summary.plot <- ForestPlot(plot.data,xlab="Treatment effect",ylab="Analysis") + ylim(c(-1,1))
+summary.plot <- ForestPlot(plot.data,xlab="Treatment effect",ylab="Analysis")
 
 ggsave(paste0(data.directory,"summary-plot.pdf"), summary.plot, width=8.5, height=11)
 
