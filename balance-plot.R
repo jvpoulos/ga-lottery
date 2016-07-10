@@ -1,5 +1,5 @@
 # Create function for plot theme
-ThemeBw1 <- function(base_size = 11, base_family = "") {
+ThemeBw1 <- function(base_size = 12, base_family = "") {
   theme_grey(base_size = base_size, base_family = base_family) %+replace%
     theme(
       axis.text.x =       element_text(size = base_size*.9, colour = "black",  hjust = .5 , vjust=1),
@@ -50,10 +50,10 @@ if(patient.balance){
   # Create plot 
   
   p <- ggplot(covars,aes(y=p,x=covars,colour=group)) +  
-    coord_flip(ylim = c(0, 1)) + 
-    geom_hline(yintercept = 0.05,size=.5,colour="blue",linetype="dotted") +
-    geom_point() + 
-    scale_y_continuous(name="Randomization p value",breaks=c(0,0.05,0.10,1),labels=c("0","0.05","0.10","1")) + 
+    coord_flip(ylim = c(0.03, 0.97)) + 
+    geom_hline(data=data.frame(x=0, y = 1), aes(x=x, yintercept=0.05), colour="black", lty=2) +
+    geom_point(size=4, alpha=0.9) + 
+    scale_y_continuous(name="p-value",breaks=c(0,0.05,0.10,1),labels=c("0","0.05","0.10","1")) + 
     scale_x_discrete(name="") + 
     ThemeBw1()
   
