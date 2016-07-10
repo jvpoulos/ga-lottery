@@ -13,7 +13,7 @@ ThemeBw1 <- function(base_size = 11, base_family = "") {
 # Create balance plot data
 covars.names <- c("Junior","Senior","Surname frequency","Surname length","Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
 
-if(patient.random){ 
+if(patient.balance){ 
   balance.tests <- read.table(paste0(data.directory,"balance-tests.txt"), quote="\"", comment.char="") # upload balance test p values
   
   covars <- data.frame("covars"=covars.names,
