@@ -1,6 +1,6 @@
-Codebook for “Wealth, Officeholding, and Elite Demand for Slavery in Antebellum Georgia”
+Codebook for “Wealth, Officeholding, and Legislative Ideology”
 
-There are four datasets in ‘lottery.RData’. ‘pet’ is the complete participant record for the 1805 lottery. ‘fdg05' and ‘fdg07’ are the fortunate drawer and grantee records for the 1805 and 1807 lotteries, respectively. ‘lot05’ merges ‘fdg05’, ‘petd’, and officeholder records. ‘officeholders’ contains outcome variables for legislator-participants. 
+There are four datasets in ‘ga-lottery.RData’. ‘pet’ is the complete participant record for the 1805 lottery. ‘fdg05' and ‘fdg07’ are the fortunate drawer and grantee records for the 1805 and 1807 lotteries, respectively. ‘lot05’ merges ‘fdg05’, ‘petd’, and officeholder records. ‘officeholders’ contains outcome variables for legislator-participants. 
 
 ——————————
 
@@ -28,25 +28,23 @@ n.draw		Number of registered draws in the lottery.
 draw		Draw result recorded by the lottery managers. “B” represents a blank draw and “P” represents a prize draw. 
 		[Source: participant records]
 
-lot		Number of land lot won by fortunate drawers.		
+lot[x,y]	Number of land lot won by fortunate drawers.		
 		[Source: participant records]
 
-fortunate.drawer[.x,.y]		The name of the person who won the lot in the land lottery.		
+fortunate.drawer[x,y]		The name of the person who won the lot in the land lottery.		
+				[Source: participant records]
+
+grantee[x,y]	The name of the person who received a grant to the land lot.		
 		[Source: participant records]
 
-female.fd	“1” if fortunate drawer has a female first name, “0” otherwise.		
-		[Source: author/participant records]
+grant.date[x,y]			Date recorded on the land grant issued by Georgia.		
+				[Source: participant records]
 
-grantee[.x,.y]		The name of the person who received a grant to the land lot.		
+grant.book[x,y]			Grant book and page reference for the recorded grant.		
+				[Source: participant records]
+
+prize		Prize record includes county, district, and number of land lot won by fortunate drawers.		
 		[Source: participant records]
-
-grant.date[.x,.y]	Date recorded on the land grant issued by Georgia.		
-		[Source: participant records]
-
-grant.book[.x,.y]	Grant book and page reference for the recorded grant.		
-		[Source: participant records]
-
-prize		Prize record includes county, district, and number of land lot won by fortunate drawers.		[Source: participant records]
 
 prize2		Second prize record for fortunate drawers who drew two prizes. 
 		[Source: participant 	records]
@@ -69,16 +67,16 @@ surname		Participant’s surname.
 first.name	Participant’s first name.
 		[Source: participant records/author]
 
-surname.freq		Frequency of participant’s surname in the participant records.
+surname.freq	Frequency of participant’s surname in the participant records.
 		[Source: participant records/author]
 
-surname.length		Character length of participant’s surname.  
+surname.length	Character length of participant’s surname.  
 		[Source: participant records/author]
 
-sound.first		Soundex code of participant’s first name.  
+sound.first	Soundex code of participant’s first name.  
 		[Source: participant records/author]
 
-blacksmith		“1” if participant listed as a blacksmith, “0” otherwise.  
+blacksmith	“1” if participant listed as a blacksmith, “0” otherwise.  
 		[Source: participant records/author]
 
 captain		“1” if participant listed with military rank of Captain, “0” otherwise.  
@@ -87,55 +85,58 @@ captain		“1” if participant listed with military rank of Captain, “0” ot
 colonel		“1” if participant listed with military rank of Colonel, “0” otherwise.  
 		[Source: participant records/author]
 
-bricklayer		“1” if participant listed as a bricklayer, “0” otherwise.  
+bricklayer	“1” if participant listed as a bricklayer, “0” otherwise.  
 		[Source: participant records/author]
 
 general		“1” if participant listed with military rank of General, “0” otherwise.  
 		[Source: participant records/author]
 
 hatter		“1” if participant listed as a hatter, “0” otherwise.
-			[Source: participant records/author]
+		[Source: participant records/author]
 
 esquire
-(“Lawyer”)		“1” if participant listed as a lawyer, “0” otherwise. 
-			[Source: participant records/author]
+(“Lawyer”)	“1” if participant listed as a lawyer, “0” otherwise. 
+		[Source: participant records/author]
 
-merchant		“1” if participant listed as a merchant, “0” otherwise.
-			[Source: participant records/author]
+merchant	“1” if participant listed as a merchant, “0” otherwise.
+		[Source: participant records/author]
 
-military		“1” if participant listed with military rank (i.e., Captain, Colonel, General, or Major), “0” otherwise.  
-			[Source: participant records/author]
+military	“1” if participant listed with military rank (i.e., Captain, Colonel, General, or Major), “0” otherwise.  
+		[Source: participant records/author]
 
 major		“1” if participant listed with military rank of Major, “0” otherwise.  
 		[Source: participant records/author]
 
 doctor
-(“Physician”)		“1” if participant listed as a physician, “0” otherwise. 
-			[Source: participant records/author]
+(“Physician”)	“1” if participant listed as a physician, “0” otherwise. 
+		[Source: participant records/author]
 
-reverend		“1” if participant listed as a reverend, “0” otherwise. 
-			[Source: participant records/author]
+reverend	“1” if participant listed as a reverend, “0” otherwise. 
+		[Source: participant records/author]
 
 schoolmaster
-(“Teacher”)		“1” if participant listed as a teacher, “0” otherwise. 
-			[Source: participant records/author]
+(“Teacher”)	“1” if participant listed as a teacher, “0” otherwise. 
+		[Source: participant records/author]
 
-oh		“1” if participant held office during study period, “0” otherwise.		
-			[Source: officeholder records/author]
+oh		“1” if participant held office between 1806-1847 (inclusive), “0” otherwise.		
+		[Source: officeholder records/author]
 
 prior.office
-(“Pretreatment officeholder”)		“1” if participant held office prior to 1806, “0” otherwise.					[Source: officeholder records/author]
+(“Pretreatment officeholder”)		“1” if participant held office prior to 1806, “0” otherwise.										[Source: officeholder records/author]
 
-name[.1-.4]		Name of matched officeholder.  
+name.1			Name of matched officeholder.  
 			[Source: officeholder records/author]
 
-office[.1-.4]		Office of matched officeholder.  
+office			Office of matched officeholder.  
 			[Source: officeholder records/author]
 
-const[.1-.4]		Constituency of matched officeholder.  
+const			Constituency of matched officeholder.  
 			[Source: officeholder records/author]
 
-match		Probability of correct match between officeholder and participant.  
+match.oh		Probability of correct match between officeholder and participant.  
+			[Source: author] 
+
+match.census		Probability of correct match between 1820 Census entry and participant.  
 			[Source: author] 
 
 first.name.census  	First name. 
@@ -158,3 +159,12 @@ bank.index		Mean of votes in favor of state banking policy.
 
 n.post.terms		Number of terms held by officeholder after 1805 lottery.
 			[Source: officeholder records]	
+
+match.votes		Probability of correct match between candidate and participant.  
+			[Source: author] 
+
+prior.run
+(“Pretreatment candidate”)		“1” if participant ran for office prior to 1805, “0” otherwise.									[Source: candidate records/author]
+
+candidate	“1” if participant was a candidate for office between 1805-1847 (inclusive), “0” otherwise.		
+		[Source: candidate records/author]
