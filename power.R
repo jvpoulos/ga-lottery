@@ -37,14 +37,14 @@ s.size <- c(21750) # sample size
 # Create grid for parameters
 grid.bin <- expand.grid("r.prob"=r.prob, "s.size"=s.size)
 
-SimR <- function(r.prob,s.size,y,treat,w,p.score,L=1000){
+SimR <- function(r.prob,s.size,y,treat,w,p.score,L=100){
   #   r.prob: Effect size (integer).
   #   s.size: Sample size (integer).
   #   y: Vector of non-missing responses.
   #   treat: Vector of non-missing treatment assignments (0/1). Must be equal in length to y and the sum must be nonzero. 
   #   w: Vector of non-missing weights. Must be equal in length to y. 
   #   p.score: Vector of non-missing propensity scores. Must be equal in length to y. 
-  #   L: Number of iterations for the permutation. Default is L=1000.
+  #   L: Number of iterations for the permutation. Default is L=100.
   
   # Simulate data
   design <-data.frame("treat"=sample(treat, s.size, replace=FALSE, prob=p.score),
