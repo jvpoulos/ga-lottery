@@ -35,7 +35,7 @@ assembly.impute.bank <- rfImpute(x=cbind(common.features[rownames(sub.prior),][!
                                           sub.prior[!is.na(sub.prior$bank.index),][wealth.features]),
                                   y=sub.prior[!is.na(sub.prior$bank.index),]$bank.index)[-1] # remove response 
 
-banks.pre.bank <- DummiesQCut(assembly.impute.bank$banks.pre)
+slaves.pre.bank <- DummiesQCut(assembly.impute.bank$slaves.pre)
 acres.pre.bank <- DummiesQCut(assembly.impute.bank$acres.pre)
 ptax.pre.bank <- DummiesQCut(assembly.impute.bank$ptax.pre)
 
@@ -48,7 +48,7 @@ x07.assembly.slave <- data.frame(common.features[rownames(sub.prior),][!is.na(su
 y07.assembly.slave <- as.matrix(sub.prior[!is.na(sub.prior$slave.index),]$slave.index)
 
 x07.assembly.bank <- data.frame(common.features[rownames(sub.prior),][!is.na(sub.prior$bank.index),],
-                                 "banks.pre.bank" = banks.pre.bank,
+                                 "slaves.pre.bank" = slaves.pre.bank,
                                  "acres.pre.bank" = acres.pre.bank,
                                  "ptax.pre.bank"= ptax.pre.bank)
 

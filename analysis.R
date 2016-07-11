@@ -32,10 +32,10 @@ registerDoParallel(cores) # register cores
 RNGkind("L'Ecuyer-CMRG") # ensure random number generation
 
 # Set data directory 
-data.directory <-"/home/ubuntu/ga-lottery/"
+data.directory <-"/home/ubuntu/github/ga-lottery/"
 
 # Load data
-load(paste0(data.directory,"lottery.RData"))
+load(paste0(data.directory,"ga-lottery.RData"))
 
 # Run balance tests?
 patient.balance <- FALSE
