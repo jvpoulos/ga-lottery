@@ -46,6 +46,7 @@ cnames$lat[cnames$group=="Camden"] <- 31 # move up Camden
 cnames$lat[cnames$group=="Bryan"] <- 32.01 # move up Bryan
 cnames$long[cnames$group=="Chatham"] <- -81.2 # move left Chatham
 
+if(patient.descriptive){ 
 # Produce counties map with 1807 boundaries
 Map <- ggplot(counties1807, aes(long, lat, group = group, fill = newcounty)) + geom_polygon() + 
   coord_equal()  + scale_fill_gradient(low = "white", high = "gray") + 
@@ -59,10 +60,11 @@ Map <- ggplot(counties1807, aes(long, lat, group = group, fill = newcounty)) + g
 pdf(paste0(data.directory,"county-map.pdf"), width=8.5, height=11)
 Map + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
 dev.off() 
-
+}
 #merge 1850 census data 
 county.50 <- merge(counties1807,counties, by.x="id", by.y = "name",all.x=TRUE) # only counties in 1807
 
+if(patient.descriptive){ 
 # Produce slavery population map with 1807 boundaries
 Map.slave.pop.50 <- ggplot(county.50, aes(long, lat, group = group, fill = slave.poppc)) + geom_polygon() + 
   coord_equal()  + scale_fill_gradient(low = "white", high = "gray") + labs(fill="Slave pop. (% in 1850)") + 
@@ -75,3 +77,4 @@ Map.slave.pop.50 <- ggplot(county.50, aes(long, lat, group = group, fill = slave
 pdf(paste0(data.directory,"county-map-slave-pop-1850.pdf"), width=8.5, height=11)
 Map.slave.pop.50 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
 dev.off() 
+}

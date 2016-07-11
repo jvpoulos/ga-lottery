@@ -3,6 +3,7 @@
 # Use the 1850 complete--count Census. Restrict sample to male heads of households aged 21 and over who were born in GA and have non--missing surnames and property value. 
 # Historical CPI found here: http://www.measuringworth.com/datasets/uscpi/.
 
+
 # Import Census data
 ipums <- read.csv(paste0(data.directory,"ipums-ga-1850.csv"),header=TRUE, sep = ",")
 
@@ -41,7 +42,9 @@ ipums <- cbind(ipums,dummify(as.factor(ipums$OCC)))
 ipums$AGE[ipums$AGE==999] <-NA # clean vars
 
 my.stats <- list("n", "min", "mean", "max", "s") # create table
+if(patient.descriptive){ 
 tableContinuous(vars =ipums[c("surname.length","surname.freq","AGE","REALPROP","literate","school","5","22","39","41","49","54","97","136","157","203","266")], prec = 3,stats=my.stats,cap = "`Surname length' is the character length of surnames. `Surname frequency' is the number of times surnames appear in the sample. `Literate' is a binary variable indicating literacy (can read and write). `In school' is an indicator variable for individuals currently in school. Sample is drawn from the 1850 full--count Census. The occupations dummies indicate contemporary occupational categories. Sample is restricted to male heads of households aged 21 and over who living in Georgia at the time of the census, were born in Georgia, and have non--missing surnames and property value.", lab = "sum-1850")
+}
 
 # Calc property wealth deciles
 wealth.dec <- subset(ipums, select=c("SERIAL","REALPROP")) %>%
@@ -67,11 +70,13 @@ counties.00$name <- properCase(as.character(counties.00$name))
 counties.00$slave.poppc <- counties.00$stot/counties.00$totpop
 
 # Create table 
+if(patient.descriptive){ 
 print(xtable(counties.00[c("name","wm1625", "wm2644", "wm45","wmtot","wftot","slave.poppc")],digits= 3,caption = "Summary statistics on selected county--level characteristics in the 1800 Census. `Slave pop.' is the slave population over the total population.", lab = "sum-counties-00"),
       include.rownames = FALSE,
       booktabs = TRUE,
       tabular.environment = "longtable",
       floating=FALSE)
+}
 
 # Approx pc. eligible white males
 (nrow(petd[petd$orphan!=1 & petd$widow!=1,])/(counties.00$wm1625[counties.00$county==0] + counties.00$wm2644[counties.00$county==0] + counties.00$wm45[counties.00$county==0]))*100
@@ -123,12 +128,14 @@ counties$slave.deathpc <- counties$sdeath/counties$deaths # slave deaths / total
 # Keep counties that existed in 1805 + 3 new counties + Georgia
 counties1805 <- subset(counties, name=="Baldwin" | name== "Bryan"| name=="Bulloch"| name=="Burke"| name=="Camden"| name=="Chatham"| name=="Clarke"| name=="Columbia"| name=="Effingham"| name=="Elbert"| name=="Franklin"| name=="Glynn"| name=="Greene"| name=="Hancock"| name=="Jackson"| name=="Jefferson"| name=="Liberty"| name=="Lincoln"| name=="McIntosh"| name=="Montgomery"| name=="Oglethorpe"| name=="Richmond"| name=="Screven"| name=="Tattnall"| name=="Warren"| name=="Washington"| name=="Wayne" | name=="Wilkes" | name=="Wilkinson" | name=="Georgia")
 
+if(patient.descriptive){ 
 # Make table
 print(xtable(counties1805[c("name","logfarmval","logequipval","logfarms","logavgfarm","logtotalfarmacres","avgacre","wtot","slave.poppc")],digits= 3,caption = "Summary statistics on selected county--level characteristics for counties existing in 1805 from the 1850 Census. `Log total farm acres' is the log of the sum of improved and unimproved acres of land in farms. `Log average farm value' is the log of the difference between farm value and equipment value, over the total number of farms. `Per acre farm value' is the difference between farm value and equipment value, over the sum of improved and unimproved acres of farm land. All dollar values are current (1850$). `Slave pop.' is the slave population over the total population.", lab = "sum-counties"),
       include.rownames = FALSE,
       booktabs = TRUE,
       tabular.environment = "longtable",
       floating=FALSE)
+}
 
 ## Plot densities of time lag in filing grants by lottery year and county in which land is drawn
 
@@ -166,6 +173,7 @@ time.lapse.plot05 <- melt(data=fdg05[fdg05$rgb!=1,][c("time.lapse","county.drawn
 time.lapse.plot07 <- melt(data=fdg07[fdg07$rgb!=1,][c("time.lapse","county.drawn")], # exclude reverted lots
                           id.vars="county.drawn") 
 
+if(patient.descriptive){ 
 # Plot the overlaid density of time lapse by county drawn for each lottery
 time.lapse.hist05 <- ggplot(time.lapse.plot05, aes(x=value, fill=county.drawn)) + 
   geom_density(alpha=.3) +
@@ -192,3 +200,4 @@ pdf(paste0(data.directory,"time-lapse.pdf"), width=8.5, height=11)
 print(grid.arrange(time.lapse.hist05, time.lapse.hist07,
                    ncol=2, nrow=1, left="Density", bottom="# of days since start of grant claiming")) 
 dev.off() 
+}
