@@ -58,7 +58,7 @@ y07.assembly.bank <- as.matrix(sub.prior[!is.na(sub.prior$bank.index),]$bank.ind
 set.seed(42)
 fitSL.assembly.slave <- SuperLearner(Y=y07.assembly.slave[,1],
                                      X=x07.assembly.slave,
-                                     SL.library=SL.library.reg[-4],
+                                     SL.library=SL.library.reg[c(1:3,5,11:14)],
                                      family=gaussian()) # gaussian for continuous response
 
 print(fitSL.assembly.slave) # summarize
@@ -103,6 +103,7 @@ tau.assembly.slave <- lapply(assembly.covs.slave,
 
 tau.assembly.bank <- lapply(assembly.covs.bank, 
                              function(x) BootDiffHet(tau.i=assembly.pred.bank$tau.i, g=assembly.pred.bank[x]))
+
 # Create data for heterogenous wealth plot
 assembly.slave <- data.frame(x=rep(c("Q1","Q2","Q3","Q4","Q5"),3),
                              y = tail(sapply(tau.assembly.slave, "[[", 1), 15),   # plot just wealth quintiles
@@ -126,8 +127,8 @@ het.plot.assembly.slave <- DotPlotF(assembly.slave,
                                                 format(nrow(assembly.pred.slave),big.mark=",",scientific=FALSE,trim=TRUE)))
 
 het.plot.assembly.bank <- DotPlotF(assembly.bank, 
-                                    title=paste("State banking policy, N =", 
-                                                format(nrow(assembly.pred.bank),big.mark=",",scientific=FALSE,trim=TRUE))) 
+                                    title=paste("Banking legislation, N =", 
+                                                format(nrow(assembly.pred.bank),big.mark=",",scientific=FALSE,trim=TRUE)))
 
 pdf(paste0(data.directory,"het-wealth-plots.pdf"), width=8.5, height=11)
 grid.arrange(het.plot.assembly.slave,
@@ -144,7 +145,7 @@ y05.candidate <- as.matrix(sub.candidate$candidate)
 # Run model
 set.seed(42) 
 fitSL.candidate <- SuperLearner(Y=y05.candidate[,1],X=x05.candidate,
-                         SL.library=SL.library.class,
+                         SL.library=SL.library.class[c(1,8:11)],
                          family="binomial") # glmnet response is 2-level factor 
 
 # Print summary table
@@ -188,7 +189,7 @@ y05.oh <- as.matrix(sub.oh$oh)
 # Run model
 set.seed(42) 
 fitSL.oh <- SuperLearner(Y=y05.oh[,1],X=x05.oh,
-                         SL.library=SL.library.class,
+                         SL.library=SL.library.class[c(1,8:11)],
                          family="binomial") # glmnet response is 2-level factor 
 
 # Print summary table
@@ -223,8 +224,6 @@ het.plot.oh <- DotPlot(oh.plot,
                        title=paste("Officeholding, N =", 
                                    format(length(fitSL.oh$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE)))
 
-ggsave(paste0(data.directory,"het-plot-oh-pdf"), het.plot.oh, width=8.5, height=11) 
-
 ## Heterogeneous treatment effects on slavery legislation
 
 # Create data for plot
@@ -250,7 +249,7 @@ bank.plot <- data.frame(x=c(covars.names[-c(3,4)],
 
 # Plot forest plot
 het.plot.bank <- DotPlot(bank.plot, 
-                          title=paste("State banking policy, N =", 
+                          title=paste("Banking legislation, N =", 
                                       format(length(fitSL.assembly.bank$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) 
 
 ## Heterogeneous treatment effects on number of terms held after lottery
@@ -262,7 +261,7 @@ y05.term <- as.matrix(sub.prior$n.post.terms)
 # Run model
 set.seed(42)
 fitSL.term <- SuperLearner(Y=y05.term[,1],X=x05.term,
-                           SL.library=SL.library.reg,
+                           SL.library=SL.library.reg[c(1:3,5,11:14)],
                            family=gaussian()) # gaussian for continuous resp
 
 # Print summary table
@@ -294,7 +293,7 @@ term.plot <- data.frame(x = c(covars.names[-c(3,4)],
 
 # Plot forest plot
 het.plot.term <- DotPlot(term.plot, 
-                         title=paste("# terms after lottery, N =", 
+                         title=paste("# terms, N =", 
                                      format(length(fitSL.term$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) 
 
 ## Heterogeneous treatment effects on number of slaves held (1820)
@@ -306,7 +305,7 @@ y05.slaves <- as.matrix(resp.dat[!is.na(resp.dat$no.slaves.1820),]$no.slaves.182
 # Run model
 set.seed(42)
 fitSL.slaves <- SuperLearner(Y=y05.slaves[,1],X=x05.slaves,
-                             SL.library=SL.library.reg,
+                             SL.library=SL.library.reg[c(1:3,5,11:14)],
                              family=gaussian()) # gaussian for continuous resp
 
 # Print summary table
@@ -338,15 +337,24 @@ slaves.plot <- data.frame(x=c(covars.names[-c(3,4)],
 
 # Plot forest plot
 het.plot.slaves <- DotPlot(slaves.plot, 
-                           title=paste("# slaves held, N =", 
+                           title=paste("# slaves, N =", 
                                        format(length(fitSL.slaves$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) 
+
+## Save OH plot
+
+ggsave(paste0(data.directory,"het-plot-oh.pdf"), het.plot.oh, width=8.5, height=11) 
+
+## Combine plots for legislative outcomes
+pdf(paste0(data.directory,"het-assembly-plots.pdf"), width=8.5, height=11)
+grid.arrange( het.plot.bank,
+              het.plot.slave,
+             ncol=2, nrow=1, left="Pretreatment measure of wealth (quintiles)", bottom="Heterogeneous treatment effect")
+dev.off() 
 
 ## Combine plots for other outcomes
 pdf(paste0(data.directory,"het-plots.pdf"), width=11, height=16)
 grid.arrange(het.plot.slaves,
              het.plot.term, 
              het.plot.candidate,
-             het.plot.slave,
-             het.plot.bank,
              ncol=2, nrow=3, left="Pretreatment covariate", bottom="Heterogeneous treatment effect")
 dev.off() 

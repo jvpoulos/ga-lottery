@@ -177,6 +177,7 @@ BootDiffHet <- function(tau.i,g) {
 
 # Faceted dot plot (pretreatment wealth as features)
 DotPlotF <- function(plot.df,title){
+  options(scipen=999)
   p <- ggplot(plot.df, aes(x=x,y=y,ymin=y.lo, ymax=y.hi,colour=Measure,group=Measure)) + 
     coord_flip() +
     geom_pointrange(size=1.5, alpha=0.9) +
