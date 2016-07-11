@@ -25,7 +25,7 @@ require(parallel)
 require(doParallel)
 
 # Setup parallel processing 
-cores <- 8 # specify number of cores to use
+cores <- detectCores() # specify number of cores to use
 
 registerDoParallel(cores) # register cores
 
@@ -50,147 +50,8 @@ patient.het <- TRUE
 source(paste0(data.directory,"descriptive-stats.R"))
 source(paste0(data.directory,"county-maps.R"))
 
-## Define functions for analyses
-
-EstAte <- function(y,treat,w,beta.hat=NULL){ 
-  # Calculate weighted difference-in-means.
-  #
-  # Args:
-  #   y: Response vector.
-  #   treat: Treatment assignment vector.
-  #   w: Vector of weights. 
-  #   beta.hat: The fraction of compliers in the experimental population. Default is NULL (ITT).
-  #
-  # Returns:
-  #   ITT weighted difference-in-means or TOT weighted difference-in-means if beta.hat supplied.
-  if(is.null(beta.hat)){ 
-    return(weighted.mean(y[treat==1],w[treat==1]) - weighted.mean(y[treat==0],w[treat==0]))  
-  } else{ 
-    return((weighted.mean(y[treat==1],w[treat==1]) - weighted.mean(y[treat==0],w[treat==0]))/beta.hat) 
-  }
-} 
-
-PermutationTest<-function(y,treat,w,p.score,L=10000,alternative="two.sided",allow.parallel=TRUE,workers=cores){
-  # Calculate randomization p value for ITT weighted difference-in-means.
-  #
-  # Args:
-  #   y: Vector of non-missing responses.
-  #   treat: Vector of non-missing treatment assignments (0/1). Must be equal in length to y and the sum must be nonzero. 
-  #   w: Vector of non-missing weights. Must be equal in length to y. 
-  #   p.score: Vector of non-missing propensity scores. Must be equal in length to y. 
-  #   L: Number of iterations for the permutation. Default is L=10000. 
-  #   alternative: Character string specifying alternative hypothesis. Must be one of "two.sided" (default), "greater" or "less". 
-  #   allow.parallel: Character string specifying whether to use parallel backend. Default is TRUE.
-  #   workers: Number of workers used for parallel execution. Default is set to number of cores.
-  #
-  # Returns:
-  #   Randomization p value. 
-  # Error handling
-  if (sum(is.na(y))>0){
-    stop("y contains missing values.")
-  }
-  if (sum(is.na(treat))>0 | length(treat)!=length(y)){
-    stop("treat must be equal in length to y and contain non-missing values.")
-  }
-  if (sum(treat)==0){
-    stop("Treatment group is empty.")
-  }
-  if (sum(treat)==length(treat)){
-    warning("Control group is empty.")
-  }
-  if (sum(is.na(w))>0 | length(w)!=length(y)){
-    stop("w must be equal in length to y and contain non-missing values.")
-  }
-  if (sum(is.na(p.score))>0 | length(p.score)!=length(y)){
-    stop("p.score must be equal in length to y and contain non-missing values.")
-  }
-  # Apply permutation test L times
-  if(allow.parallel){
-    new.t.stats <- mclapply(1:L, function(i){
-      # Create permutation assignment vector 
-      treat.perm <-sample(c(rep(1,sum(treat)), rep(0,length(treat) - sum(treat))), 
-                          length(treat),
-                          prob=w, 
-                          replace=FALSE) 
-      # Create permutation weight vector
-      w.perm <- (treat.perm)/(p.score) + (1-treat.perm)/(1-p.score)
-      # Calculate permutation test statistic
-      return(EstAte(y,treat.perm,w.perm))
-    }, 
-    mc.set.seed=FALSE,
-    mc.cores=workers)
-  }
-  else{
-    new.t.stats <- lapply(1:L, function(i){
-      # Create permutation assignment vector 
-      treat.perm <-sample(c(rep(1,sum(treat)), rep(0,length(treat) - sum(treat))), 
-                          length(treat),
-                          prob=w, 
-                          replace=FALSE) 
-      # Create permutation weight vector
-      w.perm <- (treat.perm)/(p.score) + (1-treat.perm)/(1-p.score)
-      # Calculate permutation test statistic
-      return(EstAte(y,treat.perm,w.perm))
-    })
-  }
-  new.t.stats <- unlist(new.t.stats)
-  # Calculate p value
-  if (alternative=="two.sided"){
-    pvalue <- sum(abs(new.t.stats) >= abs(EstAte(y,treat,w)))/L 
-  }
-  if (alternative=="greater"){
-    pvalue <- sum(new.t.stats > EstAte(y,treat,w))/L
-  }
-  if (alternative=="less"){
-    pvalue <- sum(new.t.stats < EstAte(y,treat,w))/L
-  }
-  # Return p-value and permutation vectors
-  return(list("p" = pvalue, "perm.t.stats" = new.t.stats))
-}
-
-BootDiff<- function(y,treat,w,R=10000,beta.hat) {
-  # Function to compute 95% confidence interval for the weighted difference in two means.
-  #
-  # Args:
-  #   y: Response vector.
-  #   treat: Treatment vector
-  #   w: Vector of weights.
-  #   R: The number of bootstrap replicates. The default is 1,000. 
-  #   beta.hat: The fraction of compliers in the experimental population.
-  #
-  # Returns:
-  #   Vector containing weighted difference-in-means, and 95% nonparametric CI.
-  treat <- as.factor(treat) 
-  # Bootstrap weighted means for response y for each treatment group 
-  itt.diff <- bootstrap(y, EstAte,R=R, args.stat=list(treat,w[treat])) #ITT
-  tot.diff <- bootstrap(y, EstAte,R=R, args.stat=list(treat,w[treat],beta.hat)) #TOT
-  # Calculate percentiles of the differences in bootstrapped means
-  itt.per <- CI.percentile(itt.diff, probs = c(0.025, 0.975))
-  tot.per <- CI.percentile(tot.diff, probs = c(0.025, 0.975))
-  # Calculate observed differences in means
-  meandif.itt <- EstAte(y,treat,w) 
-  meandif.tot <- EstAte(y,treat,w,beta.hat)
-  # Make table for estimates
-  res.itt <- c(meandif.itt, itt.per) 
-  res.tot <- c(meandif.tot, tot.per)
-  res <- rbind(res.itt,res.tot) 
-  colnames(res) <- c('Mean Difference','.025','.975') 
-  rownames(res) <- c('ITT','TOT') 
-  return(res)
-}
-
-# Forest plot for summary figure
-ForestPlot <- function(d, xlab, ylab){
-  p <- ggplot(d, aes(x=x, y=y, ymin=y.lo, ymax=y.hi,colour=Outcome)) + 
-    geom_pointrange(size=1.5, alpha=0.9) + 
-    coord_flip() +
-    geom_hline(data=data.frame(x=0, y = 1), aes(x=x, yintercept=0), colour="black", lty=2) +
-    theme(legend.position="none") +
-    facet_grid(Outcome~.) +
-    ylab(xlab) +
-    xlab(ylab) #switch because of the coord_flip() above
-  return(p)
-}
+# Define functions for analyses and plots
+source(paste0(data.directory,"utils.R"))
 
 ## Prepare 1805 lottery data 
 
@@ -223,17 +84,17 @@ resp.dat$p.score <- ifelse(resp.dat$n.draw==2,2*(prizes/tickets),prizes/tickets)
 # Create column of weights 
 resp.dat$weight <- (resp.dat$treat)/(resp.dat$p.score) + (1-resp.dat$treat)/(1-resp.dat$p.score)
 
-# Create sample exclusions
-sub.oh <- resp.dat[(resp.dat$prior.office!=1) & (resp.dat$orphan!=1) & (resp.dat$widow!=1),] # exclude orphans, widows, pretreatment officeholders
-sub.candidate <- resp.dat[(resp.dat$prior.run!=1) & (resp.dat$prior.office!=1) & (resp.dat$orphan!=1) & (resp.dat$widow!=1),] # exclude orphans, widows, pretreatment candidates + officeholders
-sub.prior <- resp.dat[(resp.dat$prior.office==1),] # only pretreatment officeholders
-
 ## Run balance tests and plots
 
 source(paste0(data.directory,"balance-tests.R"))
 source(paste0(data.directory,"balance-plot.R")) 
 source(paste0(data.directory,"qq-plot.R")) 
 source(paste0(data.directory,"tax-records.R"))
+
+## Create sample exclusions
+sub.oh <- resp.dat[(resp.dat$prior.office!=1) & (resp.dat$orphan!=1) & (resp.dat$widow!=1),] # exclude orphans, widows, pretreatment officeholders
+sub.candidate <- resp.dat[(resp.dat$prior.run!=1) & (resp.dat$prior.office!=1) & (resp.dat$orphan!=1) & (resp.dat$widow!=1),] # exclude orphans, widows, pretreatment candidates + officeholders
+sub.prior <- resp.dat[(resp.dat$prior.office==1),] # only pretreatment officeholders
 
 ## Create table showing outcomes by treatment group & compliance status
 my.stats <- list("n", "min", "mean", "max", "s") 

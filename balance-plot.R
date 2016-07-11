@@ -1,15 +1,3 @@
-# Create function for plot theme
-ThemeBw1 <- function(base_size = 12, base_family = "") {
-  theme_grey(base_size = base_size, base_family = base_family) %+replace%
-    theme(
-      axis.text.x =       element_text(size = base_size*.9, colour = "black",  hjust = .5 , vjust=1),
-      axis.text.y =       element_text(size = base_size, colour = "black", hjust = 0 , vjust=.5 ), # changes position of X axis text
-      axis.ticks =        element_blank(),
-      axis.title.y =      element_text(size = base_size,angle=90,vjust=.01,hjust=.1),
-      legend.position = "none"
-    )
-}
-
 # Create balance plot data
 covars.names <- c("Junior","Senior","Surname frequency","Surname length","Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
 
