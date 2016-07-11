@@ -50,5 +50,5 @@ $ ./analysis.sh > analysis.txt
 ```
 * The script will output figures as .pdfs and a .RData file `analysis.RData`.
   * `analysis.txt` contains the result of the script and LaTeX table output.
-* Repeat previous steps to run `power.R' via the executable `power.sh'
+* Repeat previous steps to run `power.R` via the executable `power.sh`.
 
