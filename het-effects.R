@@ -66,7 +66,7 @@ print(fitSL.assembly.slave) # summarize
 set.seed(42)
 fitSL.assembly.bank <- SuperLearner(Y=y07.assembly.bank[,1],
                                      X=x07.assembly.bank,
-                                     SL.library=SL.library.reg[-4],
+                                     SL.library=SL.library.reg[c(1:3,5,11:14)],
                                      family=gaussian()) # gaussian for continuous response
 
 print(fitSL.assembly.bank) # summarize
@@ -239,6 +239,20 @@ het.plot.slave <- DotPlot(slave.plot,
                           title=paste("Slavery legislation, N =", 
                                       format(length(fitSL.assembly.slave$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) 
 
+## Heterogeneous treatment effects on slavery legislation
+
+# Create data for plot
+bank.plot <- data.frame(x=c(covars.names[-c(3,4)], 
+                             surname.splits),
+                         y = head(sapply(tau.assembly.bank, "[[", 1), 47), # don't plot wealth measures
+                         y.lo= head(sapply(tau.assembly.bank, "[[", 2), 47),
+                         y.hi= head(sapply(tau.assembly.bank, "[[", 3), 47))
+
+# Plot forest plot
+het.plot.bank <- DotPlot(bank.plot, 
+                          title=paste("State banking policy, N =", 
+                                      format(length(fitSL.assembly.bank$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) 
+
 ## Heterogeneous treatment effects on number of terms held after lottery
 
 # Create features and outcomes vectors
@@ -333,5 +347,6 @@ grid.arrange(het.plot.slaves,
              het.plot.term, 
              het.plot.candidate,
              het.plot.slave,
-             ncol=2, nrow=2, left="Pretreatment covariate", bottom="Heterogeneous treatment effect")
+             het.plot.bank,
+             ncol=2, nrow=3, left="Pretreatment covariate", bottom="Heterogeneous treatment effect")
 dev.off() 
