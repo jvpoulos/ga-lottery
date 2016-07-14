@@ -191,7 +191,7 @@ DotPlotF <- function(plot.df,title){
 }
 
 # Dot plot (balance covariates as features)
-DotPlot <- function(plot.df,title,missing.occ=FALSE){
+DotPlot <- function(plot.df,title,missing.occ=FALSE,missing.gen=FALSE){
   # Create function for plot theme
   ThemeBw1 <- function(base_size = 12, base_family = "") {
     theme_grey(base_size = base_size, base_family = base_family) %+replace%
@@ -250,6 +250,9 @@ DotPlot <- function(plot.df,title,missing.occ=FALSE){
   plot.df <- plot.df[(!is.na(plot.df$y.lo)) | (is.na(plot.df$group)),] # remove lines with empty CIs
   if(missing.occ==TRUE){
     plot.df <- plot.df[plot.df$order!=12.1 & plot.df$order!=12.5,]
+  }
+  if(missing.gen==TRUE){
+    plot.df <- plot.df[plot.df$order!=2.1 & plot.df$order!=2.5,]
   }
   
   # Plot data
