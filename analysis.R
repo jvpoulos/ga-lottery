@@ -88,6 +88,8 @@ print(tableContinuous(vars = sub.candidate[c("candidate")],
                       stats=my.stats))
 }
 
+## ITT/TOT analyses for all outcomes
+
 # Results for candidacy
 if(patient.random){
   perm.candidate <- PermutationTest(y=sub.candidate$candidate,
@@ -101,8 +103,6 @@ candidate.CI <- BootDiff(y=sub.candidate$candidate,
                          treat=sub.candidate$treat,
                          w=sub.candidate$weight,
                          beta.hat=beta.hat)
-
-## ITT/TOT analyses for all outcomes
 
 # Results for officeholding
 if(patient.random){
@@ -144,7 +144,8 @@ if(patient.random){
 bank.CI <- BootDiff(y=sub.prior[!is.na(sub.prior$bank.index),]$bank.index,
                        treat=sub.prior[!is.na(sub.prior$bank.index),]$treat,
                        w=sub.prior[!is.na(sub.prior$bank.index),]$weight,
-                       beta.hat=beta.hat)
+                       beta.hat=beta.hat,
+                    sc=15) # more smoothing
 
 # Permutation results for term 
 if(patient.random){
