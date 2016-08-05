@@ -114,23 +114,26 @@ avg.prize.07 <- round(((counties$avgacre[counties$name=="Baldwin"]*202.5+countie
 # What is ratio of 1805 prize to median income?
 avg.prize.05/median(ipums$REALPROP/(7.57/11.36))
 
+# Create Gini Coefficient for realprop per county
+gini.counties <- ddply(ipums,~COUNTY,summarise,gini=gini(REALPROP))
+
+counties <- merge(counties, gini.counties, by.x=c("county"), by.y=c("COUNTY"), all.x=TRUE) # merge with 1850 county file
+counties$gini[counties$name=="Georgia"] <- gini(ipums$REALPROP) # Statewide gini
+  
 # Make table for county--level data. 
 counties$logfarmval <- log(counties$farmval) # log farm value
 counties$logequipval <- log(counties$equipval) # log equipment value
 counties$logfarms <- log(counties$farms)   # log farms
 counties$logavgfarm <- log(counties$avgfarm) # log avg farm value
 counties$logtotalfarmacres <- log(counties$acunimp+counties$acimp) # log total farm acres
-counties$logstot <- log(counties$stot) # log slave pop
 counties$slave.poppc <- counties$stot/counties$totpop # slave population / total population
-counties$slave.birthpc <- counties$sbirth/counties$births # slave births / total births
-counties$slave.deathpc <- counties$sdeath/counties$deaths # slave deaths / total deaths
 
 # Keep counties that existed in 1805 + 3 new counties + Georgia
 counties1805 <- subset(counties, name=="Baldwin" | name== "Bryan"| name=="Bulloch"| name=="Burke"| name=="Camden"| name=="Chatham"| name=="Clarke"| name=="Columbia"| name=="Effingham"| name=="Elbert"| name=="Franklin"| name=="Glynn"| name=="Greene"| name=="Hancock"| name=="Jackson"| name=="Jefferson"| name=="Liberty"| name=="Lincoln"| name=="McIntosh"| name=="Montgomery"| name=="Oglethorpe"| name=="Richmond"| name=="Screven"| name=="Tattnall"| name=="Warren"| name=="Washington"| name=="Wayne" | name=="Wilkes" | name=="Wilkinson" | name=="Georgia")
 
 if(patient.descriptive){ 
 # Make table
-print(xtable(counties1805[c("name","logfarmval","logequipval","logfarms","logavgfarm","logtotalfarmacres","avgacre","wtot","slave.poppc")],digits= 3,caption = "Summary statistics on selected county--level characteristics for counties existing in 1805 from the 1850 Census. `Log total farm acres' is the log of the sum of improved and unimproved acres of land in farms. `Log average farm value' is the log of the difference between farm value and equipment value, over the total number of farms. `Per acre farm value' is the difference between farm value and equipment value, over the sum of improved and unimproved acres of farm land. All dollar values are current (1850$). `Slave pop.' is the slave population over the total population.", lab = "sum-counties"),
+print(xtable(counties1805[c("name","logfarmval","logequipval","logfarms","logavgfarm","logtotalfarmacres","avgacre","slave.poppc","gini")],digits= 3, lab = "sum-counties"),
       include.rownames = FALSE,
       booktabs = TRUE,
       tabular.environment = "longtable",

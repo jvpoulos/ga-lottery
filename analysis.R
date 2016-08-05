@@ -1,4 +1,5 @@
 # Packages
+require(reldist)
 require(stats)
 require(gdata)
 require(ggplot2)

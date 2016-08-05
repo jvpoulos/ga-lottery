@@ -38,6 +38,9 @@ county.f$newcounty <- ifelse((county.f$id=="Wilkinson" | county.f$id=="Wayne" | 
 # Subset 1807 counties + 3 new counties
 counties1807 <- county.f[county.f$id=="Baldwin" | county.f$id== "Bryan"| county.f$id=="Bulloch"| county.f$id=="Burke"| county.f$id=="Camden"| county.f$id=="Chatham"| county.f$id=="Clarke"| county.f$id=="Columbia"| county.f$id=="Effingham"| county.f$id=="Elbert"| county.f$id=="Franklin"| county.f$id=="Glynn"| county.f$id=="Greene"| county.f$id=="Hancock"| county.f$id=="Jackson"| county.f$id=="Jefferson"| county.f$id=="Liberty"| county.f$id=="Lincoln"| county.f$id=="Mcintosh"| county.f$id=="Montgomery"| county.f$id=="Oglethorpe"| county.f$id=="Richmond"| county.f$id=="Screven"| county.f$id=="Tattnall"| county.f$id=="Warren"| county.f$id=="Washington"| county.f$id=="Wayne" | county.f$id=="Wilkes" | county.f$id=="Wilkinson",]
 
+#merge 1800 census data 
+county.00 <- merge(counties1807,counties.00, by.x="id", by.y = "name",all.x=TRUE) # only counties in 1807
+
 # Make labels
 cnames <- aggregate(cbind(counties1807$long, counties1807$lat),list(counties1807$id), 
                     FUN=function(x)mean(range(x)))
@@ -60,6 +63,19 @@ Map <- ggplot(counties1807, aes(long, lat, group = group, fill = newcounty)) + g
 pdf(paste0(data.directory,"county-map.pdf"), width=8.5, height=11)
 Map + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
 dev.off() 
+
+# Counties map with 1800 slave share
+Map.slave.pop <- ggplot(county.00, aes(long, lat, group = group, fill = slave.poppc)) + geom_polygon() + 
+  coord_equal()  + scale_fill_gradient(low = "white", high = "gray") + labs(fill="Slave pop. (% in 1800)") + 
+  theme(axis.ticks = element_blank(), axis.text.x = element_blank(), 
+        axis.text.y = element_blank(),axis.title.x = element_blank(),
+        axis.title.y = element_blank()) + theme(panel.grid.minor=element_blank(), 
+                                                panel.grid.major=element_blank()) +
+  geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
+
+pdf(paste0(data.directory,"county-map-slave-pop-1800.pdf"), width=8.5, height=11)
+Map.slave.pop + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
+dev.off() 
 }
 #merge 1850 census data 
 county.50 <- merge(counties1807,counties, by.x="id", by.y = "name",all.x=TRUE) # only counties in 1807
@@ -76,5 +92,17 @@ Map.slave.pop.50 <- ggplot(county.50, aes(long, lat, group = group, fill = slave
 
 pdf(paste0(data.directory,"county-map-slave-pop-1850.pdf"), width=8.5, height=11)
 Map.slave.pop.50 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
+
+# Produce wealth gini map with 1807 boundaries
+Map.wealth.gini.50 <- ggplot(county.50, aes(long, lat, group = group, fill = gini)) + geom_polygon() + 
+  coord_equal()  + scale_fill_gradient(low = "white", high = "gray") + labs(fill="Wealth gini (1850)") + 
+  theme(axis.ticks = element_blank(), axis.text.x = element_blank(), 
+        axis.text.y = element_blank(),axis.title.x = element_blank(),
+        axis.title.y = element_blank()) + theme(panel.grid.minor=element_blank(), 
+                                                panel.grid.major=element_blank()) +
+  geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
+
+pdf(paste0(data.directory,"county-map-wealth-gini-1850.pdf"), width=8.5, height=11)
+Map.wealth.gini.50 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
 dev.off() 
 }
