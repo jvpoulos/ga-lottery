@@ -47,7 +47,13 @@ prize		Prize record includes county, district, and number of land lot won by for
 		[Source: participant records]
 
 prize2		Second prize record for fortunate drawers who drew two prizes. 
-		[Source: participant 	records]
+		[Source: participant records]
+
+one.prize	Indicator variable for fortunate drawers who drew only one prize (excludes two-prize winners).  
+		[Source: participant records]
+
+ba,wa,wi	Indicator variables for fortunate drawers who drew land in Baldwin, Wayne, or Wilkinson counties, resp. (includes two-prize winners). 
+		[Source: participant records]
 
 orphan		“1” if participant is an orphan, “0” otherwise.  
 		[Source: participant records/author]
@@ -145,11 +151,14 @@ first.name.census  	First name.
 surname.census 		Surname.
 			[Source: 1820 Census] 
 
-county.census		County in which Census was taken
+county.census		County in which Census was taken.
 			[Source: 1820 Census] 
 
 no.slaves.1820		Number of slaves held. 
 			[Source: 1820 Census] 
+
+slave.wealth.1820	Imputed slave wealth.
+			[Source: 1820 Census/author] 
 
 slave.index		Mean of votes in favor of slavery.
 			[Source: roll call vote records/author]	

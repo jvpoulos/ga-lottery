@@ -81,6 +81,32 @@ print(xtable(counties.00[c("name","wm1625", "wm2644", "wm45","wmtot","wftot","sl
 # Approx pc. eligible white males
 (nrow(petd[petd$orphan!=1 & petd$widow!=1,])/(counties.00$wm1625[counties.00$county==0] + counties.00$wm2644[counties.00$county==0] + counties.00$wm45[counties.00$county==0]))*100
 
+## 1820
+
+# Create slave share per county
+slave.share.1820 <- ddply(census.1820,~County,summarise,slave.poppc=sum(TotalSlaves)/sum(TotalAllPersons))
+slave.share.1820 <- rbind(slave.share.1820, c("Georgia", sum(census.1820$TotalSlaves)/sum(census.1820$TotalAllPersons))) # statewide
+
+# Create Gini Coefficient for slave wealth per county
+gini.counties.1820 <- ddply(census.1820,~County,summarise,gini=gini(slave.wealth))
+gini.counties.1820 <- rbind(gini.counties.1820, c("Georgia", gini(census.1820$slave.wealth))) # statewide
+
+# Make df for table
+counties.1820 <- data.frame("name"=gini.counties.1820$County,
+                            "gini"=as.numeric(gini.counties.1820$gini),
+                            "slave.poppc"=as.numeric(slave.share.1820$slave.poppc))
+
+counties.1820.1805 <- subset(counties.1820, name=="Baldwin" | name== "Bryan"| name=="Bulloch"| name=="Burke"| name=="Camden"| name=="Chatham"| name=="Clarke"| name=="Columbia"| name=="Effingham"| name=="Elbert"| name=="Franklin"| name=="Glynn"| name=="Greene"| name=="Hancock"| name=="Jackson"| name=="Jefferson"| name=="Liberty"| name=="Lincoln"| name=="McIntosh"| name=="Montgomery"| name=="Oglethorpe"| name=="Richmond"| name=="Screven"| name=="Tattnall"| name=="Warren"| name=="Washington"| name=="Wayne" | name=="Wilkes" | name=="Wilkinson" | name=="Georgia")
+
+# Create table 
+if(patient.descriptive){ 
+  print(xtable(counties.1820.1805[c("name","slave.poppc","gini")],digits= 3,caption = "Summary statistics on selected county--level characteristics in the 1820 Census. `Slave pop.' is the slave population over the total population.  `Wealth Gini' is based on imputed slave wealth.", lab = "sum-counties-20"),
+        include.rownames = FALSE,
+        booktabs = TRUE,
+        tabular.environment = "longtable",
+        floating=FALSE)
+}
+
 ## 1850
 
 # Use historical county--level data to calculate per--acre average farm values for Baldwin, Wayne, and Wilksonson counties in 1850. 
@@ -115,9 +141,9 @@ avg.prize.07 <- round(((counties$avgacre[counties$name=="Baldwin"]*202.5+countie
 avg.prize.05/median(ipums$REALPROP/(7.57/11.36))
 
 # Create Gini Coefficient for realprop per county
-gini.counties <- ddply(ipums,~COUNTY,summarise,gini=gini(REALPROP))
+gini.counties.1850 <- ddply(ipums,~COUNTY,summarise,gini=gini(REALPROP))
 
-counties <- merge(counties, gini.counties, by.x=c("county"), by.y=c("COUNTY"), all.x=TRUE) # merge with 1850 county file
+counties <- merge(counties, gini.counties.1850, by.x=c("county"), by.y=c("COUNTY"), all.x=TRUE) # merge with 1850 county file
 counties$gini[counties$name=="Georgia"] <- gini(ipums$REALPROP) # Statewide gini
   
 # Make table for county--level data. 

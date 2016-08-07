@@ -64,7 +64,7 @@ source(paste0(data.directory,"prepare.R"))
 ## Create table showing outcomes by treatment group & compliance status
 if(patient.descriptive){ 
 my.stats <- list("n", "min", "mean", "max", "s") 
-print(tableContinuous(vars = resp.dat[c("no.slaves.1820")],
+print(tableContinuous(vars = resp.dat[c("slave.wealth.1820")],
                       group = resp.dat$treat + resp.dat$rgb, 
                       prec = 3,
                       cumsum=FALSE,
@@ -76,7 +76,7 @@ print(tableContinuous(vars = sub.prior[c("n.post.terms","slave.index","bank.inde
                       cumsum=FALSE,
                       stats=my.stats))
 
-print(tableContinuous(vars = sub.oh[c("oh")], 
+print(tableContinuous(vars = sub.oh[c("oh","match.oh")], 
                       group = sub.oh$treat + sub.oh$rgb, 
                       prec = 3,
                       cumsum=FALSE,

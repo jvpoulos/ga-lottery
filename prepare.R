@@ -8,8 +8,8 @@ lot05$rgb[c(grep("RGB",lot05$grant.book.x),grep("RGB",lot05$grant.book.y))] <- 1
 beta.hat <- 1-(sum(lot05$rgb)/sum(lot05$treat))
 
 # Merge officeholder info with lottery data
-resp.dat <- merge(lot05[c("row.no","county","treat","treat2","prize","prize2","orphan","widow","rgb","n.draw","no.slaves.1820","candidate","prior.run","match.votes","match.census")],
-                  officeholders[c("row.no","prior.office","slave.index","bank.index","oh","n.post.terms","match.oh")],by="row.no", all.x=TRUE)
+resp.dat <- merge(lot05[c("row.no","county","treat","treat2","prize","prize2","one.prize","ba","wa","wi","orphan","widow","rgb","n.draw","slave.wealth.1820","candidate","prior.run","match.oh","match.votes","match.census")],
+                  officeholders[c("row.no","prior.office","slave.index","bank.index","oh","n.post.terms")],by="row.no", all.x=TRUE)
 
 resp.dat$prior.office[is.na(resp.dat$prior.office)] <- 0 # make binary
 resp.dat$oh[is.na(resp.dat$oh)] <- 0
