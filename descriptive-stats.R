@@ -173,16 +173,20 @@ slave.wealth.plot.df <- melt(data=lot05[!is.na(lot05$slave.wealth.1820),][c("sla
                           id.vars="treat") 
 
 if(patient.descriptive){ 
-  # Plot the overlaid density of time lapse by county drawn for each lottery
   slave.wealth.plot <- ggplot(slave.wealth.plot.df, aes(x=value, fill=as.factor(treat))) + 
     geom_density(alpha=.3) +
-    ylab("") + 
-    xlab("") +
-    ggtitle(paste("1805 lottery, N =", 
-                  format(nrow(fdg05),big.mark=",",scientific=FALSE,trim=TRUE))) +
-    xlim(c(0,3000)) +
+    ylab("Density") + 
+    xlab("Slave wealth (1820$)") +
+#     ggtitle(paste("Distribution of slave wealth by treatment status, N =", 
+#                   format(nrow(lot05[!is.na(lot05$slave.wealth.1820),]),big.mark=",",scientific=FALSE,trim=TRUE))) +
+    scale_y_continuous(labels = comma) +
+    scale_x_continuous(labels = comma, limits = c(0,15000)) +
     scale_fill_manual(values = c("red","blue"), labels= c("Control", "Treated"), name="Treatment status") +
     theme(legend.justification = c(1, 1), legend.position = c(1, 1),legend.background = element_rect(colour = "black"))
+  
+  pdf(paste0(data.directory,"slave-wealth-1820.pdf"), width=8.5, height=11)
+  slave.wealth.plot
+  dev.off() 
 }
 
 
