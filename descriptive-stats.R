@@ -166,6 +166,26 @@ print(xtable(counties1805[c("name","logfarmval","logequipval","logfarms","logavg
       floating=FALSE)
 }
 
+## Plot slave wealth densities (1820) by treatment status
+
+# Make data for histogram
+slave.wealth.plot.df <- melt(data=lot05[!is.na(lot05$slave.wealth.1820),][c("slave.wealth.1820","treat")], 
+                          id.vars="treat") 
+
+if(patient.descriptive){ 
+  # Plot the overlaid density of time lapse by county drawn for each lottery
+  slave.wealth.plot <- ggplot(slave.wealth.plot.df, aes(x=value, fill=as.factor(treat))) + 
+    geom_density(alpha=.3) +
+    ylab("") + 
+    xlab("") +
+    ggtitle(paste("1805 lottery, N =", 
+                  format(nrow(fdg05),big.mark=",",scientific=FALSE,trim=TRUE))) +
+    xlim(c(0,3000)) +
+    scale_fill_manual(values = c("red","blue"), labels= c("Control", "Treated"), name="Treatment status") +
+    theme(legend.justification = c(1, 1), legend.position = c(1, 1),legend.background = element_rect(colour = "black"))
+}
+
+
 ## Plot densities of time lag in filing grants by lottery year and county in which land is drawn
 
 # Convert grant dates to POSIXct
