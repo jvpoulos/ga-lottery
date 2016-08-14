@@ -40,3 +40,4 @@ source(paste0(data.directory,"tax-records.R"))
 sub.oh <- resp.dat[(resp.dat$prior.office!=1) & (resp.dat$orphan!=1) & (resp.dat$widow!=1),] # exclude orphans, widows, pretreatment officeholders
 sub.candidate <- resp.dat[(resp.dat$prior.run!=1) & (resp.dat$prior.office!=1) & (resp.dat$orphan!=1) & (resp.dat$widow!=1),] # exclude orphans, widows, pretreatment candidates + officeholders
 sub.prior <- resp.dat[(resp.dat$prior.office==1),] # only pretreatment officeholders
+sub.1820 <- resp.dat[!is.na(resp.dat$match.census),] # matched to 1820 Census

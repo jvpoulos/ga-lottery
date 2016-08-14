@@ -25,6 +25,7 @@ require(stringr)
 require(splines)
 require(parallel)
 require(doParallel)
+require(quantreg)
 
 # Setup parallel processing 
 cores <- detectCores() # specify number of cores to use
@@ -63,47 +64,33 @@ source(paste0(data.directory,"prepare.R"))
 
 ## Create table showing outcomes by treatment group & compliance status
 if(patient.descriptive){ 
-my.stats <- list("n", "min", "mean", "max", "s") 
-print(tableContinuous(vars = resp.dat[c("slave.wealth.1820")],
-                      group = resp.dat$treat + resp.dat$rgb, 
-                      prec = 3,
-                      cumsum=FALSE,
-                      stats=my.stats))
-
-print(tableContinuous(vars = sub.prior[c("n.post.terms","slave.index","bank.index")], 
-                      group = sub.prior$treat + sub.prior$rgb, 
-                      prec = 3,
-                      cumsum=FALSE,
-                      stats=my.stats))
-
-print(tableContinuous(vars = sub.oh[c("oh","match.oh")], 
-                      group = sub.oh$treat + sub.oh$rgb, 
-                      prec = 3,
-                      cumsum=FALSE,
-                      stats=my.stats))
-
-print(tableContinuous(vars = sub.candidate[c("candidate")], 
-                      group = sub.candidate$treat + sub.candidate$rgb, 
-                      prec = 3,
-                      cumsum=FALSE,
-                      stats=my.stats))
+  my.stats <- list("n", "min", "mean", "max", "s") 
+  print(tableContinuous(vars = sub.1820[c("slave.wealth.1820")],
+                        group = sub.1820$treat + sub.1820$rgb, 
+                        prec = 3,
+                        cumsum=FALSE,
+                        stats=my.stats))
+  
+  print(tableContinuous(vars = sub.prior[c("n.post.terms","slave.index","bank.index")], 
+                        group = sub.prior$treat + sub.prior$rgb, 
+                        prec = 3,
+                        cumsum=FALSE,
+                        stats=my.stats))
+  
+  print(tableContinuous(vars = sub.oh[c("oh","match.oh")], 
+                        group = sub.oh$treat + sub.oh$rgb, 
+                        prec = 3,
+                        cumsum=FALSE,
+                        stats=my.stats))
+  
+  print(tableContinuous(vars = sub.candidate[c("candidate")], 
+                        group = sub.candidate$treat + sub.candidate$rgb, 
+                        prec = 3,
+                        cumsum=FALSE,
+                        stats=my.stats))
 }
 
-## ITT/TOT analyses for all outcomes
-
-# Results for candidacy
-if(patient.random){
-  perm.candidate <- PermutationTest(y=sub.candidate$candidate,
-                                    treat=sub.candidate$treat,
-                                    w=sub.candidate$weight,
-                                    p.score=sub.candidate$p.score) 
-  print(perm.candidate$p)
-}
-
-candidate.CI <- BootDiff(y=sub.candidate$candidate,
-                         treat=sub.candidate$treat,
-                         w=sub.candidate$weight,
-                         beta.hat=beta.hat)
+## ITT/TOT analyses for officeholding 
 
 # Results for officeholding
 if(patient.random){
@@ -119,96 +106,128 @@ oh.CI <- BootDiff(y=sub.oh$oh,
                   w=sub.oh$weight,
                   beta.hat=beta.hat)
 
-# Permutation results of slavery legislation
-if(patient.random){
-  perm.slavery <- PermutationTest(y=sub.prior[!is.na(sub.prior$slave.index),]$slave.index,
-                                  treat=sub.prior[!is.na(sub.prior$slave.index),]$treat,
-                                  w=sub.prior[!is.na(sub.prior$slave.index),]$weight,
-                                  p.score=sub.prior[!is.na(sub.prior$slave.index),]$p.score)
-  print(perm.slavery$p)
-}
+# Results for officeholding match
+match.oh.CI <- BootDiff(y=sub.oh$match.oh,
+                        treat=sub.oh$treat,
+                        w=sub.oh$weight,
+                        beta.hat=beta.hat)
 
+# Results for officeholding (treatment is winning single prize)
+one.prize.CI <- BootDiff(y=sub.oh$oh,
+                         treat=sub.oh$one.prize,
+                         w=sub.oh$weight,
+                         beta.hat=1-(length(grep("RGB",lot05$grant.book.x))/sum(lot05$one.prize))) # compliance rate among single-prize winners
+
+# Results for officeholding (treatment is by county of prize)
+ba.CI <- BootDiff(y=sub.oh$oh, 
+                  treat=sub.oh$ba, # Baldwin county 
+                  w=sub.oh$weight,
+                  beta.hat=1-(sum(lot05$rgb & lot05$ba)/sum(lot05$ba))) # compliance rate among Baldwin prize winners
+
+wa.CI <- BootDiff(y=sub.oh$oh, 
+                  treat=sub.oh$wa, # Wayne county 
+                  w=sub.oh$weight,
+                  beta.hat=1-(sum(lot05$rgb & lot05$wa)/sum(lot05$wa))) # compliance rate among Wayne prize winners
+
+wi.CI <- BootDiff(y=sub.oh$oh, 
+                  treat=sub.oh$wi, # Wayne county 
+                  w=sub.oh$weight,
+                  beta.hat=1-(sum(lot05$rgb & lot05$wi)/sum(lot05$wi))) # compliance rate among Wilkinson prize winners
+
+## ITT/TOT analyses for auxilliary outcomes
+
+# Results for candidacy
+candidate.CI <- BootDiff(y=sub.candidate$candidate,
+                         treat=sub.candidate$treat,
+                         w=sub.candidate$weight,
+                         beta.hat=beta.hat)
+
+# Results for slavery legislation
 slavery.CI <- BootDiff(y=sub.prior[!is.na(sub.prior$slave.index),]$slave.index,
                        treat=sub.prior[!is.na(sub.prior$slave.index),]$treat,
                        w=sub.prior[!is.na(sub.prior$slave.index),]$weight,
                        beta.hat=beta.hat)
 
-# Permutation results of banking legislation
-if(patient.random){
-  perm.bank <- PermutationTest(y=sub.prior[!is.na(sub.prior$bank.index),]$bank.index,
-                                  treat=sub.prior[!is.na(sub.prior$bank.index),]$treat,
-                                  w=sub.prior[!is.na(sub.prior$bank.index),]$weight,
-                                  p.score=sub.prior[!is.na(sub.prior$bank.index),]$p.score)
-  print(perm.bank$p)
-}
-
+# Results for banking legislation
 bank.CI <- BootDiff(y=sub.prior[!is.na(sub.prior$bank.index),]$bank.index,
-                       treat=sub.prior[!is.na(sub.prior$bank.index),]$treat,
-                       w=sub.prior[!is.na(sub.prior$bank.index),]$weight,
-                       beta.hat=beta.hat,
+                    treat=sub.prior[!is.na(sub.prior$bank.index),]$treat,
+                    w=sub.prior[!is.na(sub.prior$bank.index),]$weight,
+                    beta.hat=beta.hat,
                     sc=15) # more smoothing
 
-# Permutation results for term 
-if(patient.random){
-  perm.term <- PermutationTest(y=sub.prior$n.post.terms,
-                               treat=sub.prior$treat,
-                               w=sub.prior$weight,
-                               p.score=sub.prior$p.score) 
-  print(perm.term$p)
-}
-
+# Results for term 
 term.CI <- BootDiff(y=sub.prior$n.post.terms,
-                     treat=sub.prior$treat,
-                     w=sub.prior$weight,
-                     beta.hat=beta.hat)
-                    
-# Permutation results for slaves 
-if(patient.random){
-  perm.slaves <- PermutationTest(y=resp.dat[!is.na(resp.dat$no.slaves.1820),]$no.slaves.1820,
-                                 treat=resp.dat[!is.na(resp.dat$no.slaves.1820),]$treat,
-                                 w=resp.dat[!is.na(resp.dat$no.slaves.1820),]$weight,
-                                 p.score=resp.dat[!is.na(resp.dat$no.slaves.1820),]$p.score) 
-  print(perm.slaves$p)
-}
+                    treat=sub.prior$treat,
+                    w=sub.prior$weight,
+                    beta.hat=beta.hat)
 
-slaves.CI <- BootDiff(y=resp.dat[!is.na(resp.dat$no.slaves.1820),]$no.slaves.1820,
-                      treat=resp.dat[!is.na(resp.dat$no.slaves.1820),]$treat,
-                      w=resp.dat[!is.na(resp.dat$no.slaves.1820),]$weight,
+# Results for slave wealth 
+slaves.CI <- BootDiff(y=sub.1820$slave.wealth.1820,
+                      treat=sub.1820$treat,
+                      w=sub.1820$weight,
                       beta.hat=beta.hat)
 
-## Create summary plot for ATEs
+## Create summary plots for ATEs
 
-# Create data for plot
-plot.data <- data.frame(x = c("ITT","TOT"),
-                        y = c(bank.CI[1],bank.CI[2],
-                              candidate.CI[1],candidate.CI[2],
-                              oh.CI[1],oh.CI[2],
-                              slavery.CI[1],slavery.CI[2],
-                              slaves.CI[1],slaves.CI[2],
-                              term.CI[1],term.CI[2]),
-                        y.lo = c(bank.CI[3],bank.CI[4],candidate.CI[3],candidate.CI[4],oh.CI[3],oh.CI[4],slavery.CI[3],slavery.CI[4],slaves.CI[3],slaves.CI[4],term.CI[3],term.CI[4]),
-                        y.hi = c(bank.CI[5],bank.CI[6],candidate.CI[5],candidate.CI[6],oh.CI[5],oh.CI[6],slavery.CI[5],slavery.CI[6],slaves.CI[5],slaves.CI[6],term.CI[5],term.CI[6]))
-plot.data <- transform(plot.data, y.lo = y.lo, y.hi=y.hi)
-plot.data$Outcome <- c(rep(paste("Banking legislation, N =", 
-                                 format(nrow(sub.prior[!is.na(sub.prior$bank.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                       rep(paste("Candidacy, N =", 
-                                 format(nrow(sub.candidate),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                       rep(paste("Officeholding, N =",
-                                 format(nrow(sub.oh),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                       rep(paste("Slavery legislation, N =", 
-                                 format(nrow(sub.prior[!is.na(sub.prior$slave.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                       rep(paste("# Slaves, N =", 
-                                 format(nrow(resp.dat[!is.na(resp.dat$no.slaves.1820),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                       rep(paste("# Terms, N=", 
+# Create data for plot for auxilliary analyses
+plot.data.aux <- data.frame(x = c("ITT","TOT"),
+                            y = c(bank.CI[1],bank.CI[2],
+                                  candidate.CI[1],candidate.CI[2],
+                                  slavery.CI[1],slavery.CI[2],
+                                  slaves.CI[1],slaves.CI[2],
+                                  term.CI[1],term.CI[2]),
+                            y.lo = c(bank.CI[3],bank.CI[4],candidate.CI[3],candidate.CI[4],slavery.CI[3],slavery.CI[4],slaves.CI[3],slaves.CI[4],term.CI[3],term.CI[4]),
+                            y.hi = c(bank.CI[5],bank.CI[6],candidate.CI[5],candidate.CI[6],slavery.CI[5],slavery.CI[6],slaves.CI[5],slaves.CI[6],term.CI[5],term.CI[6]))
+plot.data.aux <- transform(plot.data.aux, y.lo = y.lo, y.hi=y.hi)
+plot.data.aux$Outcome <- c(rep(paste("Banking legislation, N =", 
+                                     format(nrow(sub.prior[!is.na(sub.prior$bank.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
+                           rep(paste("Candidacy, N =", 
+                                     format(nrow(sub.candidate),big.mark=",",scientific=FALSE,trim=TRUE)),2),
+                           rep(paste("Slavery legislation, N =", 
+                                     format(nrow(sub.prior[!is.na(sub.prior$slave.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
+                           rep(paste("Slave wealth (1820$), N =", 
+                                     format(nrow(resp.dat[!is.na(resp.dat$slave.wealth.1820),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
+                           rep(paste("# Terms, N=", 
                                      format(nrow(sub.prior),big.mark=",",scientific=FALSE,trim=TRUE)),2))
 
+plot.data.oh <- data.frame(x = c("ITT","TOT"),
+                           y = c(oh.CI[1],oh.CI[2],
+                                 match.oh.CI[1],match.oh.CI[2],
+                                 one.prize.CI[1],one.prize.CI[2],
+                                 ba.CI[1],ba.CI[2],
+                                 wa.CI[1],wa.CI[2],
+                                 wi.CI[1],wi.CI[2]),
+                           y.lo = c(oh.CI[3],oh.CI[4],
+                                    match.oh.CI[3],match.oh.CI[4],
+                                    one.prize.CI[3],one.prize.CI[4],
+                                    ba.CI[3],ba.CI[4],
+                                    wa.CI[3],wa.CI[4],
+                                    wi.CI[3],wi.CI[4]),
+                           y.hi = c(oh.CI[5],oh.CI[6],
+                                    match.oh.CI[5],match.oh.CI[6],
+                                    one.prize.CI[5],one.prize.CI[6],
+                                    ba.CI[5],ba.CI[6],
+                                    wa.CI[5],wa.CI[6],
+                                    wi.CI[5],wi.CI[6]))
+plot.data.oh <- transform(plot.data.oh, y.lo = y.lo, y.hi=y.hi)
+plot.data.oh$Outcome <- c(rep(paste("Bbinary response"),2),
+                          rep(paste("Continuous response"),2),
+                          rep(paste("Treatment is single prize"),2),
+                          rep(paste("Treatment is prize in Baldwin"),2),
+                          rep(paste("Treatment is prize in Wayne"),2),
+                          rep(paste("Treatment is prize in Wilkinson"),2))
 
-# Plot forest plot
-plot.data$x <- factor(plot.data$x, levels=rev(plot.data$x)) # reverse order
-plot.data$Outcome <- factor(plot.data$Outcome, levels=plot.data$Outcome) # reverse order
-summary.plot <- ForestPlot(plot.data,xlab="Treatment effect",ylab="Analysis")
+# Plot forest plots
+plot.data.aux$x <- factor(plot.data.aux$x, levels=rev(plot.data.aux$x)) # reverse order
+plot.data.aux$Outcome <- factor(plot.data.aux$Outcome, levels=plot.data.aux$Outcome) # reverse order
+summary.plot.aux <- ForestPlot(plot.data.aux,xlab="Treatment effect",ylab="Analysis")
 
-ggsave(paste0(data.directory,"summary-plot.pdf"), summary.plot, width=8.5, height=11)
+plot.data.oh$x <- factor(plot.data.oh$x, levels=rev(plot.data.oh$x)) # reverse order
+plot.data.oh$Outcome <- factor(plot.data.oh$Outcome, levels=plot.data.oh$Outcome) # reverse order
+summary.plot.oh <- ForestPlot(plot.data.oh,xlab="Treatment effect",ylab="Analysis")
+
+ggsave(paste0(data.directory,"summary-plot-aux.pdf"), summary.plot.aux, width=8.5, height=11)
+ggsave(paste0(data.directory,"summary-plot-oh.pdf"), summary.plot.oh, width=8.5, height=11)
 
 ## Create heterogeneous treatment effect plots 
 if(patient.het){
@@ -216,5 +235,25 @@ if(patient.het){
   source(paste0(data.directory,"het-effects.R"))
 }
 
-## Save  data
+## Create quantile regression plot
+taus <- seq(0.005,0.995,0.005)
+qreg.fits <- lapply(taus, function(t){
+  rq(formula = slave.wealth.1820 ~ treat, 
+     tau = t, 
+     data = sub.1820)
+})
+
+qreg.plot.df <- data.frame("effect" = sapply(qreg.fits, "[[", 1)[2,],
+                           "quantile"= taus)
+
+qreg.plot <- ggplot(qreg.plot.df, aes(y=effect, x=quantile)) + 
+  geom_point(shape=19, alpha=1/4) + 
+  ylab("Treatment effect") + 
+  xlab("Quantile of slave wealth (1820$)") + 
+  stat_smooth(method = "loess",se=TRUE) + 
+  scale_y_continuous(labels = comma,limit=c(-1500,1500))
+
+ggsave(paste0(data.directory,"qreg-plot.pdf"), qreg.plot, width=8.5, height=11)
+
+## Save data
 save.image(paste0(data.directory,"analysis.RData"))

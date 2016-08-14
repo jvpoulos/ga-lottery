@@ -300,11 +300,11 @@ het.plot.term <- DotPlot(term.plot,
                          title=paste("# terms, N =", 
                                      format(length(fitSL.term$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) 
 
-## Heterogeneous treatment effects on number of slaves held (1820)
+## Heterogeneous treatment effects on slave wealth (1820$)
 
 # Create features and outcomes vectors
-x05.slaves <- data.frame(common.features[!is.na(resp.dat$no.slaves.1820),])
-y05.slaves <- as.matrix(resp.dat[!is.na(resp.dat$no.slaves.1820),]$no.slaves.1820)
+x05.slaves <- data.frame(common.features[rownames(sub.1820),])
+y05.slaves <- as.matrix(sub.1820$slave.wealth.1820)
 
 # Run model
 set.seed(42)
