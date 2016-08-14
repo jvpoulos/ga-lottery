@@ -88,8 +88,8 @@ slave.share.1820 <- ddply(census.1820,~County,summarise,slave.poppc=sum(TotalSla
 slave.share.1820 <- rbind(slave.share.1820, c("Georgia", sum(census.1820$TotalSlaves)/sum(census.1820$TotalAllPersons))) # statewide
 
 # Create Gini Coefficient for slave wealth per county
-gini.counties.1820 <- ddply(census.1820,~County,summarise,gini=gini(slave.wealth))
-gini.counties.1820 <- rbind(gini.counties.1820, c("Georgia", gini(census.1820$slave.wealth))) # statewide
+gini.counties.1820 <- ddply(census.1820,~County,summarise,gini=Gini(slave.wealth))
+gini.counties.1820 <- rbind(gini.counties.1820, c("Georgia", Gini(census.1820$slave.wealth))) # statewide
 
 # Make df for table
 counties.1820 <- data.frame("name"=gini.counties.1820$County,
@@ -141,10 +141,10 @@ avg.prize.07 <- round(((counties$avgacre[counties$name=="Baldwin"]*202.5+countie
 avg.prize.05/median(ipums$REALPROP/(7.57/11.36))
 
 # Create Gini Coefficient for realprop per county
-gini.counties.1850 <- ddply(ipums,~COUNTY,summarise,gini=gini(REALPROP))
+gini.counties.1850 <- ddply(ipums,~COUNTY,summarise,gini=Gini(REALPROP))
 
 counties <- merge(counties, gini.counties.1850, by.x=c("county"), by.y=c("COUNTY"), all.x=TRUE) # merge with 1850 county file
-counties$gini[counties$name=="Georgia"] <- gini(ipums$REALPROP) # Statewide gini
+counties$gini[counties$name=="Georgia"] <- Gini(ipums$REALPROP) # Statewide gini
   
 # Make table for county--level data. 
 counties$logfarmval <- log(counties$farmval) # log farm value

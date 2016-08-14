@@ -14,7 +14,6 @@ require(resample)
 require(reporttools)
 require(xtable)
 require(reshape2)
-require(AER)
 require(memisc)
 require(grid)
 require(gridExtra)
@@ -52,12 +51,12 @@ patient.random <- FALSE
 # Run heterogeneous effects models?
 patient.het <- TRUE
 
+# Define functions for analyses and plots
+source(paste0(data.directory,"utils.R"))
+
 # Produce descriptive statistics and maps
 source(paste0(data.directory,"descriptive-stats.R"))
 source(paste0(data.directory,"county-maps.R"))
-
-# Define functions for analyses and plots
-source(paste0(data.directory,"utils.R"))
 
 ## Prepare 1805 lottery data 
 source(paste0(data.directory,"prepare.R"))
