@@ -155,13 +155,13 @@ bank.CI <- BootDiff(y=sub.prior[!is.na(sub.prior$bank.index),]$bank.index,
                     sc=15) # more smoothing
 
 # Results for term 
-term.CI <- BootDiff(y=sub.prior$n.post.terms,
+term.CI <- BootDiff(y=range01(sub.prior$n.post.terms), #transform to 0-1 continous variable
                     treat=sub.prior$treat,
                     w=sub.prior$weight,
                     beta.hat=beta.hat)
 
 # Results for slave wealth 
-slaves.CI <- BootDiff(y=sub.1820$slave.wealth.1820,
+slaves.CI <- BootDiff(y=range01(sub.1820$slave.wealth.1820), #transform to 0-1 continous variable
                       treat=sub.1820$treat,
                       w=sub.1820$weight,
                       beta.hat=beta.hat)
@@ -184,9 +184,9 @@ plot.data.aux$Outcome <- c(rep(paste("Banking legislation, N =",
                                      format(nrow(sub.candidate),big.mark=",",scientific=FALSE,trim=TRUE)),2),
                            rep(paste("Slavery legislation, N =", 
                                      format(nrow(sub.prior[!is.na(sub.prior$slave.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                           rep(paste("Slave wealth (1820$), N =", 
+                           rep(paste("Slave wealth, N =", 
                                      format(nrow(resp.dat[!is.na(resp.dat$slave.wealth.1820),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                           rep(paste("# Terms, N=", 
+                           rep(paste("Terms, N=", 
                                      format(nrow(sub.prior),big.mark=",",scientific=FALSE,trim=TRUE)),2))
 
 plot.data.oh <- data.frame(x = c("ITT","TOT"),
@@ -211,19 +211,21 @@ plot.data.oh <- data.frame(x = c("ITT","TOT"),
 plot.data.oh <- transform(plot.data.oh, y.lo = y.lo, y.hi=y.hi)
 plot.data.oh$Outcome <- c(rep(paste("Bbinary response"),2),
                           rep(paste("Continuous response"),2),
-                          rep(paste("Treatment is single prize"),2),
-                          rep(paste("Treatment is prize in Baldwin"),2),
-                          rep(paste("Treatment is prize in Wayne"),2),
-                          rep(paste("Treatment is prize in Wilkinson"),2))
+                          rep(paste("Single prize"),2),
+                          rep(paste("Prize in Baldwin"),2),
+                          rep(paste("Prize in Wayne"),2),
+                          rep(paste("Prize in Wilkinson"),2))
 
 # Plot forest plots
 plot.data.aux$x <- factor(plot.data.aux$x, levels=rev(plot.data.aux$x)) # reverse order
 plot.data.aux$Outcome <- factor(plot.data.aux$Outcome, levels=plot.data.aux$Outcome) # reverse order
-summary.plot.aux <- ForestPlot(plot.data.aux,xlab="Treatment effect",ylab="Analysis")
+summary.plot.aux <- ForestPlot(plot.data.aux,xlab="Treatment effect",ylab="Analysis") + scale_y_continuous(labels = percent_format(), 
+                                                                                                           limits = c(-0.5,0.5))
 
 plot.data.oh$x <- factor(plot.data.oh$x, levels=rev(plot.data.oh$x)) # reverse order
 plot.data.oh$Outcome <- factor(plot.data.oh$Outcome, levels=plot.data.oh$Outcome) # reverse order
-summary.plot.oh <- ForestPlot(plot.data.oh,xlab="Treatment effect",ylab="Analysis")
+summary.plot.oh <- ForestPlot(plot.data.oh,xlab="Treatment effect",ylab="Analysis") + scale_y_continuous(labels = percent_format(), 
+                                                                                                         limits = c(-0.025,0.025))
 
 ggsave(paste0(data.directory,"summary-plot-aux.pdf"), summary.plot.aux, width=8.5, height=11)
 ggsave(paste0(data.directory,"summary-plot-oh.pdf"), summary.plot.oh, width=8.5, height=11)

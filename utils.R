@@ -137,8 +137,8 @@ BootDiff<- function(y,treat,w,R=10000,beta.hat,sc=1) {
 
 # Forest plot for summary figure
 ForestPlot <- function(d, xlab, ylab){
-  p <- ggplot(d, aes(x=x, y=y, ymin=y.lo, ymax=y.hi,colour=Outcome)) + 
-    geom_pointrange(size=1.5, alpha=0.9) + 
+  p <- ggplot(d, aes(x=x, y = y, ymin=y.lo, ymax=y.hi,colour=Outcome)) + 
+    geom_pointrange(size=1.2, alpha=0.9) + 
     coord_flip() +
     geom_hline(data=data.frame(x=0, y = 1), aes(x=x, yintercept=0), colour="black", lty=2) +
     theme(legend.position="none") +
@@ -188,7 +188,7 @@ DotPlotF <- function(plot.df,title){
   options(scipen=999)
   p <- ggplot(plot.df, aes(x=x,y=y,ymin=y.lo, ymax=y.hi,colour=Measure,group=Measure)) + 
     coord_flip() +
-    geom_pointrange(size=1.5, alpha=0.9) +
+    geom_pointrange(size=1.2, alpha=0.9) +
     geom_hline(data=data.frame(x=0, y = 1), aes(x=x, yintercept=0), colour="black", lty=2) +
     facet_grid(Measure ~.) +
     theme(legend.position="none",plot.title = element_text(face="bold")) +
@@ -267,7 +267,7 @@ DotPlot <- function(plot.df,title,missing.occ=FALSE,missing.gen=FALSE){
   options(scipen=10000)
   plot.df$x <- factor(plot.df$x, levels=rev(plot.df$x)) # reverse order
   p <- ggplot(plot.df, aes(x=x, y=y,ymin=y.lo, ymax=y.hi,colour=group)) + 
-    geom_pointrange(size=1.5, alpha=0.9) + 
+    geom_pointrange(size=1.2, alpha=0.9) + 
     coord_flip() +
     geom_line() +
     geom_hline(data=data.frame(x=0, y = 1), aes(x=x, yintercept=0), colour="black", lty=2) +
@@ -296,3 +296,6 @@ Gini <- function (x, weights = rep(1, length = length(x))) {
   nu <- nu/nu[n]
   sum(nu[-1] * p[-n]) - sum(nu[-n] * p[-1])
 }
+
+# Transform continuous variable to 0-1
+range01 <- function(x){(x-min(x))/(max(x)-min(x))}

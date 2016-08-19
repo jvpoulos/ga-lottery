@@ -32,8 +32,8 @@ ptax.pre.slave <- DummiesQCut(assembly.impute.slave$ptax.pre)
 
 set.seed(42) 
 assembly.impute.bank <- rfImpute(x=cbind(common.features[rownames(sub.prior),][!is.na(sub.prior$bank.index),], 
-                                          sub.prior[!is.na(sub.prior$bank.index),][wealth.features]),
-                                  y=sub.prior[!is.na(sub.prior$bank.index),]$bank.index)[-1] # remove response 
+                                         sub.prior[!is.na(sub.prior$bank.index),][wealth.features]),
+                                 y=sub.prior[!is.na(sub.prior$bank.index),]$bank.index)[-1] # remove response 
 
 slaves.pre.bank <- DummiesQCut(assembly.impute.bank$slaves.pre)
 acres.pre.bank <- DummiesQCut(assembly.impute.bank$acres.pre)
@@ -48,9 +48,9 @@ x07.assembly.slave <- data.frame(common.features[rownames(sub.prior),][!is.na(su
 y07.assembly.slave <- as.matrix(sub.prior[!is.na(sub.prior$slave.index),]$slave.index)
 
 x07.assembly.bank <- data.frame(common.features[rownames(sub.prior),][!is.na(sub.prior$bank.index),],
-                                 "slaves.pre.bank" = slaves.pre.bank,
-                                 "acres.pre.bank" = acres.pre.bank,
-                                 "ptax.pre.bank"= ptax.pre.bank)
+                                "slaves.pre.bank" = slaves.pre.bank,
+                                "acres.pre.bank" = acres.pre.bank,
+                                "ptax.pre.bank"= ptax.pre.bank)
 
 y07.assembly.bank <- as.matrix(sub.prior[!is.na(sub.prior$bank.index),]$bank.index)
 
@@ -65,9 +65,9 @@ print(fitSL.assembly.slave) # summarize
 
 set.seed(42)
 fitSL.assembly.bank <- SuperLearner(Y=y07.assembly.bank[,1],
-                                     X=x07.assembly.bank,
-                                     SL.library=SL.library.reg[c(1:3,5,11:14)],
-                                     family=gaussian()) # gaussian for continuous response
+                                    X=x07.assembly.bank,
+                                    SL.library=SL.library.reg[c(1:3,5,11:14)],
+                                    family=gaussian()) # gaussian for continuous response
 
 print(fitSL.assembly.bank) # summarize
 
@@ -81,9 +81,9 @@ Y.hat.1.assembly.slave <- suppressWarnings(predict(fitSL.assembly.slave, assembl
 Y.hat.0.assembly.slave <- suppressWarnings(predict(fitSL.assembly.slave, assembly.slave.ctrl.counterfactual)$pred)
 
 assembly.bank.tr.counterfactual <- cbind("treat" = rep(1, nrow(x07.assembly.bank)),
-                                          x07.assembly.bank[, !names(x07.assembly.bank) %in% c("treat")])
+                                         x07.assembly.bank[, !names(x07.assembly.bank) %in% c("treat")])
 assembly.bank.ctrl.counterfactual <- cbind("treat" = rep(0, nrow(x07.assembly.bank)),
-                                            x07.assembly.bank[, !names(x07.assembly.bank) %in% c("treat")])
+                                           x07.assembly.bank[, !names(x07.assembly.bank) %in% c("treat")])
 
 Y.hat.1.assembly.bank <- suppressWarnings(predict(fitSL.assembly.bank, assembly.bank.tr.counterfactual)$pred)
 Y.hat.0.assembly.bank <- suppressWarnings(predict(fitSL.assembly.bank, assembly.bank.ctrl.counterfactual)$pred)
@@ -95,14 +95,14 @@ assembly.pred.slave <- data.frame("tau.i"=Y.hat.1.assembly.slave-Y.hat.0.assembl
 
 assembly.covs.bank <- colnames(x07.assembly.bank[, !names(x07.assembly.bank) %in% c("treat","two.draws")]) # exclude treatment and draws
 assembly.pred.bank <- data.frame("tau.i"=Y.hat.1.assembly.bank-Y.hat.0.assembly.bank,
-                                  x07.assembly.bank[assembly.covs.bank])
+                                 x07.assembly.bank[assembly.covs.bank])
 
 # Estimate ITT effect for each covariate group
 tau.assembly.slave <- lapply(assembly.covs.slave, 
                              function(x) BootDiffHet(tau.i=assembly.pred.slave$tau.i, g=assembly.pred.slave[x]))
 
 tau.assembly.bank <- lapply(assembly.covs.bank, 
-                             function(x) BootDiffHet(tau.i=assembly.pred.bank$tau.i, g=assembly.pred.bank[x]))
+                            function(x) BootDiffHet(tau.i=assembly.pred.bank$tau.i, g=assembly.pred.bank[x]))
 
 # Create data for heterogenous wealth plot
 assembly.slave <- data.frame(x=rep(c("Q1","Q2","Q3","Q4","Q5"),3),
@@ -114,21 +114,23 @@ assembly.slave <- data.frame(x=rep(c("Q1","Q2","Q3","Q4","Q5"),3),
                                         rep("Person tax ($)",5))) 
 
 assembly.bank <- data.frame(x=rep(c("Q1","Q2","Q3","Q4","Q5"),3),
-                             y = tail(sapply(tau.assembly.bank, "[[", 1), 15),   # plot just wealth quintiles
-                             y.lo= tail(sapply(tau.assembly.bank, "[[", 2), 15),  
-                             y.hi= tail(sapply(tau.assembly.bank, "[[", 3), 15),  
-                             Measure= c(rep("Slaves held",5), 
-                                        rep("Land (acres)",5),
-                                        rep("Person tax ($)",5))) 
+                            y = tail(sapply(tau.assembly.bank, "[[", 1), 15),   # plot just wealth quintiles
+                            y.lo= tail(sapply(tau.assembly.bank, "[[", 2), 15),  
+                            y.hi= tail(sapply(tau.assembly.bank, "[[", 3), 15),  
+                            Measure= c(rep("Slaves held",5), 
+                                       rep("Land (acres)",5),
+                                       rep("Person tax ($)",5))) 
 
 # Plot forest plot
 het.plot.assembly.slave <- DotPlotF(assembly.slave, 
                                     title=paste("Slavery legislation, N =", 
-                                                format(nrow(assembly.pred.slave),big.mark=",",scientific=FALSE,trim=TRUE)))
+                                                format(nrow(assembly.pred.slave),big.mark=",",scientific=FALSE,trim=TRUE))) + 
+  scale_y_continuous(labels = percent_format())
 
 het.plot.assembly.bank <- DotPlotF(assembly.bank, 
-                                    title=paste("Banking legislation, N =", 
-                                                format(nrow(assembly.pred.bank),big.mark=",",scientific=FALSE,trim=TRUE)))
+                                   title=paste("Banking legislation, N =", 
+                                               format(nrow(assembly.pred.bank),big.mark=",",scientific=FALSE,trim=TRUE))) + 
+  scale_y_continuous(labels = percent_format())
 
 pdf(paste0(data.directory,"het-wealth-plots.pdf"), width=8.5, height=11)
 grid.arrange(het.plot.assembly.slave,
@@ -145,17 +147,17 @@ y05.candidate <- as.matrix(sub.candidate$candidate)
 # Run model
 set.seed(42) 
 fitSL.candidate <- SuperLearner(Y=y05.candidate[,1],X=x05.candidate,
-                         SL.library=SL.library.class[c(1,8:11)],
-                         family="binomial") # glmnet response is 2-level factor 
+                                SL.library=SL.library.class[c(1,8:11)],
+                                family="binomial") # glmnet response is 2-level factor 
 
 # Print summary table
 print(fitSL.candidate) 
 
 # Use response model to estimate potential outcomes 
 candidate.tr.counterfactual <- cbind("treat" = rep(1, nrow(x05.candidate)),
-                              x05.candidate[, !names(x05.candidate) %in% c("treat")])
+                                     x05.candidate[, !names(x05.candidate) %in% c("treat")])
 candidate.ctrl.counterfactual <- cbind("treat" = rep(0, nrow(x05.candidate)),
-                                x05.candidate[, !names(x05.candidate) %in% c("treat")])
+                                       x05.candidate[, !names(x05.candidate) %in% c("treat")])
 
 Y.hat.1.candidate <- suppressWarnings(predict(fitSL.candidate, candidate.tr.counterfactual)$pred)   
 Y.hat.0.candidate <- suppressWarnings(predict(fitSL.candidate, candidate.ctrl.counterfactual)$pred) 
@@ -163,22 +165,23 @@ Y.hat.0.candidate <- suppressWarnings(predict(fitSL.candidate, candidate.ctrl.co
 # Calculate differences in potential outcomes for treated and combine with pretreatment vars
 candidate.covs <- colnames(x05.candidate[, !names(x05.candidate) %in% c("treat","two.draws")]) # exclude treatment & two draws  
 candidate.pred <- data.frame("tau.i"=Y.hat.1.candidate-Y.hat.0.candidate,
-                      x05.candidate[candidate.covs])  
+                             x05.candidate[candidate.covs])  
 
 # Estimate mean difference and CIs for each covariate group
 tau.candidate.het <- lapply(candidate.covs, function(x) BootDiffHet(tau.i=candidate.pred$tau.i, g=candidate.pred[x]))   
 
 # Create data for plot
-candidate.plot <- data.frame(x=c(covars.names[-c(3,4)],  
-                          surname.splits), 
-                      y = sapply(tau.candidate.het, "[[", 1), 
-                      y.lo= sapply(tau.candidate.het, "[[", 2),
-                      y.hi= sapply(tau.candidate.het, "[[", 3))  
+candidate.plot <- data.frame(x=c(covars.names[-c(3,4)], 
+                                 surname.splits), 
+                             y = sapply(tau.candidate.het, "[[", 1), 
+                             y.lo= sapply(tau.candidate.het, "[[", 2),
+                             y.hi= sapply(tau.candidate.het, "[[", 3))
 
 # Plot dot plot
 het.plot.candidate <- DotPlot(candidate.plot, 
-                       title=paste("Candidacy, N =", 
-                                   format(length(fitSL.candidate$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE)))
+                              title=paste("Candidacy, N =", 
+                                          format(length(fitSL.candidate$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + 
+  scale_y_continuous(labels = percent_format())
 
 ## Heterogeneous treatment effects on officeholding 
 
@@ -222,7 +225,8 @@ oh.plot <- data.frame(x=c(covars.names[-c(3,4)],
 # Plot dot plot
 het.plot.oh <- DotPlot(oh.plot, 
                        title=paste("Officeholding, N =", 
-                                   format(length(fitSL.oh$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE)))
+                                   format(length(fitSL.oh$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + 
+  scale_y_continuous(labels = percent_format())
 
 ## Heterogeneous treatment effects on slavery legislation
 
@@ -238,23 +242,23 @@ het.plot.slave <- DotPlot(slave.plot,
                           title=paste("Slavery legislation, N =", 
                                       format(length(fitSL.assembly.slave$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE)),
                           missing.occ=TRUE,
-                          missing.gen=TRUE)
+                          missing.gen=TRUE) + scale_y_continuous(labels = percent_format())
 
 ## Heterogeneous treatment effects on slavery legislation
 
 # Create data for plot
 bank.plot <- data.frame(x=c(covars.names[-c(3,4)], 
-                             surname.splits),
-                         y = head(sapply(tau.assembly.bank, "[[", 1), 47), # don't plot wealth measures
-                         y.lo= head(sapply(tau.assembly.bank, "[[", 2), 47),
-                         y.hi= head(sapply(tau.assembly.bank, "[[", 3), 47))
+                            surname.splits),
+                        y = head(sapply(tau.assembly.bank, "[[", 1), 47), # don't plot wealth measures
+                        y.lo= head(sapply(tau.assembly.bank, "[[", 2), 47),
+                        y.hi= head(sapply(tau.assembly.bank, "[[", 3), 47))
 
 # Plot forest plot
 het.plot.bank <- DotPlot(bank.plot, 
-                          title=paste("Banking legislation, N =", 
-                                      format(length(fitSL.assembly.bank$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE)),
+                         title=paste("Banking legislation, N =", 
+                                     format(length(fitSL.assembly.bank$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE)),
                          missing.occ=TRUE,
-                         missing.gen=TRUE) 
+                         missing.gen=TRUE) + scale_y_continuous(labels = percent_format())
 
 ## Heterogeneous treatment effects on number of terms held after lottery
 
@@ -264,7 +268,8 @@ y05.term <- as.matrix(sub.prior$n.post.terms)
 
 # Run model
 set.seed(42)
-fitSL.term <- SuperLearner(Y=y05.term[,1],X=x05.term,
+fitSL.term <- SuperLearner(Y=range01(y05.term[,1]), #transform to 0-1 continous variable
+                           X=x05.term, 
                            SL.library=SL.library.reg[c(1:3,5,11:14)],
                            family=gaussian()) # gaussian for continuous resp
 
@@ -297,10 +302,11 @@ term.plot <- data.frame(x = c(covars.names[-c(3,4)],
 
 # Plot forest plot
 het.plot.term <- DotPlot(term.plot, 
-                         title=paste("# terms, N =", 
-                                     format(length(fitSL.term$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) 
+                         title=paste("Terms, N =", 
+                                     format(length(fitSL.term$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + 
+  scale_y_continuous(labels = percent_format())
 
-## Heterogeneous treatment effects on slave wealth (1820$)
+## Heterogeneous treatment effects on slave wealth
 
 # Create features and outcomes vectors
 x05.slaves <- data.frame(common.features[rownames(sub.1820),])
@@ -308,7 +314,8 @@ y05.slaves <- as.matrix(sub.1820$slave.wealth.1820)
 
 # Run model
 set.seed(42)
-fitSL.slaves <- SuperLearner(Y=y05.slaves[,1],X=x05.slaves,
+fitSL.slaves <- SuperLearner(Y=range01(y05.slaves[,1]), #transform to 0-1 continous variable
+                             X=x05.slaves, 
                              SL.library=SL.library.reg[c(1:3,5,11:14)],
                              family=gaussian()) # gaussian for continuous resp
 
@@ -341,24 +348,26 @@ slaves.plot <- data.frame(x=c(covars.names[-c(3,4)],
 
 # Plot forest plot
 het.plot.slaves <- DotPlot(slaves.plot, 
-                           title=paste("# slaves, N =", 
-                                       format(length(fitSL.slaves$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) 
+                           title=paste("Slave wealth, N =", 
+                                       format(length(fitSL.slaves$SL.predict),big.mark=",",scientific=FALSE,trim=TRUE))) + 
+  scale_y_continuous(labels = percent_format())
 
-## Save OH plot
+## Save OH and candidate plots
 
 ggsave(paste0(data.directory,"het-plot-oh.pdf"), het.plot.oh, width=8.5, height=11) 
+ggsave(paste0(data.directory,"het-plot-candidate.pdf"), het.plot.candidate, width=8.5, height=11) 
 
 ## Combine plots for legislative outcomes
 pdf(paste0(data.directory,"het-assembly-plots.pdf"), width=8.5, height=11)
 grid.arrange( het.plot.bank,
               het.plot.slave,
-             ncol=1, nrow=2, left="Pretreatment measure of wealth (quintiles)", bottom="Heterogeneous treatment effect")
+              ncol=1, nrow=2, left="Pretreatment measure of wealth (quintiles)", bottom="Heterogeneous treatment effect")
 dev.off() 
 
 ## Combine plots for other outcomes
-pdf(paste0(data.directory,"het-plots.pdf"), width=8.5, height=11)
-grid.arrange(het.plot.candidate,
-             het.plot.slaves,
+pdf(paste0(data.directory,"het-plots.pdf"), width=8.5, height=13)
+grid.arrange(het.plot.slaves,
              het.plot.term, 
-             ncol=2, nrow=2, left="Pretreatment covariate", bottom="Heterogeneous treatment effect")
+             ncol=1, nrow=2,
+             left="Pretreatment covariate", bottom="Heterogeneous treatment effect")
 dev.off() 
