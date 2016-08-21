@@ -49,7 +49,7 @@ patient.balance <- FALSE
 patient.random <- FALSE
 
 # Run heterogeneous effects models?
-patient.het <- TRUE
+patient.het <- FALSE
 
 # Define functions for analyses and plots
 source(paste0(data.directory,"utils.R"))
@@ -133,13 +133,24 @@ wi.CI <- BootDiff(y=sub.oh$oh,
                   w=sub.oh$weight,
                   beta.hat=1-(sum(lot05$rgb & lot05$wi)/sum(lot05$wi))) # compliance rate among Wilkinson prize winners
 
-## ITT/TOT analyses for auxilliary outcomes
+## ITT/TOT analyses for candidacy 
 
 # Results for candidacy
+if(patient.random){
+  perm.candidate <- PermutationTest(y=sub.candidate$candidate,
+                             treat=sub.candidate$treat,
+                             w=sub.candidate$weight,
+                             p.score=sub.candidate$p.score) 
+  print(perm.candidate$p)
+}
+
 candidate.CI <- BootDiff(y=sub.candidate$candidate,
-                         treat=sub.candidate$treat,
-                         w=sub.candidate$weight,
-                         beta.hat=beta.hat)
+                  treat=sub.candidate$treat,
+                  w=sub.candidate$weight,
+                  beta.hat=beta.hat,
+                  sc=25) # more smoothing
+
+## ITT/TOT analyses for auxilliary outcomes
 
 # Results for slavery legislation
 slavery.CI <- BootDiff(y=sub.prior[!is.na(sub.prior$slave.index),]$slave.index,
@@ -152,13 +163,14 @@ bank.CI <- BootDiff(y=sub.prior[!is.na(sub.prior$bank.index),]$bank.index,
                     treat=sub.prior[!is.na(sub.prior$bank.index),]$treat,
                     w=sub.prior[!is.na(sub.prior$bank.index),]$weight,
                     beta.hat=beta.hat,
-                    sc=15) # more smoothing
+                    sc=25) # more smoothing
 
 # Results for term 
 term.CI <- BootDiff(y=range01(sub.prior$n.post.terms), #transform to 0-1 continous variable
                     treat=sub.prior$treat,
                     w=sub.prior$weight,
-                    beta.hat=beta.hat)
+                    beta.hat=beta.hat,
+                    sc=25) # more smoothing
 
 # Results for slave wealth 
 slaves.CI <- BootDiff(y=range01(sub.1820$slave.wealth.1820), #transform to 0-1 continous variable
@@ -170,18 +182,18 @@ slaves.CI <- BootDiff(y=range01(sub.1820$slave.wealth.1820), #transform to 0-1 c
 
 # Create data for plot for auxilliary analyses
 plot.data.aux <- data.frame(x = c("ITT","TOT"),
-                            y = c(bank.CI[1],bank.CI[2],
-                                  candidate.CI[1],candidate.CI[2],
+                            y = c(candidate.CI[1],candidate.CI[2],
+                                  bank.CI[1],bank.CI[2],
                                   slavery.CI[1],slavery.CI[2],
                                   slaves.CI[1],slaves.CI[2],
                                   term.CI[1],term.CI[2]),
-                            y.lo = c(bank.CI[3],bank.CI[4],candidate.CI[3],candidate.CI[4],slavery.CI[3],slavery.CI[4],slaves.CI[3],slaves.CI[4],term.CI[3],term.CI[4]),
-                            y.hi = c(bank.CI[5],bank.CI[6],candidate.CI[5],candidate.CI[6],slavery.CI[5],slavery.CI[6],slaves.CI[5],slaves.CI[6],term.CI[5],term.CI[6]))
+                            y.lo = c(candidate.CI[3],candidate.CI[4],bank.CI[3],bank.CI[4],slavery.CI[3],slavery.CI[4],slaves.CI[3],slaves.CI[4],term.CI[3],term.CI[4]),
+                            y.hi = c(candidate.CI[5],candidate.CI[6],bank.CI[5],bank.CI[6],slavery.CI[5],slavery.CI[6],slaves.CI[5],slaves.CI[6],term.CI[5],term.CI[6]))
 plot.data.aux <- transform(plot.data.aux, y.lo = y.lo, y.hi=y.hi)
-plot.data.aux$Outcome <- c(rep(paste("Banking legislation, N =", 
-                                     format(nrow(sub.prior[!is.na(sub.prior$bank.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                           rep(paste("Candidacy, N =", 
+plot.data.aux$Outcome <- c(rep(paste("Candidacy, N=", 
                                      format(nrow(sub.candidate),big.mark=",",scientific=FALSE,trim=TRUE)),2),
+                           rep(paste("Banking legislation, N =", 
+                                     format(nrow(sub.prior[!is.na(sub.prior$bank.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
                            rep(paste("Slavery legislation, N =", 
                                      format(nrow(sub.prior[!is.na(sub.prior$slave.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
                            rep(paste("Slave wealth, N =", 
@@ -189,7 +201,8 @@ plot.data.aux$Outcome <- c(rep(paste("Banking legislation, N =",
                            rep(paste("Terms, N=", 
                                      format(nrow(sub.prior),big.mark=",",scientific=FALSE,trim=TRUE)),2))
 
-plot.data.oh <- data.frame(x = c("ITT","TOT"),
+# Create data for plot for officeholding and sensitivity analyses
+plot.data.oh.sens <- data.frame(x = c("ITT","TOT"),
                            y = c(oh.CI[1],oh.CI[2],
                                  match.oh.CI[1],match.oh.CI[2],
                                  one.prize.CI[1],one.prize.CI[2],
@@ -208,13 +221,13 @@ plot.data.oh <- data.frame(x = c("ITT","TOT"),
                                     ba.CI[5],ba.CI[6],
                                     wa.CI[5],wa.CI[6],
                                     wi.CI[5],wi.CI[6]))
-plot.data.oh <- transform(plot.data.oh, y.lo = y.lo, y.hi=y.hi)
-plot.data.oh$Outcome <- c(rep(paste("Bbinary response"),2),
-                          rep(paste("Continuous response"),2),
-                          rep(paste("Single prize"),2),
-                          rep(paste("Prize in Baldwin"),2),
-                          rep(paste("Prize in Wayne"),2),
-                          rep(paste("Prize in Wilkinson"),2))
+plot.data.oh.sens <- transform(plot.data.oh.sens, y.lo = y.lo, y.hi=y.hi)
+plot.data.oh.sens$Outcome <- c(rep(paste("Officeholding (binary)"),2),
+                          rep(paste("Officeholding (match prob.)"),2),
+                          rep(paste("Treatment: Single prize"),2),
+                          rep(paste("Treatment: Baldwin"),2),
+                          rep(paste("Treatment: Wayne"),2),
+                          rep(paste("Treatment: Wilkinson"),2))
 
 # Plot forest plots
 plot.data.aux$x <- factor(plot.data.aux$x, levels=rev(plot.data.aux$x)) # reverse order
@@ -222,13 +235,12 @@ plot.data.aux$Outcome <- factor(plot.data.aux$Outcome, levels=plot.data.aux$Outc
 summary.plot.aux <- ForestPlot(plot.data.aux,xlab="Treatment effect",ylab="Analysis") + scale_y_continuous(labels = percent_format(), 
                                                                                                            limits = c(-0.5,0.5))
 
-plot.data.oh$x <- factor(plot.data.oh$x, levels=rev(plot.data.oh$x)) # reverse order
-plot.data.oh$Outcome <- factor(plot.data.oh$Outcome, levels=plot.data.oh$Outcome) # reverse order
-summary.plot.oh <- ForestPlot(plot.data.oh,xlab="Treatment effect",ylab="Analysis") + scale_y_continuous(labels = percent_format(), 
+plot.data.oh.sens$x <- factor(plot.data.oh.sens$x, levels=rev(plot.data.oh.sens$x)) # reverse order
+plot.data.oh.sens$Outcome <- factor(plot.data.oh.sens$Outcome, levels=plot.data.oh.sens$Outcome) # reverse order
+summary.plot.oh.sens <- ForestPlot(plot.data.oh.sens,xlab="Treatment effect",ylab="Analysis") + scale_y_continuous(labels = percent_format(), 
                                                                                                          limits = c(-0.025,0.025))
-
 ggsave(paste0(data.directory,"summary-plot-aux.pdf"), summary.plot.aux, width=8.5, height=11)
-ggsave(paste0(data.directory,"summary-plot-oh.pdf"), summary.plot.oh, width=8.5, height=11)
+ggsave(paste0(data.directory,"summary-plot-oh-sens.pdf"), summary.plot.oh.sens, width=8.5, height=11)
 
 ## Create heterogeneous treatment effect plots 
 if(patient.het){
@@ -249,10 +261,10 @@ qreg.plot.df <- data.frame("effect" = sapply(qreg.fits, "[[", 1)[2,],
 
 qreg.plot <- ggplot(qreg.plot.df, aes(y=effect, x=quantile)) + 
   geom_point(shape=19, alpha=1/4) + 
-  ylab("Treatment effect") + 
+  ylab("Treatment effect (1820$)") + 
   xlab("Quantile of slave wealth (1820$)") + 
   stat_smooth(method = "loess",se=TRUE) + 
-  scale_y_continuous(labels = comma,limit=c(-1500,1500))
+  scale_y_continuous(labels = comma,limit=c(-1000,1000))
 
 ggsave(paste0(data.directory,"qreg-plot.pdf"), qreg.plot, width=8.5, height=11)
 
