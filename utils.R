@@ -279,7 +279,7 @@ DotPlot <- function(plot.df,title,missing.occ=FALSE,missing.gen=FALSE){
 
 # Create dummies for pretreatment vars
 DummiesQCut <- function(x) {
-  # Cut continuous variable into deciles
+  # Cut continuous variable into quintiles
   var <- quantcut(x, q=seq(0,1,by=0.20), na.rm=FALSE)
   return(dummify(var, keep.na=TRUE))
 }

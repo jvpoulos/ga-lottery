@@ -371,3 +371,36 @@ grid.arrange(het.plot.slaves,
              ncol=1, nrow=2,
              left="Pretreatment covariate", bottom="Heterogeneous treatment effect")
 dev.off() 
+
+## Plot OH het treatment effects vs. 1820/50 Ginis
+
+county.oh.df <- merge(oh.plot[12:37,],
+                      counties.1820, 
+                      by.x = c("x"), 
+                      by.y = c("name"),
+                      all.x=TRUE)
+
+county.oh.df$above.state.gini <- ifelse(county.oh.df$gini > 0.7886069,1,0)
+county.oh.df$above.state.slave <- ifelse(county.oh.df$slave.poppc > 0.41222123,1,0)
+
+county.oh.plot.gini <- ggplot(county.oh.df, aes(gini, y, colour = above.state.gini)) + 
+  geom_pointrange(aes(ymax =county.oh.df$y.hi, ymin=county.oh.df$y.lo)) +
+  xlab("Slave wealth Gini") +
+  ylab("") +
+  stat_smooth(method = "loess",se=TRUE) + 
+  theme(legend.position = "none")
+
+county.oh.plot.slave <- ggplot(county.oh.df, aes(slave.poppc, y, colour = above.state.slave)) + 
+  geom_pointrange(aes(ymax =county.oh.df$y.hi, ymin=county.oh.df$y.lo)) +
+  xlab("Slave pop. (%)") +
+  ylab("") +
+  stat_smooth(method = "loess",se=TRUE) + 
+  theme(legend.position = "none")
+
+## Combine plots for other outcomes
+pdf(paste0(data.directory,"county-oh-plot.pdf"), width=8.5, height=13)
+grid.arrange(county.oh.plot.gini,
+             county.oh.plot.slave, 
+             ncol=1, nrow=2,
+             left="Heterogeneous treatment effect")
+dev.off() 
