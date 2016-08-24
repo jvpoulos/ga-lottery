@@ -173,6 +173,13 @@ term.CI <- BootDiff(y=range01(sub.prior$n.post.terms), #transform to 0-1 contino
                     sc=25) # more smoothing
 
 # Results for slave wealth 
+if(patient.random){
+  perm.slaves <- PermutationTest(y=range01(sub.1820$slave.wealth.1820),
+                                    treat=sub.1820$treat,
+                                    w=sub.1820$weight,
+                                    p.score=sub.1820$p.score) 
+  print(perm.slaves$p)
+}
 slaves.CI <- BootDiff(y=range01(sub.1820$slave.wealth.1820), #transform to 0-1 continous variable
                       treat=sub.1820$treat,
                       w=sub.1820$weight,
