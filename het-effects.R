@@ -388,19 +388,56 @@ county.oh.plot.gini <- ggplot(county.oh.df, aes(gini, y, colour = above.state.gi
   xlab("Slave wealth Gini") +
   ylab("") +
   stat_smooth(method = "loess",se=TRUE) + 
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  scale_y_continuous(labels = percent_format())
 
 county.oh.plot.slave <- ggplot(county.oh.df, aes(slave.poppc, y, colour = above.state.slave)) + 
   geom_pointrange(aes(ymax =county.oh.df$y.hi, ymin=county.oh.df$y.lo)) +
   xlab("Slave pop. (%)") +
   ylab("") +
   stat_smooth(method = "loess",se=TRUE) + 
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  scale_y_continuous(labels = percent_format())
 
-## Combine plots for other outcomes
+# Combine plots
 pdf(paste0(data.directory,"county-oh-plot.pdf"), width=8.5, height=13)
 grid.arrange(county.oh.plot.gini,
              county.oh.plot.slave, 
+             ncol=1, nrow=2,
+             left="Heterogeneous treatment effect")
+dev.off() 
+
+## Plot slave wealth het treatment effects vs. 1820/50 Ginis
+
+county.slaves.df <- merge(slaves.plot[12:37,],
+                      counties.1820, 
+                      by.x = c("x"), 
+                      by.y = c("name"),
+                      all.x=TRUE)
+
+county.slaves.df$above.state.gini <- ifelse(county.slaves.df$gini > 0.7886069,1,0)
+county.slaves.df$above.state.slave <- ifelse(county.slaves.df$slave.poppc > 0.41222123,1,0)
+
+county.slaves.plot.gini <- ggplot(county.slaves.df, aes(gini, y, colour = above.state.gini)) + 
+  geom_pointrange(aes(ymax =county.slaves.df$y.hi, ymin=county.slaves.df$y.lo)) +
+  xlab("Slave wealth Gini") +
+  ylab("") +
+  stat_smooth(method = "loess",se=TRUE) + 
+  theme(legend.position = "none") +
+  scale_y_continuous(labels = percent_format())
+
+county.slaves.plot.slave <- ggplot(county.slaves.df, aes(slave.poppc, y, colour = above.state.slave)) + 
+  geom_pointrange(aes(ymax =county.slaves.df$y.hi, ymin=county.slaves.df$y.lo)) +
+  xlab("Slave pop. (%)") +
+  ylab("") +
+  stat_smooth(method = "loess",se=TRUE) + 
+  theme(legend.position = "none") +
+  scale_y_continuous(labels = percent_format())
+
+# Combine plots
+pdf(paste0(data.directory,"county-slaves-plot.pdf"), width=8.5, height=13)
+grid.arrange(county.slaves.plot.gini,
+             county.slaves.plot.slave, 
              ncol=1, nrow=2,
              left="Heterogeneous treatment effect")
 dev.off() 
