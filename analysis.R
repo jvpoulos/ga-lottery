@@ -273,12 +273,14 @@ qreg.plot.df$se[72] <- summary(qreg.fits[[71]])[["coefficients"]][,2][[2]]
 qreg.plot.df$se[78] <- summary(qreg.fits[[77]])[["coefficients"]][,2][[2]]
 qreg.plot.df$se[80] <- summary(qreg.fits[[79]])[["coefficients"]][,2][[2]] 
 
-qreg.plot <- ggplot(qreg.plot.df, aes(y=effect, x=quantile)) + 
+qreg.plot <- ggplot(qreg.plot.df[qreg.plot.df$quantile > 0.351 & qreg.plot.df$quantile <=0.951,], aes(y=effect, x=quantile)) + 
   geom_pointrange(aes(ymin = effect-se, ymax = effect+se),shape=19, alpha=1/4) + 
   ylab("Treatment effect (1820$)") + 
   xlab("Quantile of slave wealth (1820$)") + 
   stat_smooth(method = "loess",se=FALSE) + 
-  scale_y_continuous(labels = comma,limit=c(-1000,1000))
+  scale_y_continuous(labels = comma) +
+  scale_x_continuous(breaks=seq(0.4,0.95,0.1), 
+                     labels=c("0.40", "0.50", "0.60", "0.70", "0.80", "0.90"))
 
 ggsave(paste0(data.directory,"qreg-plot.pdf"), qreg.plot, width=8.5, height=11)
 
