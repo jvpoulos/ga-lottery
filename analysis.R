@@ -264,13 +264,20 @@ qreg.fits <- lapply(taus, function(t){
 })
 
 qreg.plot.df <- data.frame("effect" = sapply(qreg.fits, "[[", 1)[2,],
+                           "se" = c(rep(0, 70),
+                             sapply(71:length(taus), 
+                                    function(x) summary(qreg.fits[[x]])[["coefficients"]][,2][[2]])),
                            "quantile"= taus)
 
+qreg.plot.df$se[72] <- summary(qreg.fits[[71]])[["coefficients"]][,2][[2]]
+qreg.plot.df$se[78] <- summary(qreg.fits[[77]])[["coefficients"]][,2][[2]]
+qreg.plot.df$se[80] <- summary(qreg.fits[[79]])[["coefficients"]][,2][[2]] 
+
 qreg.plot <- ggplot(qreg.plot.df, aes(y=effect, x=quantile)) + 
-  geom_point(shape=19, alpha=1/4) + 
+  geom_pointrange(aes(ymin = effect-se, ymax = effect+se),shape=19, alpha=1/4) + 
   ylab("Treatment effect (1820$)") + 
   xlab("Quantile of slave wealth (1820$)") + 
-  stat_smooth(method = "loess",se=TRUE) + 
+  stat_smooth(method = "loess",se=FALSE) + 
   scale_y_continuous(labels = comma,limit=c(-1000,1000))
 
 ggsave(paste0(data.directory,"qreg-plot.pdf"), qreg.plot, width=8.5, height=11)
