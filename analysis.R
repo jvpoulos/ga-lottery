@@ -277,5 +277,12 @@ qreg.plot <- ggplot(qreg.plot.df[qreg.plot.df$quantile <=0.951,], aes(y=effect, 
 
 ggsave(paste0(data.directory,"qreg-plot.pdf"), qreg.plot, width=8.5, height=11)
 
+## Report results for 46%
+
+#46%
+qreg.plot.df[92,]$effect # effect
+qreg.plot.df[92,]$effect - (1.96*qreg.plot.df[92,]$se) # lower 
+qreg.plot.df[92,]$effect + (1.96*qreg.plot.df[92,]$se) # lower 
+
 ## Save data
 save.image(paste0(data.directory,"analysis.RData"))
