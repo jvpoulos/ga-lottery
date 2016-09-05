@@ -80,12 +80,12 @@ grid.bin$power <- apply(p.vals.bin.array, 2, function (x) length(which(x < alpha
 power.plot.bin <- ggplot(data=grid.bin, aes(x=r.prob, 
                                             y=power)) +
   geom_line() +
-  #scale_x_continuous(breaks=r.prob, labels = c("0.025", "0.05", "0.1", "0.2", "0.4", "0.5")) +
+  scale_x_continuous(breaks=c(0.001,0.005,0.01,0.015,0.02), 
+                     labels = percent_format()) +
   scale_y_continuous(breaks=c(0.25,0.50,0.75,0.8,1), labels = c("25%", "50%", "75%","80%","100%")) +
   geom_hline(yintercept = 0.8, colour="black", linetype = "longdash") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ylab("") +
-  xlab("") +
+  ylab("Power") +
+  xlab("Treatment effect") +
   ggtitle(rep(paste("Officeholding, N =",
                     format(nrow(sub.oh),big.mark=",",scientific=FALSE,trim=TRUE)),2)) + 
   ThemeBw1()
