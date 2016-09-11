@@ -372,7 +372,7 @@ grid.arrange(het.plot.slaves,
              left="Pretreatment covariate", bottom="Heterogeneous treatment effect")
 dev.off() 
 
-## Plot OH het treatment effects vs. 1820/50 Ginis
+## Plot OH het treatment effects vs. 1820/50 Ginis, 1870 taxation
 
 county.oh.df <- merge(oh.plot[12:37,],
                       counties.1820, 
@@ -380,8 +380,17 @@ county.oh.df <- merge(oh.plot[12:37,],
                       by.y = c("name"),
                       all.x=TRUE)
 
+counties.1870$county[counties.1870$county=="Mcintosh"] <- "McIntosh"
+
+county.oh.df <- merge(county.oh.df, 
+                      counties.1870,
+                      by.x = c("x"),
+                      by.y = c("county"),
+                      all.x=TRUE)
+
 county.oh.df$above.state.gini <- ifelse(county.oh.df$gini > 0.7886069,1,0)
 county.oh.df$above.state.slave <- ifelse(county.oh.df$slave.poppc > 0.41222123,1,0)
+county.oh.df$above.state.tax <- ifelse(county.oh.df$tax.pc > 0.983,1,0)
 
 county.oh.plot.gini <- ggplot(county.oh.df, aes(gini, y, colour = above.state.gini)) + 
   geom_pointrange(aes(ymax =county.oh.df$y.hi, ymin=county.oh.df$y.lo)) +
@@ -398,6 +407,16 @@ county.oh.plot.slave <- ggplot(county.oh.df, aes(slave.poppc, y, colour = above.
   stat_smooth(method = "loess",se=TRUE) + 
   theme(legend.position = "none") +
   scale_y_continuous(labels = percent_format())
+
+county.oh.plot.tax <- ggplot(county.oh.df, aes(tax.pc, y, colour = above.state.tax)) + 
+  geom_pointrange(aes(ymax =county.oh.df$y.hi, ymin=county.oh.df$y.lo)) +
+  xlab("Per-capita taxation") +
+  ylab("") +
+  stat_smooth(method = "loess",se=TRUE) + 
+  theme(legend.position = "none") +
+  scale_y_continuous(labels = percent_format())
+
+ggsave(paste0(data.directory,"county-oh-plot-tax.pdf"), county.oh.plot.tax, width=8.5, height=11) 
 
 # Combine plots
 pdf(paste0(data.directory,"county-oh-plot.pdf"), width=8.5, height=13)

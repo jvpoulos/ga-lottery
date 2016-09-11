@@ -50,6 +50,7 @@ colnames(cnames) <- c("group","long","lat")
 cnames$lat[cnames$group=="Camden"] <- 31 # move up Camden
 cnames$lat[cnames$group=="Bryan"] <- 32.01 # move up Bryan
 cnames$long[cnames$group=="Chatham"] <- -81.2 # move left Chatham
+cnames$group[cnames$group=="Mcintosh"] <- "McIntosh"
 
 if(patient.descriptive){ 
 # Produce counties map with 1807 boundaries
@@ -145,3 +146,23 @@ pdf(paste0(data.directory,"county-map-wealth-gini-1850.pdf"), width=8.5, height=
 Map.wealth.gini.50 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
 dev.off() 
 }
+
+## 1870 Census
+
+# Merge 1870 census data 
+county.70 <- merge(counties1807,counties.1870, by.x="id", by.y = "county",all.x=TRUE) # only counties in 1807
+
+if(patient.descriptive){ 
+  # Produce per capita taxes map with 1807 boundaries
+  Map.taxes.pop.70 <- ggplot(county.70, aes(long, lat, group = group, fill = tax.pc)) + geom_polygon() + 
+    coord_equal()  + scale_fill_gradient(low = "white", high = "gray") + labs(fill="Per-capita county taxation (1870)") + 
+    theme(axis.ticks = element_blank(), axis.text.x = element_blank(), 
+          axis.text.y = element_blank(),axis.title.x = element_blank(),
+          axis.title.y = element_blank()) + theme(panel.grid.minor=element_blank(), 
+                                                  panel.grid.major=element_blank()) +
+    geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
+}
+
+pdf(paste0(data.directory,"county-map-taxes-pop-1870.pdf"), width=8.5, height=11)
+Map.taxes.pop.70 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
+dev.off() 

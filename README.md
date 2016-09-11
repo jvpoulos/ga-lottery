@@ -10,6 +10,7 @@ Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, an
 		* `ipums-ga-1850.csv` subset of complete--count Census data (1850)
 		* `counties-1800.csv` county--level Census data (1800)
 		* `counties-1850.csv` county--level Census data (1850)
+		* `counties-1870.csv` county--level Census data (1870)
 	* `county-maps.R` create maps of Georgia with 1807 county boundaries
 	* `utils.R` defines functions
 	* `prepare.R` prepare lottery data for analysis

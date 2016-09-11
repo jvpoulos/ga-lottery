@@ -155,7 +155,7 @@ counties$logtotalfarmacres <- log(counties$acunimp+counties$acimp) # log total f
 counties$slave.poppc <- counties$stot/counties$totpop # slave population / total population
 
 # Keep counties that existed in 1805 + 3 new counties + Georgia
-counties1805 <- subset(counties, name=="Baldwin" | name== "Bryan"| name=="Bulloch"| name=="Burke"| name=="Camden"| name=="Chatham"| name=="Clarke"| name=="Columbia"| name=="Effingham"| name=="Elbert"| name=="Franklin"| name=="Glynn"| name=="Greene"| name=="Hancock"| name=="Jackson"| name=="Jefferson"| name=="Liberty"| name=="Lincoln"| name=="McIntosh"| name=="Montgomery"| name=="Oglethorpe"| name=="Richmond"| name=="Screven"| name=="Tattnall"| name=="Warren"| name=="Washington"| name=="Wayne" | name=="Wilkes" | name=="Wilkinson" | name=="Georgia")
+counties1805 <- subset(counties, name=="Baldwin" | name== "Bryan"| name=="Bulloch"| name=="Burke"| name=="Camden"| name=="Chatham"| name=="Clarke"| name=="Columbia"| name=="Effingham"| name=="Elbert"| name=="Franklin"| name=="Glynn"| name=="Greene"| name=="Hancock"| name=="Jackson"| name=="Jefferson"| name=="Liberty"| name=="Lincoln"| name=="Mcintosh"| name=="Montgomery"| name=="Oglethorpe"| name=="Richmond"| name=="Screven"| name=="Tattnall"| name=="Warren"| name=="Washington"| name=="Wayne" | name=="Wilkes" | name=="Wilkinson" | name=="Georgia")
 
 if(patient.descriptive){ 
 # Make table
@@ -166,6 +166,18 @@ print(xtable(counties1805[c("name","logfarmval","logequipval","logfarms","logavg
       floating=FALSE)
 }
 
+## 1870
+
+counties.1870 <- read.csv(paste0(data.directory,"counties-1870.csv"), stringsAsFactors=FALSE)
+
+# Create table 
+if(patient.descriptive){ 
+  print(xtable(counties.1870[c("county","tax","pop","tax.pc")],digits= 3,caption = "Summary statistics on selected county--level characteristics in the 1870 Census.", lab = "sum-counties-70"),
+        include.rownames = FALSE,
+        booktabs = TRUE,
+        tabular.environment = "longtable",
+        floating=FALSE)
+}
 ## Plot slave wealth densities (1820) by treatment status
 
 # Make data for histogram
