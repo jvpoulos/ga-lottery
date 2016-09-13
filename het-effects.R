@@ -411,7 +411,7 @@ county.oh.plot.slave <- ggplot(county.oh.df, aes(slave.poppc, y, colour = above.
 county.oh.plot.tax <- ggplot(county.oh.df, aes(tax.pc, y, colour = above.state.tax)) + 
   geom_pointrange(aes(ymax =county.oh.df$y.hi, ymin=county.oh.df$y.lo)) +
   xlab("Per-capita taxation") +
-  ylab("") +
+  ylab("Heterogeneous treatment effect") +
   stat_smooth(method = "loess",se=TRUE) + 
   theme(legend.position = "none") +
   scale_y_continuous(labels = percent_format())
