@@ -1,4 +1,4 @@
-Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, and Legislative Ideology"
+Reproduce figures, tables, and empirical estimates.
 
 #Contents
 * `ga-lottery-online-appendix.pdf` is the Online Appendix
