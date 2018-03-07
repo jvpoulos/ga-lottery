@@ -1,4 +1,4 @@
-Reproduce figures, tables, and empirical estimates in "Land Lotteries, Long-term Wealth, and Political Selection"
+Reproduce figures, tables, and empirical estimates
 ======
 
 Contents
