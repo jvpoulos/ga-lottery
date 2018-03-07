@@ -18,14 +18,14 @@ Contents
 		* `balance-tests.R` estimates randomization *p* values for balance plot; outputs as `balance-tests.txt`
 		* `balance-plot.R` creates balance plot
 		* `qq-plot.R` creates QQ plots for Online Appendix
-<!-- 		* `tax-records.R` creates pretreatment wealth distribution figures and tables
-			* `tax-digests.R` prepares tax digest data (`tax-digests.csv`) 
-				* `tax-digests.csv` tax digest data for legislators -->
 	* `SuperLearner.R` defines **SuperLearner** libraries
 	* `het-effects.R` create heterogeneous treatment effect plots and ensemble 
 * `power.sh` shell script for `power.R`
 * `power.R` performs power analysis and outputs plot
 
+<!-- 		* `tax-records.R` creates pretreatment wealth distribution figures and tables
+			* `tax-digests.R` prepares tax digest data (`tax-digests.csv`) 
+				* `tax-digests.csv` tax digest data for legislators -->
 
 Instructions
 ------
