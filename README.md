@@ -1,7 +1,8 @@
-Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, and Legislative Ideology"
+Reproduce figures, tables, and empirical estimates in "Land Lotteries, Long-term Wealth, and Political Selection"
+======
 
-#Contents
-* `ga-lottery-online-appendix.pdf` is the Online Appendix
+Contents
+------
 * `lottery.Rdata` contains the datasets used for the analysis 
 * `codebook.txt` describes the `lottery.Rdata` datasets
 * `analysis.sh` shell script for `analysis.R`
@@ -14,19 +15,20 @@ Reproduce figures, tables, and empirical estimates in "Wealth, Officeholding, an
 	* `county-maps.R` create maps of Georgia with 1807 county boundaries
 	* `utils.R` defines functions
 	* `prepare.R` prepare lottery data for analysis
-		* `balance-tests.R` estimates randomization *p* values for balance plot; outputs as `balance-tests.txt'
+		* `balance-tests.R` estimates randomization *p* values for balance plot; outputs as `balance-tests.txt`
 		* `balance-plot.R` creates balance plot
 		* `qq-plot.R` creates QQ plots for Online Appendix
-		* `tax-records.R` creates pretreatment wealth distribution figures and tables
+<!-- 		* `tax-records.R` creates pretreatment wealth distribution figures and tables
 			* `tax-digests.R` prepares tax digest data (`tax-digests.csv`) 
-				* `tax-digests.csv` tax digest data for legislators
+				* `tax-digests.csv` tax digest data for legislators -->
 	* `SuperLearner.R` defines **SuperLearner** libraries
 	* `het-effects.R` create heterogeneous treatment effect plots and ensemble 
 * `power.sh` shell script for `power.R`
 * `power.R` performs power analysis and outputs plot
 
 
-#Instructions
+Instructions
+------
 * Clone a copy of the repository to your working directory with the command
 ```
 $ git clone https://github.com/jvpoulos/ga-lottery
