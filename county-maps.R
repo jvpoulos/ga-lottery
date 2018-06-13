@@ -11,6 +11,7 @@ require(spdep)
 require(ifultools)
 
 # Download historical county map data
+setwd(data.directory)
 url <- "http://publications.newberry.org/ahcbp/downloads/gis/GA_AtlasHCB.zip"
 map.data <- basename(url)
 download.file(url,map.data)
@@ -63,9 +64,7 @@ Map <- ggplot(counties1807, aes(long, lat, group = group, fill = newcounty)) + g
   geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + 
   scale_colour_manual(values=c('black')) + theme(legend.position="none") 
 
-pdf(paste0(data.directory,"county-map.pdf"), width=8.5, height=11)
-Map + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
-dev.off() 
+ggsave(paste0(data.directory,"plots/county-map.png"), Map + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
 
 # Counties map with 1800 slave share
 Map.slave.pop <- ggplot(county.00, aes(long, lat, group = group, fill = slave.poppc)) + geom_polygon() + 
@@ -76,9 +75,7 @@ Map.slave.pop <- ggplot(county.00, aes(long, lat, group = group, fill = slave.po
                                                 panel.grid.major=element_blank()) +
   geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
 
-pdf(paste0(data.directory,"county-map-slave-pop-1800.pdf"), width=8.5, height=11)
-Map.slave.pop + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
-dev.off() 
+ggsave(paste0(data.directory,"plots/county-map-slave-pop-1800.png"), Map.slave.pop + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
 }
 
 ## 1820 Census
@@ -96,9 +93,7 @@ if(patient.descriptive){
                                                   panel.grid.major=element_blank()) +
     geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
   
-  pdf(paste0(data.directory,"county-map-slave-pop-1820.pdf"), width=8.5, height=11)
-  Map.slave.pop.20 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
-  dev.off() 
+  ggsave(paste0(data.directory,"plots/county-map-slave-pop-1820.png"), Map.slave.pop.20 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
   
   # Produce wealth gini map with 1807 boundaries
   Map.wealth.gini.20 <- ggplot(county.20, aes(long, lat, group = group, fill = gini)) + geom_polygon() + 
@@ -109,9 +104,8 @@ if(patient.descriptive){
                                                   panel.grid.major=element_blank()) +
     geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
   
-  pdf(paste0(data.directory,"county-map-wealth-gini-1820.pdf"), width=8.5, height=11)
-  Map.wealth.gini.20 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
-  dev.off() 
+  ggsave(paste0(data.directory,"plots/county-map-wealth-gini-1820.png"), Map.wealth.gini.20 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
+  
 }
 
 ## 1850 Census
@@ -129,9 +123,8 @@ Map.slave.pop.50 <- ggplot(county.50, aes(long, lat, group = group, fill = slave
                                                 panel.grid.major=element_blank()) +
   geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
 
-pdf(paste0(data.directory,"county-map-slave-pop-1850.pdf"), width=8.5, height=11)
-Map.slave.pop.50 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
-dev.off() 
+ggsave(paste0(data.directory,"plots/county-map-slave-pop-1850.png"), Map.slave.pop.50 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
+
 
 # Produce wealth gini map with 1807 boundaries
 Map.wealth.gini.50 <- ggplot(county.50, aes(long, lat, group = group, fill = gini)) + geom_polygon() + 
@@ -142,9 +135,7 @@ Map.wealth.gini.50 <- ggplot(county.50, aes(long, lat, group = group, fill = gin
                                                 panel.grid.major=element_blank()) +
   geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
 
-pdf(paste0(data.directory,"county-map-wealth-gini-1850.pdf"), width=8.5, height=11)
-Map.wealth.gini.50 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
-dev.off() 
+ggsave(paste0(data.directory,"plots/county-map-wealth-gini-1850.png"), Map.wealth.gini.50 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
 }
 
 ## 1870 Census
@@ -163,6 +154,4 @@ if(patient.descriptive){
     geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
 }
 
-pdf(paste0(data.directory,"county-map-taxes-pop-1870.pdf"), width=8.5, height=11)
-Map.taxes.pop.70 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3))
-dev.off() 
+ggsave(paste0(data.directory,"plots/county-map-taxes-pop-1870.png"), Map.taxes.pop.70 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)

@@ -34,7 +34,7 @@ registerDoParallel(cores) # register cores
 RNGkind("L'Ecuyer-CMRG") # ensure random number generation
 
 # Set data directory 
-data.directory <-"/home/ubuntu/github/ga-lottery/"
+data.directory <-"~/Dropbox/github/ga-lottery/"
 
 # Load data
 load(paste0(data.directory,"ga-lottery.RData"))
@@ -66,12 +66,6 @@ if(patient.descriptive){
   my.stats <- list("n", "min", "mean", "max", "s") 
   print(tableContinuous(vars = sub.1820[c("slave.wealth.1820")],
                         group = sub.1820$treat + sub.1820$rgb, 
-                        prec = 3,
-                        cumsum=FALSE,
-                        stats=my.stats))
-  
-  print(tableContinuous(vars = sub.prior[c("n.post.terms","slave.index","bank.index")], 
-                        group = sub.prior$treat + sub.prior$rgb, 
                         prec = 3,
                         cumsum=FALSE,
                         stats=my.stats))

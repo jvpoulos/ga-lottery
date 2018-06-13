@@ -196,9 +196,7 @@ if(patient.descriptive){
     scale_fill_manual(values = c("red","blue"), labels= c("Control", "Treated"), name="Treatment status") +
     theme(legend.justification = c(1, 1), legend.position = c(1, 1),legend.background = element_rect(colour = "black"))
   
-  pdf(paste0(data.directory,"slave-wealth-1820.pdf"), width=8.5, height=11)
-  slave.wealth.plot
-  dev.off() 
+  ggsave(paste0(data.directory,"plots/slave-wealth-1820.png"), slave.wealth.plot, width=11, height=8.5)
 }
 
 
@@ -261,8 +259,7 @@ time.lapse.hist07 <- ggplot(time.lapse.plot07, aes(x=value, fill=county.drawn)) 
   theme(legend.justification = c(1, 1), legend.position = c(1, 1),legend.background = element_rect(colour = "black"))
 
 # Combine plots
-pdf(paste0(data.directory,"time-lapse.pdf"), width=8.5, height=11)
-print(grid.arrange(time.lapse.hist05, time.lapse.hist07,
-                   ncol=2, nrow=1, left="Density", bottom="# of days since start of grant claiming")) 
-dev.off() 
+ggsave(paste0(data.directory,"plots/time-lapse.png"), grid.arrange(time.lapse.hist05, time.lapse.hist07,
+                                                                   ncol=2, nrow=1, left="Density", bottom="# of days since start of grant claiming"), 
+       width=11, height=8.5)
 }

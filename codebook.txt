@@ -1,4 +1,4 @@
-Codebook for “Wealth, Officeholding, and Legislative Ideology”
+Codebook for "Land Lotteries, Long-term Wealth, and Political Selection"
 
 There are four datasets in ‘ga-lottery.RData’. ‘pet’ is the complete participant record for the 1805 lottery. ‘fdg05' and ‘fdg07’ are the fortunate drawer and grantee records for the 1805 and 1807 lotteries, respectively. ‘lot05’ merges ‘fdg05’, ‘petd’, and officeholder records. ‘officeholders’ contains outcome variables for legislator-participants. 
 

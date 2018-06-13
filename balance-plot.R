@@ -1,20 +1,22 @@
 # Create balance plot data
-covars.names <- c("Junior","Senior","Surname frequency","Surname length","Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
+covars.names <- c("Candidate","Officeholder","Junior","Senior","Surname frequency","Surname length","Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
 
 if(patient.balance){ 
-  balance.tests <- read.table(paste0(data.directory,"balance-tests.txt"), quote="\"", comment.char="") # upload balance test p values
+  balance.tests <- read.table(paste0(data.directory,"results/balance-tests.txt"), quote="\"", comment.char="") # upload balance test p values
+  
+  balance.tests$adjusted.p <- p.adjust(balance.tests$V3, method="hommel")
   
   covars <- data.frame("covars"=covars.names,
                        "p"=balance.tests[,3])
   
-  Generational  <- c("Junior","Senior") # group vars
-  Surname    <- c("Surname frequency","Surname length")
+  Political  <- c("Candidate","Officeholder") # group vars
+  Surname    <- c("Junior","Senior","Surname frequency","Surname length")
   Occupations       <- c("Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher")
   Counties       <- c("Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
   
   covars$group <- NA
-  covars$group[covars$covars %in% Generational]       <- "Generational titles"
-  covars$group[covars$covars %in% Surname]       <- "Surname characteristics"
+  covars$group[covars$covars %in% Political]       <- "Political activity"
+  covars$group[covars$covars %in% Surname]       <- "Names"
   covars$group[covars$covars %in% Occupations]       <- "Occupations"
   covars$group[covars$covars %in% Counties]       <- "County of registration"
   
@@ -22,14 +24,14 @@ if(patient.balance){
   covars$covars <- paste(offset,covars$covars)
   
   covars$order <- 1:nrow(covars)  # reorder  
-  order <- data.frame(covars= c("Generational titles:",
+  order <- data.frame(covars= c("Political activity:",
                                 "  ",
-                                "Surname characteristics:",
+                                "Names:",
                                 "   ",
                                 "Occupations:",
                                 "    ",
                                 "County of registration:"
-  ),order=c(.5,2.1,2.5,4.1,4.5,13.1,13.5),
+  ),order=c(.5,2.1,2.5,6.1,6.5,15.1,15.5),
   p=NA,group=NA)
   covars <- rbind(covars,order)
   covars <-covars[order(covars$order),]
@@ -45,5 +47,5 @@ if(patient.balance){
     scale_x_discrete(name="") + 
     ThemeBw1()
   
-  ggsave(paste0(data.directory,"balance-plot.pdf"), p, width=8.5, height=11)
+  ggsave(paste0(data.directory,"plots/balance-plot.png"), p, width=11, height=8.5)
 }
