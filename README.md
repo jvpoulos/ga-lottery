@@ -15,9 +15,8 @@ Contents
 	* `county-maps.R` create maps of Georgia with 1807 county boundaries
 	* `utils.R` defines functions
 	* `prepare.R` prepare lottery data for analysis
-		* `balance-tests.R` estimates randomization *p* values for balance plot; outputs as `balance-tests.txt`
-		* `balance-plot.R` creates balance plot
-		* `qq-plot.R` creates QQ plots for Online Appendix
+		* `balance-tests.R` estimates *p* values for balance plot
+		* `balance-plot.R` creates balance table with *p* values
 	* `SuperLearner.R` defines **SuperLearner** libraries
 	* `het-effects.R` create heterogeneous treatment effect plots and ensemble 
 * `power.sh` shell script for `power.R`

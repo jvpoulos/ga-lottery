@@ -96,45 +96,6 @@ PermutationTest<-function(y,treat,w,p.score,L=10000,alternative="two.sided",allo
   return(list("p" = pvalue, "perm.t.stats" = new.t.stats))
 }
 
-BootDiff<- function(y,treat,w,R=10000,beta.hat,sc=1) {
-  # Function to compute 95% confidence interval for the weighted difference in two means.
-  #
-  # Args:
-  #   y: Response vector.
-  #   treat: Treatment vector
-  #   w: Vector of weights.
-  #   R: The number of bootstrap replicates. The default is 10,000. 
-  #   beta.hat: The fraction of compliers in the experimental population.
-  #   sc. Smoothing constant. Default is 1. 
-  #
-  # Returns:
-  #   Vector containing weighted difference-in-means, and 95% nonparametric CI.
-  treat <- as.factor(treat) 
-  # Bootstrap weighted means for response y for each treatment group 
-  itt.diff <- bootstrap(y, EstAte,R=R, args.stat=list(treat,w[treat])) #ITT
-  tot.diff <- bootstrap(y, EstAte,R=R, args.stat=list(treat,w[treat],beta.hat)) #TOT
-  # Smooth bootstrap replicates by adding random normal variate independently to each observation
-  itt.diff[[2]] <- sapply(1:R, function(x) {
-    itt.diff[[2]][x] + rnorm(1,0,sc*sd(itt.diff[[2]])/sqrt(length(y)))
-  })
-  tot.diff[[2]] <- sapply(1:R, function(x) {
-    tot.diff[[2]][x] + rnorm(1,0,sc*sd(tot.diff[[2]])/sqrt(length(y)))
-  })
-  # Calculate percentiles of the differences in bootstrapped means
-  itt.per <- quantile(itt.diff[[2]], probs = c(0.025, 0.975))
-  tot.per <- quantile(tot.diff[[2]], probs = c(0.025, 0.975))
-  # Calculate observed differences in means
-  meandif.itt <- EstAte(y,treat,w) 
-  meandif.tot <- EstAte(y,treat,w,beta.hat)
-  # Make table for estimates
-  res.itt <- c(meandif.itt, itt.per) 
-  res.tot <- c(meandif.tot, tot.per)
-  res <- rbind(res.itt,res.tot) 
-  colnames(res) <- c('Mean Difference','.025','.975') 
-  rownames(res) <- c('ITT','TOT') 
-  return(res)
-}
-
 # Forest plot for summary figure
 ForestPlot <- function(d, xlab, ylab){
   p <- ggplot(d, aes(x=x, y = y, ymin=y.lo, ymax=y.hi,colour=Outcome)) + 
@@ -146,20 +107,6 @@ ForestPlot <- function(d, xlab, ylab){
     ylab(xlab) +
     xlab(ylab) #switch because of the coord_flip() above
   return(p)
-}
-
-## Functions for balance plot
-
-# Create function for balance plot theme
-ThemeBw1 <- function(base_size = 12, base_family = "") {
-  theme_grey(base_size = base_size, base_family = base_family) %+replace%
-    theme(
-      axis.text.x =       element_text(size = base_size*.9, colour = "black",  hjust = .5 , vjust=1),
-      axis.text.y =       element_text(size = base_size, colour = "black", hjust = 0 , vjust=.5 ), # changes position of X axis text
-      axis.ticks =        element_blank(),
-      axis.title.y =      element_text(size = base_size,angle=90,vjust=.01,hjust=.1),
-      legend.position = "none"
-    )
 }
 
 ## Functions for for heterogeneous treatment effects plots

@@ -1,51 +1,73 @@
 # Create balance plot data
-covars.names <- c("Candidate","Officeholder","Junior","Senior","Surname frequency","Surname length","Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
+covars.names <- c("1820 Census Match","Candidate","Officeholder","Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
 
-if(patient.balance){ 
-  balance.tests <- read.table(paste0(data.directory,"results/balance-tests.txt"), quote="\"", comment.char="") # upload balance test p values
-  
-  balance.tests$adjusted.p <- p.adjust(balance.tests$V3, method="hommel")
-  
-  covars <- data.frame("covars"=covars.names,
-                       "p"=balance.tests[,3])
-  
-  Political  <- c("Candidate","Officeholder") # group vars
-  Surname    <- c("Junior","Senior","Surname frequency","Surname length")
-  Occupations       <- c("Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher")
-  Counties       <- c("Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
-  
-  covars$group <- NA
-  covars$group[covars$covars %in% Political]       <- "Political activity"
-  covars$group[covars$covars %in% Surname]       <- "Names"
-  covars$group[covars$covars %in% Occupations]       <- "Occupations"
-  covars$group[covars$covars %in% Counties]       <- "County of registration"
-  
-  offset <- c("   ")
-  covars$covars <- paste(offset,covars$covars)
-  
-  covars$order <- 1:nrow(covars)  # reorder  
-  order <- data.frame(covars= c("Political activity:",
-                                "  ",
-                                "Names:",
-                                "   ",
-                                "Occupations:",
-                                "    ",
-                                "County of registration:"
-  ),order=c(.5,2.1,2.5,6.1,6.5,15.1,15.5),
-  p=NA,group=NA)
-  covars <- rbind(covars,order)
-  covars <-covars[order(covars$order),]
-  covars$covars <- factor(covars$covars,levels=unique(covars$covars)[length(covars$covars):1])
-  
-  # Create plot 
-  
-  p <- ggplot(covars,aes(y=p,x=covars,colour=group)) +  
-    coord_flip(ylim = c(0.03, 0.97)) + 
-    geom_hline(data=data.frame(x=0, y = 1), aes(x=x, yintercept=0.05), colour="black", lty=2) +
-    geom_point(size=4, alpha=0.9) + 
-    scale_y_continuous(name="p-value",breaks=c(0,0.05,0.10,1),labels=c("0","0.05","0.10","1")) + 
-    scale_x_discrete(name="") + 
-    ThemeBw1()
-  
-  ggsave(paste0(data.directory,"plots/balance-plot.png"), p, width=11, height=8.5)
+covars <- data.frame("covars"=covars.names,
+                     "1805.ATE"= unlist(lapply(balance, '[[', 1)),
+                     "1805.p"= unlist(lapply(balance, '[[', 2)),
+                     "1805.winners.ATE"= unlist(lapply(balance.05.winners, '[[', 1)),
+                     "1805.winners.p"= unlist(lapply(balance.05.winners, '[[', 2)),
+                     "1807.winners.ATE"= c(unlist(lapply(balance.07.winners, '[[', 1))[1:4], NA, unlist(lapply(balance.07.winners, '[[', 1))[5:6],NA,unlist(lapply(balance.07.winners, '[[', 1))[7:9],NA,unlist(lapply(balance.07.winners, '[[', 1))[10:35]),
+                     "1807.winners.p"= c(unlist(lapply(balance.07.winners, '[[', 2))[1:4], NA, unlist(lapply(balance.07.winners, '[[', 2))[5:6],NA,unlist(lapply(balance.07.winners, '[[', 2))[7:9],NA,unlist(lapply(balance.07.winners, '[[', 2))[10:35]))
+
+Attrition <- c("1820 Census Match") # group vars
+Political  <- c("Candidate","Officeholder")
+Occupations       <- c("Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher")
+Counties       <- c("Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
+
+covars$group <- NA
+covars$group[covars$covars %in% Attrition]       <- "Attrition"
+covars$group[covars$covars %in% Political]       <- "Political activity"
+covars$group[covars$covars %in% Occupations]       <- "Occupations"
+covars$group[covars$covars %in% Counties]       <- "County of registration"
+
+offset <- c("   ")
+covars$covars <- paste(offset,covars$covars)
+
+covars$order <- 1:nrow(covars)  # reorder  
+order <- data.frame(covars= c("Attrition:",
+                              " ", # need different size gaps
+                               "Political activity:",
+                              "  ",
+                               "Occupations:",
+                              "   ",
+                               "County of registration:"
+),"X1805.ATE"=NA,"X1805.p"=NA,"X1805.winners.ATE"=NA,"X1805.winners.p"=NA,  
+"X1807.winners.ATE"=NA,"X1807.winners.p"=NA,"group"=NA,order=c(.5,1.1,1.5,3.1,3.5,12.1,12.5))
+covars <- rbind(covars,order)
+covars <-covars[order(covars$order),]
+covars$covars <- factor(covars$covars,levels=unique(covars$covars)[length(covars$covars):1])
+
+# Create plot 
+
+# Create function for balance plot theme
+ThemeBw1 <- function(base_size = 12, base_family = "") {
+  theme_grey(base_size = base_size, base_family = base_family) %+replace%
+    theme(
+      axis.text.x =       element_text(size = base_size*.9, colour = "black",  hjust = .5 , vjust=1),
+      axis.text.y =       element_text(size = base_size, colour = "black", hjust = 0 , vjust=.5 ), # changes position of X axis text
+      axis.ticks =        element_blank(),
+      axis.title.y =      element_text(size = base_size,angle=90,vjust=.01,hjust=.1)
+    )
 }
+
+p <- ggplot(covars,aes(x=covars)) +  
+  coord_flip(ylim = c(0.03, 0.97)) + 
+  geom_hline(data=data.frame(x=0, y = 1), aes(x=x, yintercept=0.05), colour="black", lty=2) +
+  geom_point(aes(y=X1805.p, colour="x1805", shape="x1805"), size=3, alpha=0.8) + 
+  geom_point(aes(y=X1805.winners.p, colour="x1805.winners", shape="x1805.winners"), size=3, alpha=0.8) + 
+  geom_point(aes(y=X1807.winners.p, colour="x1807.winners", shape="x1807.winners"), size=3, alpha=0.8) + 
+  scale_y_continuous(name="p value",breaks=c(0,0.05,0.10,1),labels=c("0","0.05","0.10","1")) + 
+  scale_colour_manual(name="Sample",
+                      values=c(x1805=wes_palette("Darjeeling")[3], x1805.winners=wes_palette("Darjeeling")[2], x1807.winners=wes_palette("Darjeeling")[1]),
+                      label=c("1805 winners and losers",
+                              "1805 winners",
+                              "1807 winners")) +
+  scale_shape_manual(name="Sample",
+                      values=c(19, 17, 15),
+                      label=c("1805 winners and losers",
+                              "1805 winners",
+                              "1807 winners")) +
+  scale_x_discrete(name="") + 
+  ThemeBw1() # fill in by pos/negative ATE 
+
+ggsave(paste0(data.directory,"plots/balance-plot.png"), p, width=11, height=8.5)

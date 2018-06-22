@@ -25,6 +25,7 @@ require(splines)
 require(parallel)
 require(doParallel)
 require(quantreg)
+require(wesanderson)
 
 # Setup parallel processing 
 cores <- detectCores() # specify number of cores to use
@@ -45,9 +46,6 @@ patient.descriptive <- FALSE
 # Run balance tests?
 patient.balance <- FALSE
 
-# Run randomization tests?
-patient.random <- FALSE
-
 # Run heterogeneous effects models?
 patient.het <- FALSE
 
@@ -58,190 +56,245 @@ source(paste0(data.directory,"utils.R"))
 source(paste0(data.directory,"descriptive-stats.R"))
 source(paste0(data.directory,"county-maps.R"))
 
-## Prepare 1805 lottery data 
+## Prepare lottery data 
 source(paste0(data.directory,"prepare.R"))
 
 ## Create table showing outcomes by treatment group & compliance status
 if(patient.descriptive){ 
   my.stats <- list("n", "min", "mean", "max", "s") 
-  print(tableContinuous(vars = sub.1820[c("slave.wealth.1820")],
-                        group = sub.1820$treat + sub.1820$rgb, 
-                        prec = 3,
+  
+  # 1805 winners and losers
+  
+  print(tableContinuous(vars = sub.oh.05[c("candidate","match.votes.05")], 
+                        group = sub.oh.05$treat + sub.oh.05$rgb, 
+                        prec = 2,
                         cumsum=FALSE,
                         stats=my.stats))
   
-  print(tableContinuous(vars = sub.oh[c("oh","match.oh")], 
-                        group = sub.oh$treat + sub.oh$rgb, 
-                        prec = 3,
+  print(tableContinuous(vars = sub.oh.05[c("oh","match.oh")], 
+                        group = sub.oh.05$treat + sub.oh.05$rgb, 
+                        prec = 2,
                         cumsum=FALSE,
                         stats=my.stats))
   
-  print(tableContinuous(vars = sub.candidate[c("candidate")], 
-                        group = sub.candidate$treat + sub.candidate$rgb, 
-                        prec = 3,
+  print(tableContinuous(vars = sub.1820.05[c("slave.wealth.1820","slave.wealth.1820.w")],
+                        group = sub.1820.05$treat + sub.1820.05$rgb, 
+                        prec = 2,
+                        cumsum=FALSE,
+                        stats=my.stats))
+  
+  # 1805 winners
+  print(tableContinuous(vars = sub.oh.05.winners[c("candidate","match.votes.05")],
+                        group = sub.oh.05.winners$treat + sub.oh.05.winners$rgb,
+                        prec = 2,
+                        cumsum=FALSE,
+                        stats=my.stats))
+
+  print(tableContinuous(vars = sub.oh.05.winners[c("oh","match.oh")],
+                        group = sub.oh.05.winners$treat + sub.oh.05.winners$rgb,
+                        prec = 2,
+                        cumsum=FALSE,
+                        stats=my.stats))
+
+  print(tableContinuous(vars = sub.1820.05.winners[c("slave.wealth.1820","slave.wealth.1820.w")],
+                        group = sub.1820.05.winners$treat + sub.1820.05.winners$rgb,
+                        prec = 2,
                         cumsum=FALSE,
                         stats=my.stats))
 }
 
-## ITT/TOT analyses for officeholding 
+## ITT analyses for officeholding 
 
 # Results for officeholding
 if(patient.random){
-  perm.oh <- PermutationTest(y=sub.oh$oh,
-                             treat=sub.oh$treat,
-                             w=sub.oh$weight,
-                             p.score=sub.oh$p.score) 
-  print(perm.oh$p)
+  # 1805 winners and losers
+  # perm.oh <- PermutationTest(y=sub.oh.05$oh,
+  #                            treat=sub.oh.05$treat,
+  #                            w=sub.oh.05$weight,
+  #                            p.score=sub.oh.05$p.score)
+  # print(perm.oh$p)
+  
+  # 1805 winners
+  perm.oh.05.winners <- PermutationTest(y=sub.oh.05.winners$oh,
+                             treat=sub.oh.05.winners$treat,
+                             w=sub.oh.05.winners$weight,
+                             p.score=sub.oh.05.winners$p.score)
+  print(perm.oh.05.winners$p)
 }
 
-oh.CI <- BootDiff(y=sub.oh$oh,
-                  treat=sub.oh$treat,
-                  w=sub.oh$weight,
-                  beta.hat=beta.hat)
+# 1805 winners and losers
+oh.lm <- lm(sub.oh.05$oh~sub.oh.05$treat + sub.oh.05$n.draw)
+oh.CI <- list("CI" = confint(oh.lm, "sub.oh.05$treat")[1:2],
+              "ATE" = oh.lm$coefficients['sub.oh.05$treat'][[1]])
+
+print(oh.CI)
+
+# 1805 winners
+oh.lm.winners <- lm(sub.oh.05.winners$oh~sub.oh.05.winners$treat + sub.oh.05.winners$n.draw)
+oh.CI.winners <- list("CI" = confint(oh.lm.winners, "sub.oh.05.winners$treat")[1:2],
+              "ATE" = oh.lm.winners$coefficients['sub.oh.05.winners$treat'][[1]])
+
+print(oh.CI.winners)
 
 # Results for officeholding match
-match.oh.CI <- BootDiff(y=sub.oh$match.oh,
-                        treat=sub.oh$treat,
-                        w=sub.oh$weight,
-                        beta.hat=beta.hat)
 
-# Results for officeholding (treatment is winning single prize)
-one.prize.CI <- BootDiff(y=sub.oh$oh,
-                         treat=sub.oh$one.prize,
-                         w=sub.oh$weight,
-                         beta.hat=1-(length(grep("RGB",lot05$grant.book.x))/sum(lot05$one.prize))) # compliance rate among single-prize winners
+if(patient.random){
+  # 1805 winners and losers
+  # perm.match.oh <- PermutationTest(y=sub.oh.05$match.oh,
+  #                            treat=sub.oh.05$treat,
+  #                            w=sub.oh.05$weight,
+  #                            p.score=sub.oh.05$p.score)
+  # print(perm.match.oh$p)
+  # 
+  # 1805 winners
+  perm.match.oh.winners <- PermutationTest(y=sub.oh.05.winners$match.oh,
+                                   treat=sub.oh.05.winners$treat,
+                                   w=sub.oh.05.winners$weight,
+                                   p.score=sub.oh.05.winners$p.score)
+  print(perm.match.oh.winners$p)
+}
 
-# Results for officeholding (treatment is by county of prize)
-ba.CI <- BootDiff(y=sub.oh$oh, 
-                  treat=sub.oh$ba, # Baldwin county 
-                  w=sub.oh$weight,
-                  beta.hat=1-(sum(lot05$rgb & lot05$ba)/sum(lot05$ba))) # compliance rate among Baldwin prize winners
+# 1805 winners and losers
+match.oh.lm <- lm(sub.oh.05$match.oh~sub.oh.05$treat + sub.oh.05$n.draw)
+match.oh.CI <- list("CI" = confint(match.oh.lm, "sub.oh.05$treat")[1:2],
+              "ATE" = match.oh.lm$coefficients['sub.oh.05$treat'][[1]])
 
-wa.CI <- BootDiff(y=sub.oh$oh, 
-                  treat=sub.oh$wa, # Wayne county 
-                  w=sub.oh$weight,
-                  beta.hat=1-(sum(lot05$rgb & lot05$wa)/sum(lot05$wa))) # compliance rate among Wayne prize winners
+print(match.oh.CI)
 
-wi.CI <- BootDiff(y=sub.oh$oh, 
-                  treat=sub.oh$wi, # Wayne county 
-                  w=sub.oh$weight,
-                  beta.hat=1-(sum(lot05$rgb & lot05$wi)/sum(lot05$wi))) # compliance rate among Wilkinson prize winners
+# 1805 winners
+match.oh.lm.winners <- lm(sub.oh.05.winners$match.oh~sub.oh.05.winners$treat + sub.oh.05.winners$n.draw)
+match.oh.CI.winners <- list("CI" = confint(match.oh.lm.winners, "sub.oh.05.winners$treat")[1:2],
+                    "ATE" = match.oh.lm.winners$coefficients['sub.oh.05.winners$treat'][[1]])
 
-## ITT/TOT analyses for candidacy 
+print(match.oh.CI.winners)
+
+## ITT analyses for candidacy 
 
 # Results for candidacy
 if(patient.random){
-  perm.candidate <- PermutationTest(y=sub.candidate$candidate,
-                             treat=sub.candidate$treat,
-                             w=sub.candidate$weight,
-                             p.score=sub.candidate$p.score) 
-  print(perm.candidate$p)
+  # 1805 winners and losers
+  # perm.candidate <- PermutationTest(y=sub.oh.05$candidate,
+  #                            treat=sub.oh.05$treat,
+  #                            w=sub.oh.05$weight,
+  #                            p.score=sub.oh.05$p.score)
+  # print(perm.candidate$p)
+  
+  # 1805 winners
+  perm.candidate.winners <- PermutationTest(y=sub.oh.05.winners$candidate,
+                                    treat=sub.oh.05.winners$treat,
+                                    w=sub.oh.05.winners$weight,
+                                    p.score=sub.oh.05.winners$p.score)
+  print(perm.candidate.winners$p)
 }
 
-candidate.CI <- BootDiff(y=sub.candidate$candidate,
-                  treat=sub.candidate$treat,
-                  w=sub.candidate$weight,
-                  beta.hat=beta.hat,
-                  sc=25) # more smoothing
+# 1805 winners and losers
+candidate.lm <- lm(sub.oh.05$candidate~sub.oh.05$treat + sub.oh.05$n.draw)
+candidate.CI <- list("CI" = confint(candidate.lm, "sub.oh.05$treat")[1:2],
+                    "ATE" = candidate.lm$coefficients['sub.oh.05$treat'][[1]])
 
-## ITT/TOT analyses for auxilliary outcomes
+print(candidate.CI)
 
-# Results for slavery legislation
-slavery.CI <- BootDiff(y=sub.prior[!is.na(sub.prior$slave.index),]$slave.index,
-                       treat=sub.prior[!is.na(sub.prior$slave.index),]$treat,
-                       w=sub.prior[!is.na(sub.prior$slave.index),]$weight,
-                       beta.hat=beta.hat)
+# 1805 winners
+candidate.lm.winners <- lm(sub.oh.05.winners$candidate~sub.oh.05.winners$treat + sub.oh.05.winners$n.draw)
+candidate.CI.winners <- list("CI" = confint(candidate.lm.winners, "sub.oh.05.winners$treat")[1:2],
+                     "ATE" = candidate.lm.winners$coefficients['sub.oh.05.winners$treat'][[1]])
 
-# Results for banking legislation
-bank.CI <- BootDiff(y=sub.prior[!is.na(sub.prior$bank.index),]$bank.index,
-                    treat=sub.prior[!is.na(sub.prior$bank.index),]$treat,
-                    w=sub.prior[!is.na(sub.prior$bank.index),]$weight,
-                    beta.hat=beta.hat,
-                    sc=25) # more smoothing
+print(candidate.CI.winners)
 
-# Results for term 
-term.CI <- BootDiff(y=range01(sub.prior$n.post.terms), #transform to 0-1 continous variable
-                    treat=sub.prior$treat,
-                    w=sub.prior$weight,
-                    beta.hat=beta.hat,
-                    sc=25) # more smoothing
-
-# Results for slave wealth 
+# Results for candidacy match
 if(patient.random){
-  perm.slaves <- PermutationTest(y=range01(sub.1820$slave.wealth.1820),
-                                    treat=sub.1820$treat,
-                                    w=sub.1820$weight,
-                                    p.score=sub.1820$p.score) 
-  print(perm.slaves$p)
+  # 1805 winners and losers
+  # perm.match.candidate <- PermutationTest(y=sub.oh.05$match.votes.05,
+  #                                   treat=sub.oh.05$treat,
+  #                                   w=sub.oh.05$weight,
+  #                                   p.score=sub.oh.05$p.score)
+  # print(perm.match.candidate$p)
+  
+  # 1805 winners
+  perm.match.candidate.winners <- PermutationTest(y=sub.oh.05.winners$match.votes.05,
+                                          treat=sub.oh.05.winners$treat,
+                                          w=sub.oh.05.winners$weight,
+                                          p.score=sub.oh.05.winners$p.score)
+  print(perm.match.candidate.winners$p)
 }
-slaves.CI <- BootDiff(y=range01(sub.1820$slave.wealth.1820), #transform to 0-1 continous variable
-                      treat=sub.1820$treat,
-                      w=sub.1820$weight,
-                      beta.hat=beta.hat)
 
-## Create summary plots for ATEs
+# 1805 winners and losers
+match.candidate.lm <- lm(sub.oh.05$match.votes.05~sub.oh.05$treat + sub.oh.05$n.draw)
+match.candidate.CI <- list("CI" = confint(match.candidate.lm, "sub.oh.05$treat")[1:2],
+                     "ATE" = match.candidate.lm$coefficients['sub.oh.05$treat'][[1]])
 
-# Create data for plot for auxilliary analyses
-plot.data.aux <- data.frame(x = c("ITT","TOT"),
-                            y = c(candidate.CI[1],candidate.CI[2],
-                                  bank.CI[1],bank.CI[2],
-                                  slavery.CI[1],slavery.CI[2],
-                                  slaves.CI[1],slaves.CI[2],
-                                  term.CI[1],term.CI[2]),
-                            y.lo = c(candidate.CI[3],candidate.CI[4],bank.CI[3],bank.CI[4],slavery.CI[3],slavery.CI[4],slaves.CI[3],slaves.CI[4],term.CI[3],term.CI[4]),
-                            y.hi = c(candidate.CI[5],candidate.CI[6],bank.CI[5],bank.CI[6],slavery.CI[5],slavery.CI[6],slaves.CI[5],slaves.CI[6],term.CI[5],term.CI[6]))
-plot.data.aux <- transform(plot.data.aux, y.lo = y.lo, y.hi=y.hi)
-plot.data.aux$Outcome <- c(rep(paste("Candidacy, N=", 
-                                     format(nrow(sub.candidate),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                           rep(paste("Banking legislation, N =", 
-                                     format(nrow(sub.prior[!is.na(sub.prior$bank.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                           rep(paste("Slavery legislation, N =", 
-                                     format(nrow(sub.prior[!is.na(sub.prior$slave.index),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                           rep(paste("Slave wealth, N =", 
-                                     format(nrow(resp.dat[!is.na(resp.dat$slave.wealth.1820),]),big.mark=",",scientific=FALSE,trim=TRUE)),2),
-                           rep(paste("Terms, N=", 
-                                     format(nrow(sub.prior),big.mark=",",scientific=FALSE,trim=TRUE)),2))
+print(match.candidate.CI)
 
-# Create data for plot for officeholding and sensitivity analyses
-plot.data.oh.sens <- data.frame(x = c("ITT","TOT"),
-                           y = c(oh.CI[1],oh.CI[2],
-                                 match.oh.CI[1],match.oh.CI[2],
-                                 one.prize.CI[1],one.prize.CI[2],
-                                 ba.CI[1],ba.CI[2],
-                                 wa.CI[1],wa.CI[2],
-                                 wi.CI[1],wi.CI[2]),
-                           y.lo = c(oh.CI[3],oh.CI[4],
-                                    match.oh.CI[3],match.oh.CI[4],
-                                    one.prize.CI[3],one.prize.CI[4],
-                                    ba.CI[3],ba.CI[4],
-                                    wa.CI[3],wa.CI[4],
-                                    wi.CI[3],wi.CI[4]),
-                           y.hi = c(oh.CI[5],oh.CI[6],
-                                    match.oh.CI[5],match.oh.CI[6],
-                                    one.prize.CI[5],one.prize.CI[6],
-                                    ba.CI[5],ba.CI[6],
-                                    wa.CI[5],wa.CI[6],
-                                    wi.CI[5],wi.CI[6]))
-plot.data.oh.sens <- transform(plot.data.oh.sens, y.lo = y.lo, y.hi=y.hi)
-plot.data.oh.sens$Outcome <- c(rep(paste("Officeholding (binary)"),2),
-                          rep(paste("Officeholding (match prob.)"),2),
-                          rep(paste("Treatment: Single prize"),2),
-                          rep(paste("Treatment: Baldwin"),2),
-                          rep(paste("Treatment: Wayne"),2),
-                          rep(paste("Treatment: Wilkinson"),2))
+# 1805 winners
+match.candidate.lm.winners <- lm(sub.oh.05.winners$match.votes.05~sub.oh.05.winners$treat + sub.oh.05.winners$n.draw)
+match.candidate.CI.winners <- list("CI" = confint(match.candidate.lm.winners, "sub.oh.05.winners$treat")[1:2],
+                           "ATE" = match.candidate.lm.winners$coefficients['sub.oh.05.winners$treat'][[1]])
 
-# Plot forest plots
-plot.data.aux$x <- factor(plot.data.aux$x, levels=rev(plot.data.aux$x)) # reverse order
-plot.data.aux$Outcome <- factor(plot.data.aux$Outcome, levels=plot.data.aux$Outcome) # reverse order
-summary.plot.aux <- ForestPlot(plot.data.aux,xlab="Treatment effect",ylab="Analysis") + scale_y_continuous(labels = percent_format(), 
-                                                                                                           limits = c(-0.5,0.5))
+print(match.candidate.CI.winners)
 
-plot.data.oh.sens$x <- factor(plot.data.oh.sens$x, levels=rev(plot.data.oh.sens$x)) # reverse order
-plot.data.oh.sens$Outcome <- factor(plot.data.oh.sens$Outcome, levels=plot.data.oh.sens$Outcome) # reverse order
-summary.plot.oh.sens <- ForestPlot(plot.data.oh.sens,xlab="Treatment effect",ylab="Analysis") + scale_y_continuous(labels = percent_format(), 
-                                                                                                         limits = c(-0.025,0.025))
-ggsave(paste0(data.directory,"summary-plot-aux.pdf"), summary.plot.aux, width=8.5, height=11)
-ggsave(paste0(data.directory,"summary-plot-oh-sens.pdf"), summary.plot.oh.sens, width=8.5, height=11)
+## ITT analyses for slave wealth 
+# Resuts for slave wealth
+
+if(patient.random){
+  # 1805 winners and losers
+  # perm.slaves <- PermutationTest(y=sub.1820.05$slave.wealth.1820,
+  #                                   treat=sub.1820.05$treat,
+  #                                   w=sub.1820.05$weight,
+  #                                   p.score=sub.1820.05$p.score)
+  # print(perm.slaves$p)
+  # 
+  # 1805 winners
+  perm.slaves.winners <- PermutationTest(y=sub.1820.05.winners$slave.wealth.1820,
+                                 treat=sub.1820.05.winners$treat,
+                                 w=sub.1820.05.winners$weight,
+                                 p.score=sub.1820.05.winners$p.score)
+  print(perm.slaves.winners$p)
+}
+
+# 1805 winners and losers
+slaves.lm <- lm(sub.1820.05$slave.wealth.1820~sub.1820.05$treat + sub.1820.05$n.draw)
+slaves.CI <- list("CI" = confint(slaves.lm, "sub.1820.05$treat")[1:2],
+                           "ATE" = slaves.lm$coefficients['sub.1820.05$treat'][[1]])
+
+print(slaves.CI)
+
+# 1805 winners
+slaves.lm.winners <- lm(sub.1820.05.winners$slave.wealth.1820~sub.1820.05.winners$treat + sub.1820.05.winners$n.draw)
+slaves.CI.winners <- list("CI" = confint(slaves.lm.winners, "sub.1820.05.winners$treat")[1:2],
+                  "ATE" = slaves.lm.winners$coefficients['sub.1820.05.winners$treat'][[1]])
+
+print(slaves.CI.winners)
+
+# Resuts for slave wealth match
+if(patient.random){
+  # # 1805 winners and losers
+  # perm.match.slaves <- PermutationTest(y=sub.1820.05$slave.wealth.1820.w,
+  #                                treat=sub.1820.05$treat,
+  #                                w=sub.1820.05$weight,
+  #                                p.score=sub.1820.05$p.score)
+  # print(perm.match.slaves$p)
+  
+  # 1805 winners
+  perm.match.slaves.winners <- PermutationTest(y=sub.1820.05.winners$slave.wealth.1820.w,
+                                       treat=sub.1820.05.winners$treat,
+                                       w=sub.1820.05.winners$weight,
+                                       p.score=sub.1820.05.winners$p.score)
+  print(perm.match.slaves.winners$p)
+}
+
+# 1805 winners and losers
+match.slaves.lm <- lm(sub.1820.05$slave.wealth.1820.w~sub.1820.05$treat + sub.1820.05$n.draw)
+match.slaves.CI <- list("CI" = confint(match.slaves.lm, "sub.1820.05$treat")[1:2],
+                  "ATE" = match.slaves.lm$coefficients['sub.1820.05$treat'][[1]])
+
+print(match.slaves.CI)
+
+# 1805 winners
+match.slaves.lm.winners <- lm(sub.1820.05.winners$slave.wealth.1820.w~sub.1820.05.winners$treat + sub.1820.05.winners$n.draw)
+match.slaves.CI.winners <- list("CI" = confint(match.slaves.lm.winners, "sub.1820.05.winners$treat")[1:2],
+                        "ATE" = match.slaves.lm.winners$coefficients['sub.1820.05.winners$treat'][[1]])
+
+print(match.slaves.CI.winners)
 
 ## Create heterogeneous treatment effect plots 
 if(patient.het){
@@ -254,7 +307,7 @@ taus <- seq(0.005,0.995,0.005)
 qreg.fits <- lapply(taus, function(t){
   rq(formula = slave.wealth.1820 ~ treat, 
      tau = t, 
-     data = sub.1820)
+     data = sub.1820.05)
 })
 
 qreg.plot.df <- data.frame("effect" = sapply(qreg.fits, "[[", 1)[2,],
@@ -284,4 +337,4 @@ qreg.plot.df[100,]$effect - (1.96*qreg.plot.df[100,]$se) # lower
 qreg.plot.df[100,]$effect + (1.96*qreg.plot.df[100,]$se) # lower 
 
 ## Save data
-save.image(paste0(data.directory,"analysis.RData"))
+save.image(paste0(data.directory,"results/analysis.RData"))
