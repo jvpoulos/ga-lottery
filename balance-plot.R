@@ -50,13 +50,15 @@ ThemeBw1 <- function(base_size = 12, base_family = "") {
     )
 }
 
+y.title <- expression(paste(italic("p"), " value"))
+
 p <- ggplot(covars,aes(x=covars)) +  
   coord_flip(ylim = c(0.03, 0.97)) + 
   geom_hline(data=data.frame(x=0, y = 1), aes(x=x, yintercept=0.05), colour="black", lty=2) +
   geom_point(aes(y=X1805.p, colour="x1805", shape="x1805"), size=3, alpha=0.8) + 
   geom_point(aes(y=X1805.winners.p, colour="x1805.winners", shape="x1805.winners"), size=3, alpha=0.8) + 
   geom_point(aes(y=X1807.winners.p, colour="x1807.winners", shape="x1807.winners"), size=3, alpha=0.8) + 
-  scale_y_continuous(name="p value",breaks=c(0,0.05,0.10,1),labels=c("0","0.05","0.10","1")) + 
+  scale_y_continuous(name=y.title,breaks=c(0,0.05,0.10,1),labels=c("0","0.05","0.10","1")) + 
   scale_colour_manual(name="Sample",
                       values=c(x1805=wes_palette("Darjeeling")[3], x1805.winners=wes_palette("Darjeeling")[2], x1807.winners=wes_palette("Darjeeling")[1]),
                       label=c("1805 winners and losers",
