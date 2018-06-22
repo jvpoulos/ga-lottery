@@ -52,6 +52,15 @@ ThemeBw1 <- function(base_size = 12, base_family = "") {
 
 y.title <- expression(paste(italic("p"), " value"))
 
+winners.losers.05.label <- paste("1805 winners & losers, \n N =", 
+                     format(nrow(lot05),big.mark=",",scientific=FALSE,trim=TRUE),"\n")
+
+winners.05.label <- paste("1805 winners, \n N =", 
+                           format(nrow(lot05[(lot05$treat==1),]),big.mark=",",scientific=FALSE,trim=TRUE),"\n")
+
+winners.07.label <- paste("1805 winners, \n N =", 
+                          format(nrow(lot07),big.mark=",",scientific=FALSE,trim=TRUE))
+
 p <- ggplot(covars,aes(x=covars)) +  
   coord_flip(ylim = c(0.03, 0.97)) + 
   geom_hline(data=data.frame(x=0, y = 1), aes(x=x, yintercept=0.05), colour="black", lty=2) +
@@ -61,15 +70,15 @@ p <- ggplot(covars,aes(x=covars)) +
   scale_y_continuous(name=y.title,breaks=c(0,0.05,0.10,1),labels=c("0","0.05","0.10","1")) + 
   scale_colour_manual(name="Sample",
                       values=c(x1805=wes_palette("Darjeeling")[3], x1805.winners=wes_palette("Darjeeling")[2], x1807.winners=wes_palette("Darjeeling")[1]),
-                      label=c("1805 winners and losers",
-                              "1805 winners",
-                              "1807 winners")) +
+                      label=c(winners.losers.05.label,
+                              winners.05.label,
+                              winners.07.label)) +
   scale_shape_manual(name="Sample",
                       values=c(19, 17, 15),
-                      label=c("1805 winners and losers",
-                              "1805 winners",
-                              "1807 winners")) +
+                      label=c(winners.losers.05.label,
+                              winners.05.label,
+                              winners.07.label)) +
   scale_x_discrete(name="") + 
-  ThemeBw1() # fill in by pos/negative ATE 
+  ThemeBw1()
 
 ggsave(paste0(data.directory,"plots/balance-plot.png"), p, width=11, height=8.5)
