@@ -41,10 +41,7 @@ data.directory <-"~/Dropbox/github/ga-lottery/"
 load(paste0(data.directory,"ga-lottery.RData"))
 
 # Run descriptive analyses?
-patient.descriptive <- FALSE
-
-# Run balance tests?
-patient.balance <- FALSE
+patient.descriptive <- TRUE
 
 # Run heterogeneous effects models?
 patient.het <- FALSE
@@ -59,49 +56,13 @@ source(paste0(data.directory,"county-maps.R"))
 ## Prepare lottery data 
 source(paste0(data.directory,"prepare.R"))
 
-## Create table showing outcomes by treatment group & compliance status
-if(patient.descriptive){ 
-  my.stats <- list("n", "min", "mean", "max", "s") 
-  
-  # 1805 winners and losers
-  
-  print(tableContinuous(vars = sub.oh.05[c("candidate","match.votes.05")], 
-                        group = sub.oh.05$treat + sub.oh.05$rgb, 
-                        prec = 2,
-                        cumsum=FALSE,
-                        stats=my.stats))
-  
-  print(tableContinuous(vars = sub.oh.05[c("oh","match.oh")], 
-                        group = sub.oh.05$treat + sub.oh.05$rgb, 
-                        prec = 2,
-                        cumsum=FALSE,
-                        stats=my.stats))
-  
-  print(tableContinuous(vars = sub.1820.05[c("slave.wealth.1820","slave.wealth.1820.w")],
-                        group = sub.1820.05$treat + sub.1820.05$rgb, 
-                        prec = 2,
-                        cumsum=FALSE,
-                        stats=my.stats))
-  
-  # 1805 winners
-  print(tableContinuous(vars = sub.oh.05.winners[c("candidate","match.votes.05")],
-                        group = sub.oh.05.winners$treat + sub.oh.05.winners$rgb,
-                        prec = 2,
-                        cumsum=FALSE,
-                        stats=my.stats))
+## Run balance tests and plot (Fig. 1)
 
-  print(tableContinuous(vars = sub.oh.05.winners[c("oh","match.oh")],
-                        group = sub.oh.05.winners$treat + sub.oh.05.winners$rgb,
-                        prec = 2,
-                        cumsum=FALSE,
-                        stats=my.stats))
+source(paste0(data.directory,"balance-tests.R"))
+source(paste0(data.directory,"balance-plot.R")) 
 
-  print(tableContinuous(vars = sub.1820.05.winners[c("slave.wealth.1820","slave.wealth.1820.w")],
-                        group = sub.1820.05.winners$treat + sub.1820.05.winners$rgb,
-                        prec = 2,
-                        cumsum=FALSE,
-                        stats=my.stats))
-}
+# Table 1: summary statistics (including pre-treatment variables, political outcomes, and wealth outcomes)
+source(paste0(data.directory,"summary-table.R"))
 
 ## ITT analyses for officeholding 
 

@@ -152,6 +152,6 @@ if(patient.descriptive){
           axis.title.y = element_blank()) + theme(panel.grid.minor=element_blank(), 
                                                   panel.grid.major=element_blank()) +
     geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
-}
 
 ggsave(paste0(data.directory,"plots/county-map-taxes-pop-1870.png"), Map.taxes.pop.70 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
+}

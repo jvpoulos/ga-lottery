@@ -15,16 +15,13 @@ Contents
 	* `county-maps.R` create maps of Georgia with 1807 county boundaries
 	* `utils.R` defines functions
 	* `prepare.R` prepare lottery data for analysis
-		* `balance-tests.R` estimates *p* values for balance plot
-		* `balance-plot.R` creates balance table with *p* values
+	* `balance-tests.R` estimates *p* values for balance plot
+	* `balance-plot.R` creates Figure 1: balance plot with *p* values
+	* `summary-table.R` create Table 1: summary statistics (including pre-treatment variables, political outcomes, and wealth outcomes)
 	* `SuperLearner.R` defines **SuperLearner** libraries
 	* `het-effects.R` create heterogeneous treatment effect plots and ensemble 
 * `power.sh` shell script for `power.R`
 * `power.R` performs power analysis and outputs plot
-
-<!-- 		* `tax-records.R` creates pretreatment wealth distribution figures and tables
-			* `tax-digests.R` prepares tax digest data (`tax-digests.csv`) 
-				* `tax-digests.csv` tax digest data for legislators -->
 
 Instructions
 ------

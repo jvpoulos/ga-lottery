@@ -1,7 +1,6 @@
 # Get ATEs and p values
 
-#covars.balance <- c("prior.run","prior.office","junior","senior","surname.freq","surname.length","blacksmith","bricklayer","hatter","esquire","merchant","military","doctor","reverend","schoolmaster","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
-covars.balance <- c("prior.run","prior.office","blacksmith","bricklayer","hatter","esquire","merchant","military","doctor","reverend","schoolmaster","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
+covars.balance <- c("prior.run","prior.office","junior","senior","surname.freq","surname.length","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
 
 # 1805 winners and losers
 covars.balance.05 <- c("match.census.05",covars.balance)

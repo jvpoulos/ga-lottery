@@ -1,23 +1,25 @@
 # Create balance plot data
-covars.names <- c("1820 Census Match","Candidate","Officeholder","Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
+covars.names <- c("1820 Census Match","Candidate","Officeholder","Junior","Senior","Surname Frequency","Surname Length","Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
 
 covars <- data.frame("covars"=covars.names,
                      "1805.ATE"= unlist(lapply(balance, '[[', 1)),
                      "1805.p"= unlist(lapply(balance, '[[', 2)),
                      "1805.winners.ATE"= unlist(lapply(balance.05.winners, '[[', 1)),
                      "1805.winners.p"= unlist(lapply(balance.05.winners, '[[', 2)),
-                     "1807.winners.ATE"= c(unlist(lapply(balance.07.winners, '[[', 1))[1:4], NA, unlist(lapply(balance.07.winners, '[[', 1))[5:6],NA,unlist(lapply(balance.07.winners, '[[', 1))[7:9],NA,unlist(lapply(balance.07.winners, '[[', 1))[10:35]),
-                     "1807.winners.p"= c(unlist(lapply(balance.07.winners, '[[', 2))[1:4], NA, unlist(lapply(balance.07.winners, '[[', 2))[5:6],NA,unlist(lapply(balance.07.winners, '[[', 2))[7:9],NA,unlist(lapply(balance.07.winners, '[[', 2))[10:35]))
+                     "1807.winners.ATE"= unlist(lapply(balance.07.winners, '[[', 1)),
+                     "1807.winners.p"= unlist(lapply(balance.07.winners, '[[', 2)))
 
 Attrition <- c("1820 Census Match") # group vars
 Political  <- c("Candidate","Officeholder")
-Occupations       <- c("Blacksmith","Bricklayer","Hatter","Lawyer","Merchant","Military","Physician","Reverend","Teacher")
+Titles  <- c("Junior", "Senior")
+Surname  <- c("Surname Frequency", "Surname Length")
 Counties       <- c("Bryan","Bulloch","Burke","Camden","Chatham","Clarke","Columbia","Effingham","Elbert","Franklin","Glynn","Greene","Hancock","Jackson","Jefferson","Liberty","Lincoln","McIntosh","Montgomery","Oglethorpe","Richmond","Screven","Tattnall","Warren","Washington","Wilkes")
 
 covars$group <- NA
 covars$group[covars$covars %in% Attrition]       <- "Attrition"
 covars$group[covars$covars %in% Political]       <- "Political activity"
-covars$group[covars$covars %in% Occupations]       <- "Occupations"
+covars$group[covars$covars %in% Titles]       <- "Generational titles"
+covars$group[covars$covars %in% Surname]       <- "Surname characteristics"
 covars$group[covars$covars %in% Counties]       <- "County of registration"
 
 offset <- c("   ")
@@ -26,13 +28,15 @@ covars$covars <- paste(offset,covars$covars)
 covars$order <- 1:nrow(covars)  # reorder  
 order <- data.frame(covars= c("Attrition:",
                               " ", # need different size gaps
-                               "Political activity:",
+                              "Political activity:",
                               "  ",
-                               "Occupations:",
+                              "Generational titles:",
                               "   ",
+                               "Surname characteristics:",
+                              "    ",
                                "County of registration:"
 ),"X1805.ATE"=NA,"X1805.p"=NA,"X1805.winners.ATE"=NA,"X1805.winners.p"=NA,  
-"X1807.winners.ATE"=NA,"X1807.winners.p"=NA,"group"=NA,order=c(.5,1.1,1.5,3.1,3.5,12.1,12.5))
+"X1807.winners.ATE"=NA,"X1807.winners.p"=NA,"group"=NA,order=c(.5,1.1,1.5,3.1,3.5,5.1,5.5,7.1,7.5))
 covars <- rbind(covars,order)
 covars <-covars[order(covars$order),]
 covars$covars <- factor(covars$covars,levels=unique(covars$covars)[length(covars$covars):1])
@@ -56,9 +60,9 @@ winners.losers.05.label <- paste("1805 winners & losers, \n N =",
                      format(nrow(lot05),big.mark=",",scientific=FALSE,trim=TRUE),"\n")
 
 winners.05.label <- paste("1805 winners, \n N =", 
-                           format(nrow(lot05[(lot05$treat==1),]),big.mark=",",scientific=FALSE,trim=TRUE),"\n")
+                           format(nrow(sub.05.winners),big.mark=",",scientific=FALSE,trim=TRUE),"\n")
 
-winners.07.label <- paste("1805 winners, \n N =", 
+winners.07.label <- paste("1807 winners, \n N =", 
                           format(nrow(lot07),big.mark=",",scientific=FALSE,trim=TRUE))
 
 p <- ggplot(covars,aes(x=covars)) +  
