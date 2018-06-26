@@ -65,17 +65,6 @@ Map <- ggplot(counties1807, aes(long, lat, group = group, fill = newcounty)) + g
   scale_colour_manual(values=c('black')) + theme(legend.position="none") 
 
 ggsave(paste0(data.directory,"plots/county-map.png"), Map + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
-
-# Counties map with 1800 slave share
-Map.slave.pop <- ggplot(county.00, aes(long, lat, group = group, fill = slave.poppc)) + geom_polygon() + 
-  coord_equal()  + scale_fill_gradient(low = "white", high = "gray") + labs(fill="Slave pop. (% in 1800)") + 
-  theme(axis.ticks = element_blank(), axis.text.x = element_blank(), 
-        axis.text.y = element_blank(),axis.title.x = element_blank(),
-        axis.title.y = element_blank()) + theme(panel.grid.minor=element_blank(), 
-                                                panel.grid.major=element_blank()) +
-  geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
-
-ggsave(paste0(data.directory,"plots/county-map-slave-pop-1800.png"), Map.slave.pop + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
 }
 
 ## 1820 Census
@@ -84,17 +73,6 @@ ggsave(paste0(data.directory,"plots/county-map-slave-pop-1800.png"), Map.slave.p
 county.20 <- merge(counties1807,counties.1820, by.x="id", by.y = "name",all.x=TRUE) # only counties in 1807
 
 if(patient.descriptive){ 
-  # Produce slavery population map with 1807 boundaries
-  Map.slave.pop.20 <- ggplot(county.20, aes(long, lat, group = group, fill = slave.poppc)) + geom_polygon() + 
-    coord_equal()  + scale_fill_gradient(low = "white", high = "gray") + labs(fill="Slave pop. (% in 1820)") + 
-    theme(axis.ticks = element_blank(), axis.text.x = element_blank(), 
-          axis.text.y = element_blank(),axis.title.x = element_blank(),
-          axis.title.y = element_blank()) + theme(panel.grid.minor=element_blank(), 
-                                                  panel.grid.major=element_blank()) +
-    geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
-  
-  ggsave(paste0(data.directory,"plots/county-map-slave-pop-1820.png"), Map.slave.pop.20 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
-  
   # Produce wealth gini map with 1807 boundaries
   Map.wealth.gini.20 <- ggplot(county.20, aes(long, lat, group = group, fill = gini)) + geom_polygon() + 
     coord_equal()  + scale_fill_gradient(low = "white", high = "gray") + labs(fill="Slave wealth Gini (1820$)") + 
@@ -106,52 +84,4 @@ if(patient.descriptive){
   
   ggsave(paste0(data.directory,"plots/county-map-wealth-gini-1820.png"), Map.wealth.gini.20 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
   
-}
-
-## 1850 Census
-
-# Merge 1850 census data 
-county.50 <- merge(counties1807,counties, by.x="id", by.y = "name",all.x=TRUE) # only counties in 1807
-
-if(patient.descriptive){ 
-# Produce slavery population map with 1807 boundaries
-Map.slave.pop.50 <- ggplot(county.50, aes(long, lat, group = group, fill = slave.poppc)) + geom_polygon() + 
-  coord_equal()  + scale_fill_gradient(low = "white", high = "gray") + labs(fill="Slave pop. (% in 1850)") + 
-  theme(axis.ticks = element_blank(), axis.text.x = element_blank(), 
-        axis.text.y = element_blank(),axis.title.x = element_blank(),
-        axis.title.y = element_blank()) + theme(panel.grid.minor=element_blank(), 
-                                                panel.grid.major=element_blank()) +
-  geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
-
-ggsave(paste0(data.directory,"plots/county-map-slave-pop-1850.png"), Map.slave.pop.50 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
-
-
-# Produce wealth gini map with 1807 boundaries
-Map.wealth.gini.50 <- ggplot(county.50, aes(long, lat, group = group, fill = gini)) + geom_polygon() + 
-  coord_equal()  + scale_fill_gradient(low = "white", high = "gray") + labs(fill="Real estate wealth Gini (1850$)") + 
-  theme(axis.ticks = element_blank(), axis.text.x = element_blank(), 
-        axis.text.y = element_blank(),axis.title.x = element_blank(),
-        axis.title.y = element_blank()) + theme(panel.grid.minor=element_blank(), 
-                                                panel.grid.major=element_blank()) +
-  geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
-
-ggsave(paste0(data.directory,"plots/county-map-wealth-gini-1850.png"), Map.wealth.gini.50 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
-}
-
-## 1870 Census
-
-# Merge 1870 census data 
-county.70 <- merge(counties1807,counties.1870, by.x="id", by.y = "county",all.x=TRUE) # only counties in 1807
-
-if(patient.descriptive){ 
-  # Produce per capita taxes map with 1807 boundaries
-  Map.taxes.pop.70 <- ggplot(county.70, aes(long, lat, group = group, fill = tax.pc)) + geom_polygon() + 
-    coord_equal()  + scale_fill_gradient(low = "white", high = "gray") + labs(fill="Per-capita county taxation (1870)") + 
-    theme(axis.ticks = element_blank(), axis.text.x = element_blank(), 
-          axis.text.y = element_blank(),axis.title.x = element_blank(),
-          axis.title.y = element_blank()) + theme(panel.grid.minor=element_blank(), 
-                                                  panel.grid.major=element_blank()) +
-    geom_map(aes(map_id = id, colour = 'black'), map = counties1807) + scale_colour_manual(values=c('black'),guide=FALSE) + theme(legend.position="top") 
-
-ggsave(paste0(data.directory,"plots/county-map-taxes-pop-1870.png"), Map.taxes.pop.70 + with(cnames, annotate(geom="text", x = long, y=lat, label = group, size = 3)), width=11, height=8.5)
 }

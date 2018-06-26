@@ -1,6 +1,6 @@
 Codebook for "Land Lotteries, Long-term Wealth, and Political Selection"
 
-There are four datasets in ‘ga-lottery.RData’. ‘petd’ is the complete participant record for the 1805 lottery. ‘fdg05' and ‘fdg07’ are the fortunate drawer and grantee records for the 1805 and 1807 lotteries, respectively. ‘lot05’ merges ‘fdg05’, ‘petd’, and officeholder records. ‘officeholders’ contains outcome variables for legislator-participants. 
+There are four datasets in ‘ga-lottery.RData’. ‘petd’ is the complete participant record for the 1805 lottery. ‘fdg05' and ‘fdg07’ are the fortunate drawer and grantee records for the 1805 and 1807 lotteries, respectively. ‘lot05’ merges ‘fdg05’, ‘petd’, and officeholder records.
 
 ——————————
 
@@ -160,20 +160,12 @@ no.slaves.1820		Number of slaves held.
 slave.wealth.1820	Imputed slave wealth.
 			[Source: 1820 Census/author] 
 
-slave.index		Mean of votes in favor of slavery.
-			[Source: roll call vote records/author]	
-
-bank.index		Mean of votes in favor of state banking policy.
-			[Source: roll call vote records/author]	
-
-n.post.terms		Number of terms held by officeholder after 1805 lottery.
-			[Source: officeholder records]	
-
 match.votes		Probability of correct match between candidate and participant.  
 			[Source: author] 
 
 prior.run
-(“Pretreatment candidate”)		“1” if participant ran for office prior to 1805, “0” otherwise.									[Source: candidate records/author]
+(“Pretreatment candidate”)		“1” if participant ran for office prior to 1805, “0” otherwise.	
+					[Source: candidate records/author]
 
 candidate	“1” if participant was a candidate for office between 1805-1847 (inclusive), “0” otherwise.		
 		[Source: candidate records/author]

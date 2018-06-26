@@ -6,8 +6,8 @@ Contents
 * `lottery.Rdata` contains the datasets used for the analysis 
 * `codebook.txt` describes the `lottery.Rdata` datasets
 * `analysis.sh` shell script for `analysis.R`
-* `analysis.R` creates table showing outcomes by treatment group and compliance status; implements randomization tests; creates summary plot for ATEs; and creates summary plot for sensitivity analyses
-	* `descriptive-stats.R` create descriptive figures and tables for Online Appendix
+* `analysis.R` main file; runs descriptive stats, balance tests, and ITT analyses
+	* `descriptive-stats.R` create descriptive figures and tables for Online Appendix (OA)
 		* `ipums-ga-1850.csv` subset of complete--count Census data (1850)
 		* `counties-1800.csv` county--level Census data (1800)
 		* `counties-1850.csv` county--level Census data (1850)
@@ -17,11 +17,11 @@ Contents
 	* `prepare.R` prepare lottery data for analysis
 	* `balance-tests.R` estimates *p* values for balance plot
 	* `balance-plot.R` creates Figure 1: balance plot with *p* values
+	* `qq-plot.R` creates QQ plots for (for OA)
 	* `summary-table.R` create Table 1: summary statistics (including pre-treatment variables, political outcomes, and wealth outcomes)
-	* `SuperLearner.R` defines **SuperLearner** libraries
-	* `het-effects.R` create heterogeneous treatment effect plots and ensemble 
-* `power.sh` shell script for `power.R`
-* `power.R` performs power analysis and outputs plot
+	* `slave-wealth-robust.R` robustness tests on slave wealth outcome (for OA)
+	* `qreg-plot.R` quantile regression estimates (for OA)
+	* `power.R` performs power analysis and outputs plot (for OA)
 
 Instructions
 ------
