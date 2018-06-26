@@ -32,7 +32,7 @@ data.directory <-"~/Dropbox/github/ga-lottery/"
 load(paste0(data.directory,"ga-lottery.RData"))
 
 # Run descriptive analyses?
-patient.descriptive <- TRUE
+patient.descriptive <- FALSE
 
 # Run robustness tests?
 patient.robust <- FALSE
