@@ -32,7 +32,7 @@ data.directory <-"~/Dropbox/github/ga-lottery/"
 load(paste0(data.directory,"ga-lottery.RData"))
 
 # Run descriptive analyses?
-patient.descriptive <- FALSE
+patient.descriptive <- TRUE
 
 # Run robustness tests?
 patient.robust <- FALSE
@@ -157,9 +157,10 @@ slaves.CI.winners.07 <- list("CI" = confint(slaves.lm.winners.07, "sub.1820.07.w
 
 print(slaves.CI.winners.07)
 
-## Robustness: slave wealth (for OA)
+## Robustness: slave wealth / candidacy (for OA)
 if(patient.robust){
   source(paste0(data.directory,"slave-wealth-robust.R"))
+  source(paste0(data.directory,"candidacy-robust.R"))
 }
 
 ## Create quantile regression plot (for OA)

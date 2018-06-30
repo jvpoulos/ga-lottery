@@ -44,8 +44,7 @@ lot07$treat[lot07$n.prizes==2] <- 1
 # impute # draws
 lot07$n.draw<- NA
 lot07$n.draw <- 1
-lot07$n.draw[lot07$orphan==1] <- 2
-lot07$n.draw[lot07$n.prizes==2] <- 2
+lot07$n.draw[lot07$n.prizes==2] <- 2 # this will be dropped from LM
 
 # Make indicators binary
 
@@ -55,7 +54,7 @@ lot07$oh[is.na(lot07$oh)] <- 0
 lot07$prior.run[is.na(lot07$prior.run)] <- 0
 lot07$candidate[is.na(lot07$candidate)] <- 0
 
-# Match census NAs 0
+# Match NAs 0
 
 lot07$match.votes.07[is.na(lot07$match.votes.07)] <- 0
 lot07$match.census.07[is.na(lot07$match.census.07)] <- 0
@@ -88,16 +87,16 @@ lot07$female[lot07$first.name %in% female.name] <- 1
 
 ## Create sample exclusions
 sub.oh.05 <- lot05[(lot05$orphan!=1) & (lot05$widow!=1) & (lot05$female!=1),] # exclude orphans, widows, females
-sub.1820.05 <- lot05[!is.na(lot05$match.census),] # matched to 1820 Census
+sub.1820.05 <- lot05[lot05$match.census>0,] # matched to 1820 Census
 
 sub.oh.05.winners <- lot05[(lot05$orphan!=1) & (lot05$widow!=1) & (lot05$female!=1) & (lot05$treat==1),] # winners only
-sub.1820.05.winners <- lot05[!is.na(lot05$match.census) & (lot05$treat==1),] 
+sub.1820.05.winners <- lot05[(lot05$match.census>0) & (lot05$treat==1),] 
 
 sub.oh.05.winners$treat[sub.oh.05.winners$n.prizes==1] <- 0  # reformat treat among winners
 sub.oh.05.winners$treat[sub.oh.05.winners$n.prizes==2] <- 1
 
 sub.oh.07.winners <- lot07[(lot07$orphan!=1) & (lot07$widow!=1) & (lot07$female!=1),] # winners only
-sub.1820.07.winners <- lot07[!is.na(lot07$match.census.07),] 
+sub.1820.07.winners <- lot07[lot07$match.census.07>0,] 
 
 sub.oh.07.winners$treat<- NA
 sub.oh.07.winners$treat[sub.oh.07.winners$n.prizes==1] <- 0  # reformat treat among winners

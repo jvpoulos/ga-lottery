@@ -14,12 +14,29 @@ if(patient.descriptive){
   
   pretreatment.desc$census.match <- unlist(c(lot05["match.census.05"], sub.05.winners["match.census.05"], lot07["match.census.07"]))
   
-  tableContinuous(vars = pretreatment.desc[c("census.match",covars.balance)], 
+  print(tableContinuous(vars = pretreatment.desc[c("census.match",covars.balance)], 
                         group = pretreatment.desc$sample, 
                         prec = 2,
                         cumsum=FALSE,
                         nams = covars.names,
-                        stats=my.stats) 
+                        stats=my.stats))
+  
+  # treatment Variables
+  
+  treatment.desc <- rbind(lot05[c("treat","n.draw")], sub.05.winners[c("treat","n.draw")], lot07[c("treat","n.draw")])
+  
+  treatment.desc$sample <- c(rep("1805 winners & losers", nrow(lot05)), 
+                                rep("1805 winners", nrow(sub.05.winners)),
+                                rep("1807 winners", nrow(lot07)))
+  
+  treatment.desc$sample <- factor(treatment.desc$sample)
+  
+  print(tableContinuous(vars = treatment.desc[c(c("treat","n.draw"))], 
+                        group = treatment.desc$sample, 
+                        prec = 2,
+                        cumsum=FALSE,
+                        nams = c("Treated", "# draws"),
+                        stats=my.stats))
   
   # Outcomes
   # Political outcomes exlude widows, orphans, female 
@@ -34,12 +51,12 @@ if(patient.descriptive){
   
   political.desc$sample <- factor(political.desc$sample)
   
-  tableContinuous(vars = political.desc[c("candidate","oh","match.oh")], 
+  print(tableContinuous(vars = political.desc[c("candidate","oh","match.oh")], 
                   group = political.desc$sample, 
                   prec = 2,
                   cumsum=FALSE,
                   nams = c("Candidate", "Officeholder", "Officeholder (match prob.)"),
-                  stats=my.stats) 
+                  stats=my.stats))
   
   # Census wealth (no exclusions)
   
@@ -53,10 +70,10 @@ if(patient.descriptive){
   
   census.desc$sample <- factor(census.desc$sample)
   
-  tableContinuous(vars = census.desc[c("slave.wealth.1820")], 
+  print(tableContinuous(vars = census.desc[c("slave.wealth.1820")], 
                   group = census.desc$sample, 
                   prec = 2,
                   cumsum=FALSE,
                   nams = ("Slave wealth (1820$)"),
-                  stats=my.stats) 
+                  stats=my.stats))
 }
