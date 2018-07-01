@@ -72,7 +72,7 @@ ggsave(paste0(data.directory,"plots/qreg-plot-05-winners.png"), qreg.05.winners.
 
 # 1807 winners
 qreg.fits.07.winners <- lapply(taus, function(t){
-  rq(formula = slave.wealth.1820 ~ treat + n.draw, 
+  rq(formula = slave.wealth.1820 ~ treat, # no n.draw
      tau = t, 
      data = sub.1820.07.winners)
 })

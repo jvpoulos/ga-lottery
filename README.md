@@ -20,6 +20,7 @@ Contents
 	* `qq-plot.R` creates QQ plots for (for OA)
 	* `summary-table.R` create Table 1: summary statistics (including pre-treatment variables, political outcomes, and wealth outcomes)
 	* `slave-wealth-robust.R` robustness tests on slave wealth outcome (for OA)
+	* `candidate-robust.R` robustness tests on candidacy outcome (for OA)
 	* `qreg-plot.R` quantile regression estimates (for OA)
 	* `power.R` performs power analysis and outputs plot (for OA)
 
