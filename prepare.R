@@ -41,11 +41,6 @@ lot07$treat <- NA
 lot07$treat[lot07$n.prizes==1] <- 0  # reformat treat among winners
 lot07$treat[lot07$n.prizes==2] <- 1
 
-# impute # draws
-lot07$n.draw<- NA
-lot07$n.draw <- 1
-lot07$n.draw[lot07$n.prizes==2] <- 2 # this will be dropped from LM
-
 # Make indicators binary
 
 lot07$prior.office[is.na(lot07$prior.office)] <- 0 
@@ -84,6 +79,14 @@ lot07 <- cbind(lot07,dummify(as.factor(lot07$county)))
 # female participant
 lot07$female <- 0
 lot07$female[lot07$first.name %in% female.name] <- 1
+
+# impute # draws
+lot07$n.draw<- NA
+lot07$n.draw <- 2
+lot07$n.draw[lot07$orphan==1] <- 1
+lot07$n.draw[lot07$widow==1] <- 1
+lot07$n.draw[lot07$female==1] <- 1
+lot07$n.draw[lot07$n.prizes==2] <- 2 
 
 ## Create sample exclusions
 sub.oh.05 <- lot05[(lot05$orphan!=1) & (lot05$widow!=1) & (lot05$female!=1),] # exclude orphans, widows, females

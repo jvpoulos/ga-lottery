@@ -31,4 +31,4 @@ covars.balance.07.winners <- covars.balance.07.winners[!covars.balance.07.winner
 balance.07.winners <- lapply(covars.balance.07.winners, function(x){
   lm07 <- lm(lot07[,x] ~ lot07$treat + lot07$n.draw)
   return(list("ATE"=lm07$coefficients['lot07$treat'][[1]],
-              "p" = summary(lm07)$coefficients[8]))})
+              "p" = summary(lm07)$coefficients[11]))})
