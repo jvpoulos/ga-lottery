@@ -51,18 +51,22 @@ if(patient.descriptive){
   
   political.desc$sample <- factor(political.desc$sample)
   
-  print(tableContinuous(vars = political.desc[c("candidate","oh","match.oh")], 
+  political.desc$match.votes <- unlist(c(sub.oh.05[c("match.votes.05")],
+                                  sub.oh.05.winners[c("match.votes.05")],
+                                  sub.oh.07.winners[c("match.votes.07")]))
+  
+  print(tableContinuous(vars = political.desc[c("candidate","oh","match.oh","match.votes")], 
                   group = political.desc$sample, 
                   prec = 2,
                   cumsum=FALSE,
-                  nams = c("Candidate", "Officeholder", "Officeholder (match prob.)"),
+                  nams = c("Candidate", "Officeholder", "Officeholder (match prob.)", "Candidate (match prob.)"),
                   stats=my.stats))
   
   # Census wealth (no exclusions)
   
-  census.desc <- rbind(sub.1820.05[c("slave.wealth.1820")], 
-                          sub.1820.05.winners[c("slave.wealth.1820")],
-                          sub.1820.07.winners[c("slave.wealth.1820")])
+  census.desc <- rbind(sub.1820.05[c("slave.wealth.1820","slave.wealth.1820.w")], 
+                          sub.1820.05.winners[c("slave.wealth.1820","slave.wealth.1820.w")],
+                          sub.1820.07.winners[c("slave.wealth.1820","slave.wealth.1820.w")])
   
   census.desc$sample <- c(rep("1805 winners & losers", nrow(sub.1820.05)), 
                              rep("1805 winners", nrow(sub.1820.05.winners)),
@@ -70,10 +74,10 @@ if(patient.descriptive){
   
   census.desc$sample <- factor(census.desc$sample)
   
-  print(tableContinuous(vars = census.desc[c("slave.wealth.1820")], 
+  print(tableContinuous(vars = census.desc[c("slave.wealth.1820","slave.wealth.1820.w")], 
                   group = census.desc$sample, 
                   prec = 2,
                   cumsum=FALSE,
-                  nams = ("Slave wealth (1820$)"),
+                  nams = c("Slave wealth (1820$)", "Weighted slave wealth (1820$)"),
                   stats=my.stats))
 }
