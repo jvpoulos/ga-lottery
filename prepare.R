@@ -2,10 +2,10 @@
 
 # Make indicators binary
 
-lot05$prior.office[is.na(lot05$prior.office)] <- 0 
+lot05$prior.office05[is.na(lot05$prior.office05)] <- 0 
 lot05$oh[is.na(lot05$oh)] <- 0
 
-lot05$prior.run[is.na(lot05$prior.run)] <- 0
+lot05$prior.run05[is.na(lot05$prior.run05)] <- 0
 lot05$candidate[is.na(lot05$candidate)] <- 0
 
 # Match NAs 0
@@ -43,10 +43,10 @@ lot07$treat[lot07$n.prizes==2] <- 1
 
 # Make indicators binary
 
-lot07$prior.office[is.na(lot07$prior.office)] <- 0 
+lot07$prior.office07[is.na(lot07$prior.office07)] <- 0 
 lot07$oh[is.na(lot07$oh)] <- 0
 
-lot07$prior.run[is.na(lot07$prior.run)] <- 0
+lot07$prior.run07[is.na(lot07$prior.run07)] <- 0
 lot07$candidate[is.na(lot07$candidate)] <- 0
 
 # Match NAs 0

@@ -30,13 +30,13 @@ Instructions
 ```
 $ git clone https://github.com/jvpoulos/ga-lottery
 ```
-* The code uses **R** version 3.2.2 (2015-08-14). To install the latest version of R on Ubuntu, use the command 
+* The code uses **R** version 3.2.2 (2015-08-14). To install this **R** version on Ubuntu, use the command 
 ```
 $ sudo apt-get install r-base-core=3.2.2-1trusty0
 ```
 * Open `analysis.R` in a script editor
-  * Verify that all required packages are installed in your **R** library
-  * Change the file path specified by character vector `data.directory` to your working directory
+  * Verify that all required packages in `analysis.R`are installed in your **R** library
+  * Change the file path specified by `data.directory` to your working directory
   * Change `patient.descriptive` , `patient.robust` , `patient.qreg` , or `patient.power` to TRUE to run descriptive and auxilliary analyses
 <!--    (N.b.: the total elapsed time of running `analysis.RD` with all vectors set to TRUE on a machine with 8 vCPU is 11.29 hours.)  -->
   * Save your changes to `analysis.R`

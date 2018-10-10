@@ -38,7 +38,7 @@ patient.descriptive <- TRUE
 patient.robust <- FALSE
 
 # Run quantile regression plots?
-patient.qreg <- FALSE
+patient.qreg <- TRUE
 
 # Run power analysis?
 patient.power <- FALSE

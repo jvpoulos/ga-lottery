@@ -30,19 +30,14 @@ qreg.plot <- ggplot(qreg.plot.df[qreg.plot.df$quantile <0.985,], aes(y=effect, x
 
 ggsave(paste0(data.directory,"plots/qreg-plot.png"), qreg.plot, width=11, height=8.5)
 
-## Report results
+# Report results
 
-#46%
-qreg.plot.df[92,]$effect # effect
-qreg.plot.df[92,]$effect - (1.96*qreg.plot.df[92,]$se) # lower 
-qreg.plot.df[92,]$effect + (1.96*qreg.plot.df[92,]$se) # upper
+#50
+qreg.plot.df[21,]$effect # effect
+qreg.plot.df[21,]$effect - (1.96*qreg.plot.df[21,]$se) # lower 
+qreg.plot.df[21,]$effect + (1.96*qreg.plot.df[21,]$se) # upper
 
-#50%
-qreg.plot.df[100,]$effect # effect
-qreg.plot.df[100,]$effect - (1.96*qreg.plot.df[100,]$se) # lower 
-qreg.plot.df[100,]$effect + (1.96*qreg.plot.df[100,]$se) # upper
-
-# 1805 winners
+## 1805 winners
 qreg.fits.05.winners <- lapply(taus, function(t){
   rq(formula = slave.wealth.1820 ~ treat + n.draw, 
      tau = t, 
@@ -70,6 +65,13 @@ qreg.05.winners.plot <- ggplot(qreg.05.winners.plot.df[qreg.05.winners.plot.df$q
 
 ggsave(paste0(data.directory,"plots/qreg-plot-05-winners.png"), qreg.05.winners.plot, width=11, height=8.5)
 
+# Report results
+
+#50
+qreg.05.winners.plot.df[21,]$effect # effect
+qreg.05.winners.plot.df[21,]$effect - (1.96*qreg.05.winners.plot.df[21,]$se) # lower 
+qreg.05.winners.plot.df[21,]$effect + (1.96*qreg.05.winners.plot.df[21,]$se) # upper
+
 # 1807 winners
 qreg.fits.07.winners <- lapply(taus, function(t){
   rq(formula = slave.wealth.1820 ~ treat + n.draw, 
@@ -96,3 +98,10 @@ qreg.07.winners.plot <- ggplot(qreg.07.winners.plot.df[qreg.07.winners.plot.df$q
   theme(plot.title = element_text(hjust = 0.5))
 
 ggsave(paste0(data.directory,"plots/qreg-plot-07-winners.png"), qreg.07.winners.plot, width=11, height=8.5)
+
+# Report results
+
+#90
+qreg.07.winners.plot.df[101,]$effect # effect
+qreg.07.winners.plot.df[101,]$effect - (1.96*qreg.07.winners.plot.df[101,]$se) # lower 
+qreg.07.winners.plot.df[101,]$effect + (1.96*qreg.07.winners.plot.df[101,]$se) # upper

@@ -73,7 +73,7 @@ p <- ggplot(covars,aes(x=covars)) +
   geom_point(aes(y=X1807.winners.p, colour="x1807.winners", shape="x1807.winners"), size=3, alpha=0.8) + 
   scale_y_continuous(name=y.title,breaks=c(0,0.05,0.10,1),labels=c("0","0.05","0.10","1")) + 
   scale_colour_manual(name="Sample",
-                      values=c(x1805=wes_palette("Darjeeling")[3], x1805.winners=wes_palette("Darjeeling")[2], x1807.winners=wes_palette("Darjeeling")[1]),
+                      values=c(x1805=wes_palette("Darjeeling1")[3], x1805.winners=wes_palette("Darjeeling1")[2], x1807.winners=wes_palette("Darjeeling1")[1]),
                       label=c(winners.losers.05.label,
                               winners.05.label,
                               winners.07.label)) +

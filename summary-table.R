@@ -14,7 +14,11 @@ if(patient.descriptive){
   
   pretreatment.desc$census.match <- unlist(c(lot05["match.census.05"], sub.05.winners["match.census.05"], lot07["match.census.07"]))
   
-  print(tableContinuous(vars = pretreatment.desc[c("census.match",covars.balance)], 
+  pretreatment.desc$prior.run <- unlist(c(lot05["prior.run05"], sub.05.winners["prior.run05"], lot07["prior.run07"]))
+  
+  pretreatment.desc$prior.office <- unlist(c(lot05["prior.office05"], sub.05.winners["prior.office05"], lot07["prior.office07"]))
+  
+  print(tableContinuous(vars = pretreatment.desc[c("census.match", "prior.run", "prior.office", covars.balance)], 
                         group = pretreatment.desc$sample, 
                         prec = 2,
                         cumsum=FALSE,

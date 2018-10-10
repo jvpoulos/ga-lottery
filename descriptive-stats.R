@@ -30,9 +30,11 @@ ipums$logrealprop<- log(ipums$REALPROP+0.001)
 summary(lm(ipums$logrealprop~ipums$surname.length))
 summary(lm(ipums$logrealprop~ipums$surname.freq))
 
-# What % under property threshold?
+# What % under property threshold? 
 sum(ipums$REALPROP <250) /nrow(ipums)
 sum(ipums$REALPROP <500) /nrow(ipums)
+
+median(ipums$REALPROP/(7.57/11.36) ) # (1850 deflated to 1805)
 
 # Create summary statistics table.
 ipums$literate <- ifelse(ipums$LIT==4,1,0) # create variables
@@ -137,7 +139,7 @@ round((counties$avgacre[counties$name=="Baldwin"]*202.5)/(7.57/11.2),2)
 round((counties$avgacre[counties$name=="Wilkinson"]*202.5)/(7.57/11.2),2)
 avg.prize.07 <- round(((counties$avgacre[counties$name=="Baldwin"]*202.5+counties$avgacre[counties$name=="Wilkinson"]*202.5)/2)/(7.57/11.2),2)
 
-# What is ratio of 1805 prize to median income?
+# What is ratio of 1805 prize to median property?
 avg.prize.05/median(ipums$REALPROP/(7.57/11.36))
 
 # Create Gini Coefficient for realprop per county
