@@ -19,8 +19,9 @@ Contents
 	* `balance-plot.R` creates Figure 1: balance plot with *p* values
 	* `qq-plot.R` creates QQ plots for (for OA)
 	* `summary-table.R` create Table 1: summary statistics (including pre-treatment variables, political outcomes, and wealth outcomes)
+	* `officeholding-robust.R` robustness tests on officeholder outcome (for OA)
 	* `slave-wealth-robust.R` robustness tests on slave wealth outcome (for OA)
-	* `candidate-robust.R` robustness tests on candidacy outcome (for OA)
+	* `candidate-robust.R` robustness tests for candidate outcome (for OA)
 	* `qreg-plot.R` quantile regression estimates (for OA)
 	* `power.R` performs power analysis and outputs plot (for OA)
 

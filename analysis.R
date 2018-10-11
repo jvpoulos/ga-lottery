@@ -110,30 +110,6 @@ oh.CI.winners.07 <- list("CI" = confint(oh.lm.winners.07, "sub.oh.07.winners$tre
 
 print(oh.CI.winners.07)
 
-# Results for officeholding match
-
-# 1805 winners and losers
-match.oh.lm <- lm(sub.oh.05$match.oh~sub.oh.05$treat + sub.oh.05$n.draw)
-match.oh.CI <- list("CI" = confint(match.oh.lm, "sub.oh.05$treat")[1:2],
-              "ATE" = match.oh.lm$coefficients['sub.oh.05$treat'][[1]])
-
-print(match.oh.CI)
-
-# 1805 winners
-match.oh.lm.winners <- lm(sub.oh.05.winners$match.oh~sub.oh.05.winners$treat + sub.oh.05.winners$n.draw)
-match.oh.CI.winners <- list("CI" = confint(match.oh.lm.winners, "sub.oh.05.winners$treat")[1:2],
-                    "ATE" = match.oh.lm.winners$coefficients['sub.oh.05.winners$treat'][[1]])
-
-print(match.oh.CI.winners)
-
-# 1807 winners
-match.oh.lm.winners.07 <- lm(sub.oh.07.winners$match.oh~sub.oh.07.winners$treat + sub.oh.07.winners$n.draw)
-match.oh.CI.winners.07 <- list("CI" = confint(match.oh.lm.winners.07, "sub.oh.07.winners$treat")[1:2],
-                            "ATE" = match.oh.lm.winners.07$coefficients['sub.oh.07.winners$treat'][[1]])
-
-print(match.oh.CI.winners.07)
-
-
 ## ITT analyses for slave wealth 
 
 # 1805 winners and losers
@@ -174,4 +150,4 @@ if(patient.power){
 }
 
 ## Save data
-save.image(paste0(data.directory,"results/analysis.RData"))
+save.image(paste0(data.directory,"analysis.RData"))

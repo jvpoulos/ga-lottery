@@ -128,7 +128,8 @@ oh		“1” if participant held office between 1806-1847 (inclusive), “0” ot
 		[Source: officeholder records/author]
 
 prior.office
-(“Pretreatment officeholder”)		“1” if participant held office prior to 1806, “0” otherwise.										[Source: officeholder records/author]
+(“Pretreatment officeholder”)		“1” if participant held office on or prior to 1805 (or 1807), “0” otherwise.										
+			[Source: officeholder records/author]
 
 name.1			Name of matched officeholder.  
 			[Source: officeholder records/author]

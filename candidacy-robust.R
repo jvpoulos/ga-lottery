@@ -72,18 +72,16 @@ print(match.candidate.CI.winners.05.covars)
 # + covariates
 
 candidate.lm.winners.07.covars <- lm(sub.oh.07.winners$candidate~sub.oh.07.winners$treat + 
-                                    sub.oh.07.winners$n.draw +
-                                    sub.oh.07.winners$prior.run +
-                                    sub.oh.07.winners$prior.office +
-                                    sub.oh.07.winners$junior +
-                                    sub.oh.07.winners$senior +
-                                    sub.oh.07.winners$surname.freq +
-                                    sub.oh.07.winners$Bryan +
-                                    sub.oh.07.winners$Burke +
-                                    sub.oh.07.winners$Chatham +
-                                    sub.oh.07.winners$Franklin +
-                                    sub.oh.07.winners$Lincoln +
-                                    sub.oh.07.winners$Richmond)
+                                       sub.oh.07.winners$n.draw +
+                                       sub.oh.07.winners$match.census.07 +
+                                       sub.oh.07.winners$prior.run +
+                                       sub.oh.07.winners$junior +
+                                       sub.oh.07.winners$senior +
+                                       sub.oh.07.winners$surname.freq +
+                                       sub.oh.07.winners$Bryan +
+                                       sub.oh.07.winners$Chatham +
+                                       sub.oh.07.winners$Clarke +
+                                       sub.oh.07.winners$Lincoln)
 candidate.CI.winners.07.covars <- list("CI" = confint(candidate.lm.winners.07.covars, "sub.oh.07.winners$treat")[1:2],
                                     "ATE" = candidate.lm.winners.07.covars$coefficients['sub.oh.07.winners$treat'][[1]])
 
@@ -100,18 +98,16 @@ print(match.candidate.CI.winners.07)
 # candidate match + covariates
 
 match.candidate.lm.winners.07.covars <- lm(sub.oh.07.winners$match.votes.07~sub.oh.07.winners$treat +
-                                          sub.oh.07.winners$n.draw +
-                                          sub.oh.07.winners$prior.run +
-                                          sub.oh.07.winners$prior.office +
-                                          sub.oh.07.winners$junior +
-                                          sub.oh.07.winners$senior +
-                                          sub.oh.07.winners$surname.freq +
-                                          sub.oh.07.winners$Bryan +
-                                          sub.oh.07.winners$Burke +
-                                          sub.oh.07.winners$Chatham +
-                                          sub.oh.07.winners$Franklin +
-                                          sub.oh.07.winners$Lincoln +
-                                          sub.oh.07.winners$Richmond)
+                                             sub.oh.07.winners$n.draw +
+                                             sub.oh.07.winners$match.census.07 +
+                                             sub.oh.07.winners$prior.run +
+                                             sub.oh.07.winners$junior +
+                                             sub.oh.07.winners$senior +
+                                             sub.oh.07.winners$surname.freq +
+                                             sub.oh.07.winners$Bryan +
+                                             sub.oh.07.winners$Chatham +
+                                             sub.oh.07.winners$Clarke +
+                                             sub.oh.07.winners$Lincoln)
 match.candidate.CI.winners.07.covars <- list("CI" = confint(match.candidate.lm.winners.07.covars, "sub.oh.07.winners$treat")[1:2],
                                           "ATE" = match.candidate.lm.winners.07.covars$coefficients['sub.oh.07.winners$treat'][[1]])
 

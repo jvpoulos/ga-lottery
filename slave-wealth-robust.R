@@ -70,17 +70,15 @@ print(match.slaves.CI.winners.05.covars)
 
 slaves.lm.winners.07.covars <- lm(sub.1820.07.winners$slave.wealth.1820~sub.1820.07.winners$treat + 
                                     sub.1820.07.winners$n.draw +
+                                    sub.1820.07.winners$match.census.07 +
                                     sub.1820.07.winners$prior.run +
-                                    sub.1820.07.winners$prior.office +
                                     sub.1820.07.winners$junior +
                                     sub.1820.07.winners$senior +
                                     sub.1820.07.winners$surname.freq +
                                     sub.1820.07.winners$Bryan +
-                                    sub.1820.07.winners$Burke +
                                     sub.1820.07.winners$Chatham +
-                                    sub.1820.07.winners$Franklin +
-                                    sub.1820.07.winners$Lincoln +
-                                    sub.1820.07.winners$Richmond)
+                                    sub.1820.07.winners$Clarke +
+                                    sub.1820.07.winners$Lincoln)
 slaves.CI.winners.07.covars <- list("CI" = confint(slaves.lm.winners.07.covars, "sub.1820.07.winners$treat")[1:2],
                                     "ATE" = slaves.lm.winners.07.covars$coefficients['sub.1820.07.winners$treat'][[1]])
 
@@ -98,17 +96,15 @@ print(match.slaves.CI.winners.07)
 
 match.slaves.lm.winners.07.covars <- lm(sub.1820.07.winners$slave.wealth.1820.w~sub.1820.07.winners$treat +
                                           sub.1820.07.winners$n.draw +
+                                          sub.1820.07.winners$match.census.07 +
                                           sub.1820.07.winners$prior.run +
-                                          sub.1820.07.winners$prior.office +
                                           sub.1820.07.winners$junior +
                                           sub.1820.07.winners$senior +
                                           sub.1820.07.winners$surname.freq +
                                           sub.1820.07.winners$Bryan +
-                                          sub.1820.07.winners$Burke +
                                           sub.1820.07.winners$Chatham +
-                                          sub.1820.07.winners$Franklin +
-                                          sub.1820.07.winners$Lincoln +
-                                          sub.1820.07.winners$Richmond)
+                                          sub.1820.07.winners$Clarke +
+                                          sub.1820.07.winners$Lincoln)
 match.slaves.CI.winners.07.covars <- list("CI" = confint(match.slaves.lm.winners.07.covars, "sub.1820.07.winners$treat")[1:2],
                                           "ATE" = match.slaves.lm.winners.07.covars$coefficients['sub.1820.07.winners$treat'][[1]])
 
