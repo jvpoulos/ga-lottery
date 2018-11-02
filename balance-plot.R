@@ -30,7 +30,7 @@ order <- data.frame(covars= c("Attrition:",
                               " ", # need different size gaps
                               "Political activity:",
                               "  ",
-                              "Generational titles:",
+                              "Generational suffixes:",
                               "   ",
                                "Surname characteristics:",
                               "    ",
