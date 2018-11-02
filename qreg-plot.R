@@ -22,7 +22,7 @@ qreg.plot <- ggplot(qreg.plot.df[qreg.plot.df$quantile <0.985,], aes(y=effect, x
   geom_pointrange(aes(ymin = effect-(1.96*se), ymax = effect+(1.96*se)),shape=19, alpha=1/4) + 
   ylab("Treatment effect") + 
   xlab("Quantile of slave wealth (1820$)") + 
-  ggtitle(winners.losers.05.title) +
+#  ggtitle(winners.losers.05.title) +
   stat_smooth(method = "loess",se=FALSE) + 
   scale_y_continuous(labels = comma) + 
   scale_y_continuous(labels = dollar) + 

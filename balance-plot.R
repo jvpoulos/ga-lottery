@@ -71,7 +71,7 @@ p <- ggplot(covars,aes(x=covars)) +
   geom_point(aes(y=X1805.p, colour="x1805", shape="x1805"), size=3, alpha=0.8) + 
   geom_point(aes(y=X1805.winners.p, colour="x1805.winners", shape="x1805.winners"), size=3, alpha=0.8) + 
   geom_point(aes(y=X1807.winners.p, colour="x1807.winners", shape="x1807.winners"), size=3, alpha=0.8) + 
-  scale_y_continuous(name=y.title,breaks=c(0,0.05,0.10,1),labels=c("0","0.05","0.10","1")) + 
+  scale_y_continuous(name=y.title,breaks=c(0.05,1),labels=c("0.05","1")) + 
   scale_colour_manual(name="Sample",
                       values=c(x1805=wes_palette("Darjeeling1")[3], x1805.winners=wes_palette("Darjeeling1")[2], x1807.winners=wes_palette("Darjeeling1")[1]),
                       label=c(winners.losers.05.label,
@@ -85,4 +85,4 @@ p <- ggplot(covars,aes(x=covars)) +
   scale_x_discrete(name="") + 
   ThemeBw1()
 
-ggsave(paste0(data.directory,"plots/balance-plot.png"), p, width=11, height=8.5)
+ggsave(paste0(data.directory,"plots/balance-plot.jpeg"), p, width=174, height=234, units="mm", dpi=320)

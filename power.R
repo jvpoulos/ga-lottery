@@ -79,8 +79,8 @@ power.plot.bin <- ggplot(data=grid.bin, aes(x=r.prob,
   geom_hline(yintercept = 0.8, colour="black", linetype = "longdash") +
   ylab("Power") +
   xlab("Treatment effect") +
-  ggtitle(rep(paste("Officeholding, N =",
-                    format(nrow(sub.oh.05),big.mark=",",scientific=FALSE,trim=TRUE)),2)) + 
+  # ggtitle(rep(paste("Officeholding, N =",
+  #                   format(nrow(sub.oh.05),big.mark=",",scientific=FALSE,trim=TRUE)),2)) + 
   ThemeBw2() 
 
 ggsave(paste0(data.directory,"plots/power-plot-bin.png"), power.plot.bin, width=11, height=8.5) 
