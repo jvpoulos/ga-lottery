@@ -1,5 +1,24 @@
-Reproduce figures, tables, and empirical estimates
+ga-lottery
 ======
+
+This code in this repository reproduces figures, tables, and empirical estimates for the paper
+
+["Land lotteries, long-term wealth, and political selection"](https://jvpoulos.github.io/papers/ga-lottery-puch.pdf).
+
+Please cite the paper if you use this code for academic research:
+
+```
+@article{poulos2019land,
+  title={Land lotteries, long-term wealth, and political selection},
+  author={Poulos, Jason},
+  journal={Public Choice},
+  volume={178},
+  number={1-2},
+  pages={217--230},
+  year={2019},
+  publisher={Springer US}
+}
+```
 
 Contents
 ------
