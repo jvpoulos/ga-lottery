@@ -1,7 +1,7 @@
 ga-lottery
 ======
 
-This code in this repository reproduces figures, tables, and empirical estimates for the paper
+The code in this repository reproduces figures, tables, and empirical estimates for the paper:
 
 ["Land lotteries, long-term wealth, and political selection"](https://jvpoulos.github.io/papers/ga-lottery-puch.pdf).
 
